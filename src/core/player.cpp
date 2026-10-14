@@ -14,6 +14,7 @@
 #include "economy/merchants.hpp"
 #include "hud/idle_fade.hpp"
 #include "hud/damage_feedback.hpp"
+#include "progression/growth.hpp"
 
 namespace remaster::player {
 namespace {
@@ -28,6 +29,7 @@ void on_execute_post(ModContext*, void* args, void*, void*) {
     if (link == nullptr) {
         return;
     }
+    progression::growth::tick();
     healing::tick(link);
     resources::ammo::tick(link);
     economy::merchants::tick();

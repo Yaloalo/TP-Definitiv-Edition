@@ -5,6 +5,7 @@
 #include "d/d_meter_map.h"
 #include "d/d_meter_button.h"
 #include "JSystem/J2DGraph/J2DScreen.h"
+#include "d/d_menu_collect.h"
 
 namespace remaster::hooks {
 struct EnemySound : mods::NamedHook<"Z2CreatureEnemy::startCreatureSound",
@@ -17,6 +18,7 @@ struct WolfMovement : mods::Hook<&daAlink_c::setSpeedAndAngleWolf> { static void
 struct MapDraw : mods::Hook<&dMeterMap_c::draw> { static void* resolved_target(); };
 struct ButtonDraw : mods::Hook<&dMeterButton_c::draw> { static void* resolved_target(); };
 struct ScreenDraw : mods::Hook<&J2DScreen::draw> { static void* resolved_target(); };
+struct CollectDraw : mods::Hook<&dMenu_Collect2D_c::_draw> { static void* resolved_target(); };
 struct Shared0 : mods::Hook<&daAlink_c::checkItemAction> { static void* resolved_target(); };
 struct Shared1 : mods::Hook<&dMeter2Draw_c::draw> { static void* resolved_target(); };
 struct Shared2 : mods::Hook<&cLib_chaseF> { static void* resolved_target(); };

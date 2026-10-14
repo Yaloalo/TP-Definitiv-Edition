@@ -106,7 +106,7 @@ ModResult register_text(const char* text, MessageId* id) {
 }
 Model& model() { return g_model; }
 bool ready() { return g_ready; }
-int stamina_bonus() { return is_active() && g_ready && tuning::get().removeCurrency ? g_model.stamina_bonus() : 0; }
+int stamina_bonus() { return is_active() && g_ready ? g_model.stamina_bonus() : 0; }
 void persist() {
     if (!is_active() || !g_ready) return;
     const auto bytes = encode(g_model);
@@ -133,7 +133,7 @@ ModResult install() {
     if (result == MOD_OK) result = mods::hook::add_pre<ItemMessage>(item_message);
     if (result == MOD_OK) result = mods::hook::add_post<CheckMessage>(check_message_post);
     if (result == MOD_OK) result = register_text("You found a Flask Shard!\nFour shards add one Sacred Flask charge.", &g_shardMessage);
-    if (result == MOD_OK) result = register_text("You found a Stamina Fragment!\nFour fragments permanently increase stamina.", &g_staminaMessage);
+    if (result == MOD_OK) result = register_text("You found a Growth Fragment!\nFive fragments form a blessing. Choose health or stamina in your equipment menu.", &g_staminaMessage);
     return result;
 }
 }

@@ -30,5 +30,21 @@ int main() {
     corrupt=bytes; corrupt[20]=10; assert(!decode(corrupt,loaded)); // invalid bottle slot
     Model slots[3]; slots[0]=m; slots[1].refill(3,8); slots[1].spend(3,8);
     assert(slots[0].charges==7 && slots[1].charges==2 && slots[2].flaskShards==0);
+    // Migrate the actual old byte layout; do not infer version from file length.
+    auto old=encode(m);old.resize(old.size()-24);old[0]=0x54;old[1]=0x44;old[2]=0x46;old[3]=0x31;
+    Model legacy;assert(decode(old,legacy)&&!legacy.growthReady&&legacy.stamina_bonus()==6);
+    legacy.migrate_growth(37);assert(legacy.healthPoints==4&&legacy.staminaPoints==1&&legacy.growthFragments==27);
+    assert(legacy.stamina_bonus()>=6&&legacy.native_max_life()==37&&legacy.charges==7&&legacy.flaskShards==20);
+    legacy.migrate_growth(15);assert(legacy.healthPoints==4); // migration is idempotent
+    Model growth;growth.migrate_growth(15);assert(!growth.allocate(false)&&!growth.exchange(true));
+    for(int i=0;i<5;++i){auto name="growth:"+std::to_string(i);assert(growth.claim(name.c_str(),0x14));}
+    assert(growth.unassigned()==1&&growth.allocate(true)&&growth.stamina_bonus()==20&&growth.unassigned()==0);
+    auto total=growth.growthFragments;assert(growth.exchange(false)&&growth.healthPoints==1&&growth.staminaPoints==0&&growth.growthFragments==total);
+    for(int i=0;i<1000;++i){assert(growth.exchange(true));assert(growth.exchange(false));assert(growth.growthFragments==total&&growth.unassigned()==0);}
+    growth.add_growth(1000);assert(growth.growthFragments==110);
+    while(growth.allocate(true)){};while(growth.allocate(false)){};
+    assert(growth.healthPoints==17&&growth.staminaPoints==5&&growth.unassigned()==0&&growth.native_max_life()==100);
+    assert(!growth.allocate(false)&&!growth.exchange(true)&&!growth.exchange(false));
+    Model complete;assert(decode(encode(growth),complete)&&complete.healthPoints==17&&complete.staminaPoints==5);
     std::cout << "Progression, reward deduplication, charge persistence and corrupt-save rejection passed\n";
 }

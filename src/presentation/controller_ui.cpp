@@ -2874,7 +2874,7 @@ DEFINE_HOOK(&dMeter2Draw_c::drawButtonCross, ButtonCrossDrawHook);
 DEFINE_HOOK(&CPaneMgr::paneTrans, PaneTransHook);
 using ScreenDrawHook=remaster::hooks::ScreenDraw;
 DEFINE_HOOK(&dMenu_Ring_c::_draw, RingControllerOverlayHook);
-DEFINE_HOOK(&dMenu_Collect2D_c::_draw, CollectCompatDrawHook);
+using CollectCompatDrawHook=remaster::hooks::CollectDraw;
 DEFINE_HOOK(&dDlst_FileSel_c::draw, FileSelDrawHook);
 DEFINE_HOOK(&COutFont_c::createPane, OutFontCreatePaneHook);
 DEFINE_HOOK(&COutFont_c::drawFont, OutFontDrawFontHook);

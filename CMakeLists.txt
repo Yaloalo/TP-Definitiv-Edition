@@ -7,7 +7,7 @@ if (NOT DEFINED CMAKE_BUILD_TYPE AND NOT DEFINED ENV{CMAKE_BUILD_TYPE})
     set(CMAKE_BUILD_TYPE "RelWithDebInfo" CACHE STRING "Build type")
 endif ()
 
-project(tp_remaster VERSION 0.6.1 LANGUAGES CXX)
+project(tp_remaster VERSION 0.7.0 LANGUAGES CXX)
 
 # Must match the Dusklight release the mod runs on: game structs and symbols are version-specific.
 if (NOT DUSKLIGHT_VERSION)
@@ -29,6 +29,8 @@ add_mod(tp_remaster
             src/core/player.cpp
             src/core/hooks.cpp
             src/progression/rewards.cpp
+            src/progression/growth.cpp
+            src/progression/pause.cpp
             src/healing/flask.cpp
             src/healing/rest_stones.cpp
             src/healing/wolf.cpp
@@ -105,6 +107,10 @@ if (BUILD_TESTING AND NOT CMAKE_CROSSCOMPILING AND NOT MSVC)
         COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/story_progression_test.py")
     add_test(NAME qa_tooling
         COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/qa_tools_test.py")
+    add_test(NAME shared_growth
+        COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/growth_callbacks_test.py")
+    add_test(NAME pause_progression
+        COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/pause_progression_test.py")
     # Keep assertions enabled in RelWithDebInfo/Release test binaries.
     target_compile_options(enemy_timing_test PRIVATE -UNDEBUG)
 

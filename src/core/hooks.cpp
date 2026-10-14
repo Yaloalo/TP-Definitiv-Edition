@@ -15,6 +15,8 @@ DEFINE_HOOK(&dMeterButton_c::draw, ButtonDrawMetadata);
 void* ButtonDraw::resolved_target() { return ButtonDrawMetadata::resolved_target(); }
 DEFINE_HOOK(&J2DScreen::draw, ScreenDrawMetadata);
 void* ScreenDraw::resolved_target() { return ScreenDrawMetadata::resolved_target(); }
+DEFINE_HOOK(&dMenu_Collect2D_c::_draw, CollectDrawMetadata);
+void* CollectDraw::resolved_target() { return CollectDrawMetadata::resolved_target(); }
 DEFINE_HOOK(&daAlink_c::checkItemAction, Shared0Metadata);
 void* Shared0::resolved_target() { return Shared0Metadata::resolved_target(); }
 DEFINE_HOOK(&dMeter2Draw_c::draw, Shared1Metadata);
