@@ -7,7 +7,7 @@
 > Refill clarification: add more refill locations using existing game assets and deliberate interactions. Strict emergency recovery is enabled by default: one charge when empty, after 90 seconds clear of enemies/damage and 30 additional seconds still in the overworld. Other bottle behavior is accepted and remains unchanged.
 > Economy amendment: rare, finite Hylian rupees may buy select permanent gear; keep ordinary drops and farming removed. Bug/Poe collections award meaningful permanent upgrades and specific relics. Shared heart/stamina blessings are shown with flask/gear progress on the tunic pause screen, with a later natural free redistribution interaction. Hawkeye is available with Bow; no lantern-fuel purchase or upgrade.
 > Earlier explicit decisions remain: no Flurry Rush, health bars or damage numbers; Zora Swim/Dark Morpheel stays standalone; source is integrated locally wherever practical.
-> Combat amendment 2026-10-14: the owner selected Souls/Elden Ring-inspired combat with hidden enemy stance, committed heavy actions and deep integration of every Hidden Skill, plus a shared enemy intent/director architecture above native action execution. See [COMBAT_AND_ENEMY_AI.md](COMBAT_AND_ENEMY_AI.md) for approved boundaries and decisions awaiting approval before implementation. The discussed Sekiro conversion and separation of health/stamina rewards are not approved changes.
+> Combat amendment 2026-10-14: the owner selected Souls/Elden Ring-inspired combat with hidden enemy stance, committed heavy actions and deep integration of every Hidden Skill, plus a shared enemy intent/director architecture above native action execution. See [COMBAT_AND_ENEMY_AI.md](COMBAT_AND_ENEMY_AI.md) for approved boundaries and approved implementation choices. The discussed Sekiro conversion and separation of health/stamina rewards are not approved changes.
 
 Vision: Preserve Twilight Princess's atmosphere, story, music, characters, dungeons and dark fantasy identity while completely modernizing its gameplay.
 
@@ -78,8 +78,8 @@ The detailed design and approval questions are in
 
 All seven skills must have a distinct, useful place in ordinary combat. Preserve
 learned flags and teaching events; detailed access timing, Great Spin's
-full-health condition and additional heavy/guard-counter controls remain open
-approval decisions. Do not interpret this table as completed implementation.
+full-health condition and additional heavy/guard-counter controls are resolved in the detailed design: native learning gates, no Great Spin health
+requirement, and dedicated heavy/guard-counter actions. Do not interpret this table as completed implementation.
 
 ## 5. Boss overhaul
 

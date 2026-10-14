@@ -10,8 +10,7 @@ claim that the larger redesign is complete. Graphics remain a separate track.
 ## Next combat milestone: stamina, hidden stance and integrated skills
 
 The owner approved the Souls/Elden Ring-inspired direction and shared enemy AI
-architecture in [COMBAT_AND_ENEMY_AI.md](COMBAT_AND_ENEMY_AI.md). Resolve its six
-approval questions before implementing the new combat systems. Finish and
+architecture in [COMBAT_AND_ENEMY_AI.md](COMBAT_AND_ENEMY_AI.md). The owner approved D1 A, D2 A, D3 B, D4 A, D5 A and D6 B, authorizing implementation. Finish and
 validate the separate pending economy/dialogue milestone first.
 
 Build a complete encounter against one supported melee actor: stamina decisions,
@@ -41,7 +40,7 @@ death transition universally safe.
 
 | Order | Change | Deliverable and dependency |
 |---|---|---|
-| 1 | First combat encounter | Approved stamina rules, hidden stance, timed Shield Attack and supported break/punish against one actor; pending design answers |
+| 1 | First combat encounter | Approved stamina rules, hidden stance, timed Shield Attack and supported break/punish against one actor; approved design choices |
 | 2 | Shared enemy AI | Encounter director, utility decisions, capability profiles and native adapters; prove fair one-on-one and group behavior |
 | 3 | Full Hidden Skill integration | All seven learned skills have distinct combat jobs; expand stance/contact/reaction support rather than add isolated bonuses |
 | 4 | Wolf combat completeness | Appropriate attack/dodge stamina and recovery; preserve scripted abilities and required Wolf combat |

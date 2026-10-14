@@ -5,8 +5,10 @@ stamina-based combat, hidden enemy stance, committed heavy actions, meaningful
 Hidden Skills and a shared enemy decision architecture. This document records
 that direction; it does not claim the systems below are implemented.
 
-The decisions in the approval table remain open. Do not begin the new combat
-implementation until the owner answers and approves them. Existing economy and
+The owner approved D1 A, D2 A, D3 B, D4 A, D5 A and D6 B. Implementation is
+authorized, including a dedicated heavy move and a distinct guard counter.
+A full Xbox controller is available; preserve essential native controls while
+using the additional physical inputs. Existing economy and
 dialogue work is a separate milestone. This document supersedes the proposed
 Sekiro direction and the old parry-only implementation sequence.
 
@@ -40,7 +42,7 @@ reaction and a full stance break are distinct outcomes.
 Link uses health and stamina. Do not add a second full player posture meter on
 top of stamina-based blocking. Blocking spends stamina on contact; exhaustion
 may cause a brief native guard-break reaction. Dodges and powerful techniques
-have costs. Basic sword costs remain an explicit approval decision below.
+have costs. Ordinary sword swings have a small stamina cost (D1 A).
 Successful parries should be efficient, rewarding alternatives to blocking;
 exact costs, windows, refunds and exhaustion rules require prototype tuning.
 
@@ -51,8 +53,8 @@ generic heavy sword move is optional; existing moves can establish the system.
 
 Guard counters are proposed committed attacks after an ordinary successful
 block. They are not parries, cannot cancel every enemy combo safely, and must
-have a clear input window and interruptible recovery. Their initial inclusion
-is an approval decision, not a promised existing animation or control binding.
+have a clear input window and interruptible recovery. The owner approved their inclusion in the first milestone (D6 B). The native
+animation and control binding still require implementation verification.
 
 Flask healing has a readable commitment. Enemies can react to its visible
 animation after a delay; they cannot know the player pressed heal before it
@@ -63,7 +65,8 @@ merely because the director temporarily withholds an attack opportunity.
 ## Every Hidden Skill has a job
 
 The roles below are the design targets. Costs, damage and actor support are
-tuning work. The two changes to access/health conditions are open decisions.
+tuning work. Native learning gates stay (D4 A); Great Spin loses its full-health condition
+while retaining its learned flag and stamina cost (D5 A).
 
 | Skill | Integrated role | Limits and interactions |
 |---|---|---|
@@ -73,7 +76,7 @@ tuning work. The two changes to access/health conditions are open decisions.
 | Back Slice | Evasive positional counter that reaches a vulnerable side or rear | Reward correct positioning and timing; do not grant invulnerability for its entire movement or bypass every enemy's armor rules. |
 | Mortal Draw | High-risk opening/whiff punish with high health damage and meaningful stance impact | Retain the sheathed-sword setup and exposure. It cannot be instantly chained from ordinary attacks or guarantee a kill against elites/bosses. |
 | Jump Strike | Charged area attack and major stance-pressure tool | Wind-up, landing recovery and stamina cost create commitment. Each target receives only its intended hit events; multiple collision callbacks must not multiply stance damage. |
-| Great Spin | Expensive crowd control that makes space against coordinated groups | Keep per-target stance pressure below a dedicated single-target breaker unless testing supports otherwise. Its full-health requirement is an approval decision. Prevent cancel/refund loops. |
+| Great Spin | Expensive crowd control that makes space against coordinated groups | Keep per-target stance pressure below a dedicated single-target breaker unless testing supports otherwise. Its full-health requirement is removed (D5 A). Prevent cancel/refund loops. |
 
 Normal attacks maintain pressure and reliable health damage. The ordinary jump
 attack can be an early committed option before Jump Strike is learned. Spin
@@ -121,8 +124,7 @@ chest pickups or charge materials for already learned techniques.
 
 The current implementation has shared heart/stamina blessings and later free
 redistribution. Separating those rewards was discussed during the abandoned
-Sekiro proposal, but was not approved. Keep the current system unchanged until
-decision D2 is resolved. If changed, specify an idempotent save migration that
+Sekiro proposal, but was not approved. The owner chose D2 A: keep the current shared pool and redistribution. If changed, specify an idempotent save migration that
 preserves earned benefits and cannot grant the same reward twice. Do not
 rebalance by confiscating already allocated hearts or stamina.
 
@@ -195,10 +197,11 @@ responses. Paths are relative to the parent TP workspace. This supports thin
 adapters, but does not establish universal safe transitions or hook availability.
 Resolve required hooks against the pinned host before choosing the first actor.
 
-## Decisions requiring owner approval
+## Owner decisions (approved 2026-10-14)
 
-Recommendations are proposals, not accepted settings. Reply with IDs/options
-(for example, `D1 A, D2 A`) or amend any option in plain language.
+Accepted: **D1 A / D2 A / D3 B / D4 A / D5 A / D6 B**. The table retains the
+alternatives and original recommendations for context; the accepted selections
+above control implementation. No further approval is needed for routine tuning.
 
 | ID | Question | A | B | Recommendation |
 |---|---|---|---|---|
@@ -216,7 +219,7 @@ story access or the agreed input model needs an explicit revised proposal.
 
 ## Implementation and validation sequence after approval
 
-1. Record the owner's answers. Finish/validate the separate pending economy
+1. Apply the owner's recorded answers. Finish/validate the separate pending economy
    milestone and preserve its candidate. Audit hooks and choose one compatible
    melee actor; establish baseline recordings and supported reactions.
 2. Build pure stamina/stance/contact rules and one native adapter. Deliver a

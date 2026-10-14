@@ -2,9 +2,8 @@
 
 `DESIGN_VISION.md` is the design baseline. Feature implementation and coverage
 live in `INTEGRATION.md`; remaining work and sequencing are in `ROADMAP.md`.
-The approved combat/AI direction and pending owner decisions are recorded in
-[COMBAT_AND_ENEMY_AI.md](COMBAT_AND_ENEMY_AI.md). Do not start that implementation
-until its decision table is answered and approved.
+The approved combat/AI direction and recorded owner decisions are recorded in
+[COMBAT_AND_ENEMY_AI.md](COMBAT_AND_ENEMY_AI.md). The owner has approved the choices recorded there and authorized implementation.
 
 ## Build states
 
@@ -50,7 +49,7 @@ features are never applied twice.
 ## Next implementation priorities
 
 The current integration supplies combat controls and donor enemy behavior, not
-the complete Souls-style system. After owner approval of the open choices,
+the complete Souls-style system. With the owner's choices approved,
 the next combat milestone is one complete encounter using stamina, hidden enemy
 stance, timed Shield Attack and integrated learned-skill follow-ups. Shared
 intent selection and encounter coordination follow through native adapters.
