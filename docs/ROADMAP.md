@@ -1,24 +1,29 @@
 # Remaining gameplay roadmap
 
-Updated 2026-10-14, baseline 0.10.0. This compares the owner's
+Updated 2026-10-14. The committed reward/ward baseline is 0.11.0;
+the 0.12.0 economy/dialogue follow-up remains in progress. This compares the owner's
 [design vision](DESIGN_VISION.md) with the actual
-[implemented modules](INTEGRATION.md). Everything below is pending or only
-partially implemented. Existing settings/helpers are a starting point, not a
+[implemented modules](INTEGRATION.md). Status is stated per item below.
+Existing settings/helpers are a starting point, not a
 claim that the larger redesign is complete. Graphics remain a separate track.
 
-## Recommended next milestone: timed Shield Attack parries
+## Next combat milestone: stamina, hidden stance and integrated skills
 
-Build on the existing R+B Shield Attack, learned-skill gate and shared stamina
-cost. Add a configurable short parry window, an actual successful-contact check,
-a readable success cue and a brief punish opportunity. Start with one common
-sword-wielding enemy, then extend by actor type. Preserve normal guarding,
-failed/late parries, unblockable attacks, training/story gates and native death
-reactions. Wolf form and scripted scenes must remain isolated.
+The owner approved the Souls/Elden Ring-inspired direction and shared enemy AI
+architecture in [COMBAT_AND_ENEMY_AI.md](COMBAT_AND_ENEMY_AI.md). Resolve its six
+approval questions before implementing the new combat systems. Finish and
+validate the separate pending economy/dialogue milestone first.
 
-First validate timing, repeated contacts, multiple enemies, exhaustion,
-damage/death, save/load and mode switching. Playtest the Forest Temple slice.
-Commit/push that milestone after QA; add enemy posture and hidden-skill follow-ups
-in later commits. A universal stagger response needs per-enemy work.
+Build a complete encounter against one supported melee actor: stamina decisions,
+light/heavy stance pressure, timed Shield Attack, a stance break and an eligible
+punish. Integrate the learned skills as parts of that loop. Keep native death,
+armor, training and story reactions intact. Then add shared intent selection
+and a small group director; expand through per-enemy adapters.
+
+Validate contacts, multihits, exhaustion, break recovery, unsupported actors,
+actor lifecycle, save/load and mode switching. Playtest controls and readability
+before scaling up. A shared stance model does not make every native stagger or
+death transition universally safe.
 
 ## Smaller, contained improvements
 
@@ -36,18 +41,18 @@ in later commits. A universal stagger response needs per-enemy work.
 
 | Order | Change | Deliverable and dependency |
 |---|---|---|
-| 1 | Timed parries | Shield Attack rewards precise contact timing; one enemy first |
-| 2 | Enemy posture/stagger | Recovering posture, weapon-specific impact and native stagger reactions; expand actor by actor |
-| 3 | Hidden Skills rework | Helm Splitter parry follow-up, Back Slice counter, Ending Blow execution, risky Mortal Draw, Jump Strike posture break, stamina-heavy Great Spin |
+| 1 | First combat encounter | Approved stamina rules, hidden stance, timed Shield Attack and supported break/punish against one actor; pending design answers |
+| 2 | Shared enemy AI | Encounter director, utility decisions, capability profiles and native adapters; prove fair one-on-one and group behavior |
+| 3 | Full Hidden Skill integration | All seven learned skills have distinct combat jobs; expand stance/contact/reaction support rather than add isolated bonuses |
 | 4 | Wolf combat completeness | Appropriate attack/dodge stamina and recovery; preserve scripted abilities and required Wolf combat |
-| 5 | Enemy behavior beyond donor hard mode | Variable/delayed combos, healing punishment, flanking and coordination without inflated HP |
+| 5 | Broader enemy behavior | Expand the shared AI through actor-specific adapters; variable combos, observable healing reactions, flanking and coordination without inflated HP |
 | 6 | Combat item roles | Ball and Chain armor/posture breaking; Boomerang interrupts; Clawshot grappling; Bow weak points; tactical rechargeable bombs |
 | 7 | Spinner and Dominion Rod usefulness | Off-rail movement/combat and statue interactions; new rails/puzzles require additional level/asset work |
-| 8 | Complete permanent reward table | Unique item functionality, healing/stamina/armor upgrades and side-quest rewards; shared growth and collection milestones exist; generic replacement fragments still need a curated pacing table |
+| 8 | Validate and extend permanent rewards | The 278-location curated table, finite relic trades, growth/flask placements and save migration are implemented in 0.11.0; runtime pacing and additional combat/item capabilities remain |
 | 9 | Finish the rare-economy world | Rework price text, merchant interactions and individual quest/minigame funding flows coherently; rare-currency purchases and main collection/merchant conversations are implemented; native fallback dialogue and secondary services remain |
 | 10 | Shorten Ordon and repetitive Wolf pacing | Shorter mandatory chores/tutorials with character/story scenes preserved; milestone-specific event/flag patches |
 | 11 | Reduce actual Tears of Light requirements | Existing collection is faster; fewer required tears needs regional completion/state changes and route testing |
-| 12 | Armor identities and permanent upgrades | Expand Hero/Zora/Magic roles; stamina-based Magic Armor is already implemented |
+| 12 | Armor identities and permanent upgrades | Rechargeable Magic Armor ward and its upgrade tiers are implemented in 0.11.0, replacing currency/stamina drain; Hero/Zora roles and runtime balance remain |
 | 13 | Boss redesigns | One boss per milestone; current donor changes cover only selected bosses. Full Ganondorf duel redesign comes after parry/posture systems |
 | 14 | Encounter/world design | Threatening overworld encounters, useful secrets, shortcuts and exploration rewards; Cave of Ordeals and Castle should test established combat systems |
 

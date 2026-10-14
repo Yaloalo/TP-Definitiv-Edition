@@ -7,6 +7,7 @@
 > Refill clarification: add more refill locations using existing game assets and deliberate interactions. Strict emergency recovery is enabled by default: one charge when empty, after 90 seconds clear of enemies/damage and 30 additional seconds still in the overworld. Other bottle behavior is accepted and remains unchanged.
 > Economy amendment: rare, finite Hylian rupees may buy select permanent gear; keep ordinary drops and farming removed. Bug/Poe collections award meaningful permanent upgrades and specific relics. Shared heart/stamina blessings are shown with flask/gear progress on the tunic pause screen, with a later natural free redistribution interaction. Hawkeye is available with Bow; no lantern-fuel purchase or upgrade.
 > Earlier explicit decisions remain: no Flurry Rush, health bars or damage numbers; Zora Swim/Dark Morpheel stays standalone; source is integrated locally wherever practical.
+> Combat amendment 2026-10-14: the owner selected Souls/Elden Ring-inspired combat with hidden enemy stance, committed heavy actions and deep integration of every Hidden Skill, plus a shared enemy intent/director architecture above native action execution. See [COMBAT_AND_ENEMY_AI.md](COMBAT_AND_ENEMY_AI.md) for approved boundaries and decisions awaiting approval before implementation. The discussed Sekiro conversion and separation of health/stamina rewards are not approved changes.
 
 Vision: Preserve Twilight Princess's atmosphere, story, music, characters, dungeons and dark fantasy identity while completely modernizing its gameplay.
 
@@ -44,16 +45,24 @@ The goal is Twilight Princess with Souls-inspired combat, BOTW-inspired movement
 
 ## 4. Combat overhaul
 
-Dark Souls-inspired difficulty built around TP's existing sword mechanics.
+Souls/Elden Ring-inspired difficulty built around TP's existing sword mechanics.
+The detailed design and approval questions are in
+[Combat and enemy AI](COMBAT_AND_ENEMY_AI.md).
 
 - Timed parries using Shield Attack.
-- Posture/stagger system for enemies.
+- Hidden enemy stance: sustained pressure, heavy techniques and counters build
+  toward a supported stagger/punish opportunity. Keep ordinary hit reactions
+  distinct from a full break; preserve armor, weak points and boss phases.
 - Stamina management for defensive and powerful actions.
 - Aggressive enemy AI with variable combos and delayed attacks.
 - Enemies flank, coordinate and punish healing.
 - Higher enemy damage, but avoid inflated HP.
 - Improved dodging, blocking, hit reactions and attack feedback.
 - Make encounters demanding without turning enemies into damage sponges.
+- Use shared encounter coordination, utility-based intent selection and enemy
+  capability profiles, with small adapters into native state machines. This
+  reduces duplicated decision code but does not eliminate per-enemy integration.
+- Link's defense uses stamina; a separate full player posture meter is not planned.
 
 ### Hidden Skills rework
 
@@ -66,6 +75,11 @@ Dark Souls-inspired difficulty built around TP's existing sword mechanics.
 | Mortal Draw | High-risk, high-damage attack |
 | Jump Strike | Area damage and posture break |
 | Great Spin | Powerful stamina-intensive crowd control |
+
+All seven skills must have a distinct, useful place in ordinary combat. Preserve
+learned flags and teaching events; detailed access timing, Great Spin's
+full-health condition and additional heavy/guard-counter controls remain open
+approval decisions. Do not interpret this table as completed implementation.
 
 ## 5. Boss overhaul
 

@@ -2,6 +2,9 @@
 
 `DESIGN_VISION.md` is the design baseline. Feature implementation and coverage
 live in `INTEGRATION.md`; remaining work and sequencing are in `ROADMAP.md`.
+The approved combat/AI direction and pending owner decisions are recorded in
+[COMBAT_AND_ENEMY_AI.md](COMBAT_AND_ENEMY_AI.md). Do not start that implementation
+until its decision table is answered and approved.
 
 ## Build states
 
@@ -24,7 +27,8 @@ The v0.5.0 candidate adds turning/pivots, crawl speed, HUD fade and damage feedb
 ## Development loop
 
 The owner requires automated QA **after every major change and every full
-build**. The default `cmake --build build -j 2` now runs fifteen suites,
+build**. The default `cmake --build build -j 2` runs the required suites declared
+in `tests/required_suites.json`,
 package/library/resource validation and configured host symbol checks. Inspect
 `build/qa/report.json`; local builds require the pinned host. See [QA.md](QA.md)
 for setup, evidence, detailed coverage and pending runtime story routes.
@@ -46,8 +50,12 @@ features are never applied twice.
 ## Next implementation priorities
 
 The current integration supplies combat controls and donor enemy behavior, not
-the complete Souls-style system. The next combat milestone is Shield Attack's
-timed parry and enemy posture, followed by the Hidden Skill follow-ups. The flask/checkpoint resource and permanent reward modules are implemented; their validation sequence is in `HEALING_AND_REWARDS.md`. Increased aggression alone is not a substitute
+the complete Souls-style system. After owner approval of the open choices,
+the next combat milestone is one complete encounter using stamina, hidden enemy
+stance, timed Shield Attack and integrated learned-skill follow-ups. Shared
+intent selection and encounter coordination follow through native adapters.
+The flask/checkpoint resource and permanent reward modules are implemented;
+their validation sequence is in `HEALING_AND_REWARDS.md`. Increased aggression alone is not a substitute
 for delayed attacks, enemy coordination or the planned boss designs.
 
 Pacing must shorten mandatory friction while preserving story milestones and
