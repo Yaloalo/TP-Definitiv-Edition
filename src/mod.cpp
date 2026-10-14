@@ -29,6 +29,7 @@
 #include "progression/rewards.hpp"
 #include "progression/growth.hpp"
 #include "progression/pause.hpp"
+#include "progression/spring.hpp"
 #include "healing/flask.hpp"
 #include "healing/rest_stones.hpp"
 #include "economy/currency.hpp"
@@ -99,6 +100,7 @@ constexpr Installer kInstallers[] = {
     {progression::install, "permanent rewards and save state"},
     {progression::growth::install, "shared health and stamina growth"},
     {progression::pause::install, "equipment-menu growth and upgrades"},
+    {progression::spring::install, "Ordonna growth redistribution"},
     {resources::ammo::install, "renewable ammunition"},
     {economy::merchants::install, "quest and relic merchants"},
     {healing::wolf::install, "wolf recovery"},
@@ -213,6 +215,7 @@ MOD_EXPORT ModResult mod_initialize(ModError* error) {
 }
 
 MOD_EXPORT ModResult mod_update(ModError*) {
+    remaster::progression::spring::tick();
     return MOD_OK;
 }
 

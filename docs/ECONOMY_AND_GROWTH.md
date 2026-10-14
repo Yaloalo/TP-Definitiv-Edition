@@ -31,9 +31,23 @@ small stamina bonuses round up to a twenty-point allocation; they never round
 down. Corrupt versions/fields remain rejected without overwriting their blob.
 Changing health allocation cannot heal Link. No elapsed time is saved.
 
+## Ordonna's Blessing (0.8.0)
+
+After collecting Forest Temple's crystal, a one-time passive notice introduces
+free redistribution at the existing rest stone in **Ordon Spring (F_SP104,
+room 1)**. Stand safely beside the stone, then **hold L and press Y**. The
+conversation offers one earned heart for twenty stamina or the reverse.
+Starting stats, total earned blessings and fragments never change. Lowering
+maximum health clamps current health; raising it does not heal.
+
+The interaction uses the same stone visibility/proximity, idle/grounded,
+no-enemy and no-hit safety checks as resting. The native Y item action is
+consumed only if the conversation opens successfully. Buttons recheck stage,
+slot and safety. Loading, changing modes/locations or becoming unsafe closes
+the conversation. The pause menu remains the place to assign new blessings.
+
 ## Subsequent approved milestones
 
-- Free redistribution at a Light Spirit spring, introduced after Forest Temple.
 - Rare rupees from curated one-time treasures/quests, without drops, farming,
   wallet limits, death loss or required story purchases.
 - Merchant dialogue choices for permanent purchases and specific relic hand-ins.
