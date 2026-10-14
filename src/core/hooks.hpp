@@ -9,6 +9,7 @@
 #include "d/d_com_inf_game.h"
 
 namespace remaster::hooks {
+struct LinkExecute : mods::Hook<&daAlink_c::execute> { static void* resolved_target(); };
 struct LifeCount : mods::Hook<&dComIfGp_setItemLifeCount> { static void* resolved_target(); };
 struct EnemySound : mods::NamedHook<"Z2CreatureEnemy::startCreatureSound",
     Z2SoundHandlePool*(Z2CreatureEnemy*, JAISoundID, u32, s8)> {

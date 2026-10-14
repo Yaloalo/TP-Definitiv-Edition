@@ -102,3 +102,20 @@ finds that now award crafting materials/artifacts receive their new collectible
 credit once, without deducting their previously earned growth. Earlier bug growth
 also remains while its hand-ins receive Thread credit once. A full ledger makes
 migration fail atomically; unreadable data remains unavailable and unwritable.
+# Economy follow-up (0.12.0)
+
+Native merchant, donation and minigame messages now have an owned dialogue
+module: forty explicit prompts/descriptions plus context-aware price cleanup
+for loaded message resources. Native choice/control tags and activity rules
+remain intact. Donation amount rendering is hidden while the original native
+confirmation/cancellation flow still owns quest flags. Replacement prose is
+English in all supported language slots; it is not a full localization.
+
+Magic Armor purchases and Malo Mart relic recipes require the native shop
+restoration milestone. Ward charge transitions drive the native armor glow and
+sound without spending or writing either currency balance. Completing the first
+Rollgoal series also awards a permanent Fishing Trial Crest in the pause ledger.
+
+Validation: all 28 required suites and pinned-host package/import/hook checks
+passed. Full runtime routes, message layout, controller behavior and ward visual
+transitions still require playtesting; automated fixtures do not prove them.

@@ -65,7 +65,7 @@ u8 bottles[4]={0xff,0xff,0xff,0xff}; int bottleWrites=0;
 u8 dComIfGs_getItem(int i,bool){return bottles[i-11];}
 namespace remaster::resources::ammo {int hits=0;void damage_received(){++hits;}void death(){}bool enabled(){return false;}bool removes_pickup(int i){return false;}}
 namespace remaster::healing::snowpeak {bool special=false;bool allows_spawn(){return special;}bool allows_actor(daItem_c*){return special;}bool allows_grant(){return special;}}
-namespace remaster::combat::ward {void death(){}}
+namespace remaster::combat::ward {void death(){}bool visual_rupees(uint16_t&){return false;}}
 namespace remaster::healing::wolf {int interrupts=0;void interrupt(daAlink_c*){++interrupts;}}
 namespace remaster::healing::stones {void damage_received(){}}
 struct ItemCheckInfo;struct ItemCheckResolution;

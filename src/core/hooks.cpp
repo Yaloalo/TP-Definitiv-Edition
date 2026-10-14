@@ -1,5 +1,7 @@
 #include "core/hooks.hpp"
 namespace remaster::hooks {
+DEFINE_HOOK(&daAlink_c::execute, LinkExecuteMetadata);
+void* LinkExecute::resolved_target() { return LinkExecuteMetadata::resolved_target(); }
 DEFINE_HOOK(&dComIfGp_setItemLifeCount, LifeCountMetadata);
 void* LifeCount::resolved_target() { return LifeCountMetadata::resolved_target(); }
 DEFINE_HOOK_SYMBOL("Z2CreatureEnemy::startCreatureSound",

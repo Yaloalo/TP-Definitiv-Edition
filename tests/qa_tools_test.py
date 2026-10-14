@@ -77,6 +77,12 @@ class GateTests(unittest.TestCase):
         self.host.write_bytes(b'new release')
         with self.assertRaises(ValueError): qa.verify_report(self.report, self.package, self.root)
 
+    def test_reward_data_changes_invalidate_source(self):
+        self.record()
+        (self.root / 'data').mkdir()
+        (self.root / 'data/reward_catalog.json').write_text('{"changed": true}')
+        with self.assertRaises(ValueError): qa.verify_report(self.report, self.package, self.root)
+
     def test_build_outputs_do_not_invalidate_source(self):
         before = qa.source_digest(self.root)
         (self.root / 'build/report.log').write_text('new output')

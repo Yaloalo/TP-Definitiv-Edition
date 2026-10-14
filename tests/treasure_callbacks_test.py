@@ -10,7 +10,7 @@ code=r'''
 #include "progression/treasure_model.hpp"
 #include "resources/recharge_model.hpp"
 struct ModContext{};ModContext*mod_ctx=nullptr;constexpr int MOD_OK=0,dItemNo_LINKS_SAVINGS_e=237,dItemNo_NONE_e=255,dItemNo_KAKERA_HEART_e=33,dItemNo_ZORAS_JEWEL_e=61;
-bool active=true,saveReady=true;int persists=0,toasts=0;bool is_active(){return active;}std::set<int>flags;bool dComIfGs_isEventBit(int id){return flags.contains(id);}
+bool active=true,saveReady=true;int persists=0,toasts=0;bool is_active(){return active;}bool daNpcF_chkEvtBit(int id){assert(id==0x1d5);return false;}std::set<int>flags;bool dComIfGs_isEventBit(int id){return flags.contains(id);}
 struct ItemCheckInfo{const char*name;uint8_t vanilla_item;};struct ItemCheckResolution{uint8_t item,display;bool animation;};struct ItemGiveInfo{const char*check_name;uint8_t item;};
 struct UiToastDesc{const char*title_rml;const char*body_rml;};
 #define UI_TOAST_DESC_INIT {}

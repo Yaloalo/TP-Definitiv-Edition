@@ -1,4 +1,5 @@
 #include "economy/currency.hpp"
+#include "combat/ward.hpp"
 #include "core/tuning.hpp"
 #include "core/hooks.hpp"
 #include "services.hpp"
@@ -24,6 +25,8 @@ unsigned g_feeScope = 0;
 struct HiddenRupees { dMeter2Draw_c* meter = nullptr; bool visible[3]{}; } g_hidden;
 bool enabled() { return is_active() && tuning::get().removeCurrency; }
 HookAction read(ModContext*, void*, void* result, void*) {
+    if(enabled()&&g_feeScope){*static_cast<u16*>(result)=65535;return HOOK_SKIP_ORIGINAL;}
+    if(combat::ward::visual_rupees(*static_cast<u16*>(result)))return HOOK_SKIP_ORIGINAL;
     if (!enabled()) return HOOK_CONTINUE;
     // Only Hena's native minigame fee checks see a virtual affordability value.
     // The actual balance, HUD, save data and every other caller see zero currency.

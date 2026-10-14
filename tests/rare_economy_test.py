@@ -13,7 +13,7 @@ code=r'''
 #include <string>
 #include "economy/rare_model.hpp"
 struct ModContext{};ModContext* mod_ctx=nullptr;constexpr int MOD_OK=0,MOD_ERROR=1,COLLECT_HYLIAN_SHIELD=2,ITEM_GIVE_RESOLVE=2,ITEM_GIVE_SILENT=1;
-bool active=true,light=false,lakebed=false,shield=false,armor=false;bool is_active(){return active;}
+bool active=true,light=false,lakebed=false,mart=false,shield=false,armor=false;bool daNpcF_chkEvtBit(int id){assert(id==124);return mart;}bool is_active(){return active;}
 std::string stage="R_SP109";int room=3,persisted=0,gives=0;bool fail=false;
 const char* dComIfGp_getStartStageName(){return stage.c_str();}struct daAlink_c{}link;
 auto* daAlink_getAlinkActorClass(){return &link;}int fopAcM_GetRoomNo(daAlink_c*){return room;}
@@ -48,7 +48,7 @@ int main(){using namespace remaster;using namespace economy::rare;
  assert(purchase(kOffers[0])&&!purchase(kOffers[0])&&progression::state.rareRupees==300);
  ItemGiveInfo delivered{kOffers[0].check,kOffers[0].item};give(nullptr,&delivered,nullptr);give(nullptr,&delivered,nullptr);
  assert(shield&&progression::state.rareRupees==240&&!can_purchase(kOffers[0]));
- stage="R_SP160";room=0;assert(!can_purchase(kOffers[1]));lakebed=true;assert(purchase(kOffers[1]));
+ stage="R_SP160";room=0;assert(!can_purchase(kOffers[1]));lakebed=true;assert(!purchase(kOffers[1]));mart=true;assert(purchase(kOffers[1]));
  delivered={kOffers[1].check,kOffers[1].item};give(nullptr,&delivered,nullptr);assert(armor&&progression::state.rareRupees==60);
  progression::Model loaded;assert(progression::decode(progression::encode(progression::state),loaded)&&loaded.rareRupees==60);
  // Same-slot load can discard our pending set. Dispatch rechecks actual saved funds before granting.

@@ -8,6 +8,7 @@ code=r'''
 #include "resources/recharge_model.hpp"
 struct ModContext{};ModContext*mod_ctx=nullptr;
 constexpr int SLOT_15=15,dItemNo_BOW_e=0x43,dItemNo_BOMB_BAG_LV1_e=0x50;
+bool mart=true;bool daNpcF_chkEvtBit(int id){assert(id==124);return mart;}
 bool active=true,readySave=true,running=true,forest=false,bow=false,armor=false;int room=1,persists=0,toasts=0;std::string stage="R_SP01";uint8_t bags[3]={255,255,255};
 struct daAlink_c{}link;auto*daAlink_getAlinkActorClass(){return &link;}int fopAcM_GetRoomNo(daAlink_c*){return room;}
 const char*dComIfGp_getStartStageName(){return stage.c_str();}bool dComIfGs_isCollectCrystal(int){return forest;}bool dComIfGs_isItemFirstBit(int){return bow;}bool dComIfGs_isCollectClothes(int){return armor;}uint8_t dComIfGs_getItem(int slot,bool){return bags[slot-15];}
@@ -27,7 +28,7 @@ int main(){using namespace remaster;using namespace economy::guild;
  room=0;assert(!craft(kRecipes[0]));room=1;assert(craft(kRecipes[0])&&!craft(kRecipes[0])&&persists==1&&toasts==1);
  stage="R_SP109";room=3;assert(!can_craft(kRecipes[1]));bow=true;assert(craft(kRecipes[1]));
  room=1;assert(!can_craft(kRecipes[2]));bags[0]=0x70;assert(craft(kRecipes[2]));
- stage="R_SP160";room=0;assert(!can_craft(kRecipes[3]));armor=true;assert(!can_craft(kRecipes[3]));progression::state.equipmentUpgrades|=1;
+ stage="R_SP160";room=0;assert(!can_craft(kRecipes[3]));armor=true;mart=false;assert(!can_craft(kRecipes[3]));mart=true;assert(!can_craft(kRecipes[3]));progression::state.equipmentUpgrades|=1;
  progression::state.claim(progression::treasures::kSunwardRelic,255);assert(craft(kRecipes[3]));assert(!can_craft(kRecipes[4]));progression::state.claim(progression::treasures::kMirrorRelic,255);assert(craft(kRecipes[4]));
  assert(!craft(kRecipes[7]));stage="R_SP109";room=3;assert(craft(kRecipes[5]));stage="R_SP160";room=0;assert(craft(kRecipes[6])&&craft(kRecipes[7]));
  assert(progression::state.relics[0]==12&&progression::state.relics[1]==0&&progression::state.relics[2]==0&&progression::state.honors==448&&persists==8&&toasts==8);

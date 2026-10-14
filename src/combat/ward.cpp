@@ -10,6 +10,7 @@
 #include "JSystem/JUtility/JUTFont.h"
 #include "JSystem/J2DGraph/J2DGrafContext.h"
 #include <string>
+#include <vector>
 #include <fmt/format.h>
 namespace remaster::combat::ward {
 namespace {
@@ -19,6 +20,22 @@ std::string g_stage;
 int g_room=-1,g_lastLife=-1;
 bool g_retry=false;
 uint32_t g_retrySlot=255;
+std::vector<bool> g_visualScopes;
+HookAction execute_pre(ModContext*,void* args,void*,void*) {
+    auto* link=mods::arg<daAlink_c*>(args,0);
+    g_visualScopes.push_back(enabled()&&progression::ready()&&link&&link==daAlink_getAlinkActorClass()&&link->checkMagicArmorWearAbility());
+    return HOOK_CONTINUE;
+}
+void execute_post(ModContext*,void*,void*,void*) {if(!g_visualScopes.empty())g_visualScopes.pop_back();}
+void sync_visual(daAlink_c* link) {
+    if(!link||!link->checkMagicArmorWearAbility()||link->mClothesChangeWaitTimer!=0||
+        !link->mMagicArmorBodyBrk||!link->mMagicArmorHeadBrk)return;
+    const int powered=progression::model().wardCharges>0;
+    if(link->field_0x2fd7==powered)return;
+    link->setMagicArmorBrk(powered);
+    link->seStartOnlyReverb(powered?Z2SE_AL_M_ARMER_RECOVER:Z2SE_AL_M_ARMER_TURNOFF);
+    link->mZ2Link.setLinkState(powered?4:5);
+}
 bool ensure() {
     if(!enabled()||!progression::ready()||!dComIfGs_isCollectClothes(2))return false;
     if(initialize(progression::model()))progression::persist();return true;
@@ -42,6 +59,10 @@ void hud_post(ModContext*,void*,void*,void*) {
 }
 }
 bool enabled() {return is_active()&&tuning::get().magicWard;}
+bool visual_rupees(uint16_t& value) {
+    if(!enabled()||!progression::ready()||g_visualScopes.empty()||!g_visualScopes.back())return false;
+    value=progression::model().wardCharges>0?1:0;return true;
+}
 void reset() {clear_clock();g_retry=false;g_retrySlot=255;}
 void damage_received() {g_clock.hit();}
 float absorb(daAlink_c* link) {
@@ -63,6 +84,7 @@ void tick(daAlink_c* link) {
     if(!link||!ensure()){clear_clock();return;}
     const std::string stage=dComIfGp_getStartStageName();const auto room=fopAcM_GetRoomNo(link);
     if(link!=g_owner||stage!=g_stage||room!=g_room){clear_clock();g_owner=link;g_stage=stage;g_room=room;}
+    sync_visual(link);
     if(!player::input_allowed()||link->mProcID==daAlink_c::PROC_DEAD||dComIfGs_getLife()==0){g_clock.hit();return;}
     const int life=dComIfGs_getLife();if(g_lastLife>=0&&life<g_lastLife)damage_received();g_lastLife=life;
     if(g_retry){g_retry=false;if(g_retrySlot==dComIfGs_getDataNum())refill();}
@@ -72,7 +94,9 @@ void tick(daAlink_c* link) {
     if(gained){m.wardCharges+=gained;progression::persist();}
 }
 ModResult install() {
-    auto r=mods::hook::add_post<hooks::Shared1>(hud_post);
+    auto r=mods::hook::add_pre<hooks::LinkExecute>(execute_pre);
+    if(r==MOD_OK)r=mods::hook::add_post<hooks::LinkExecute>(execute_post);
+    if(r==MOD_OK)r=mods::hook::add_post<hooks::Shared1>(hud_post);
     if(r==MOD_OK)r=svc_save->observe_saves(mod_ctx,new_save,loaded,nullptr,nullptr,nullptr);
     return r;
 }

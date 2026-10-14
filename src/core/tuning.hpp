@@ -106,6 +106,7 @@ struct Values {
     int64_t oilRechargeDelayMs = 3000, oilRechargeIntervalMs = 1000;
     int64_t baitRechargeDelayMs = 3000, baitRechargeIntervalMs = 2000;
     bool merchantRewards = true;
+    bool economyDialogue = true;
     bool magicWard = true;
     int64_t wardRecoveryDelayMs = 12000, wardRecoveryIntervalMs = 6000;
 

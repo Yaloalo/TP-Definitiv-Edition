@@ -9,6 +9,7 @@
 #include "core/player.hpp"
 #include "core/hooks.hpp"
 #include "d/d_com_inf_game.h"
+#include "d/actor/d_a_npc4.h"
 #include "d/d_item_data.h"
 #include "f_op/f_op_actor_iter.h"
 #include "m_Do/m_Do_controller_pad.h"
@@ -41,7 +42,7 @@ Kind kind(fopAc_ac_c* actor) {
     if(stage=="R_SP160"&&room==4&&profile==fpcNm_NPC_GRM_e)return Kind::Goron;
     if(stage=="R_SP109"&&room==3&&profile==fpcNm_NPC_MARO_e)return Kind::Malo;
     if(stage=="R_SP109"&&room==1&&profile==fpcNm_NPC_BANS_e)return Kind::Barnes;
-    if(stage=="R_SP160"&&room==0&&(profile==fpcNm_NPC_MARO_e||profile==fpcNm_NPC_CLERKA_e||profile==fpcNm_NPC_CLERKB_e||profile==fpcNm_NPC_CLERKT_e))return Kind::Armorer;
+    if(stage=="R_SP160"&&room==0&&daNpcF_chkEvtBit(124)&&(profile==fpcNm_NPC_MARO_e||profile==fpcNm_NPC_CLERKA_e||profile==fpcNm_NPC_CLERKB_e||profile==fpcNm_NPC_CLERKT_e))return Kind::Armorer;
     if(stage=="R_SP160"&&profile==fpcNm_NPC_INS_e)return Kind::Agitha;
     if(stage=="R_SP160"&&profile==fpcNm_NPC_POUYA_e)return Kind::Jovani;
     return Kind::None;

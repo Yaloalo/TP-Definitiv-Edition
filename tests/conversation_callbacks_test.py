@@ -30,7 +30,8 @@ enum HookAction{HOOK_CONTINUE,HOOK_SKIP_ORIGINAL};
 struct Vec{float x=0;float abs(Vec other){return std::abs(x-other.x);}};
 struct fopAc_ac_c{int id=1,profile=0,room=3,health=1,group=0,angle=0;struct{Vec pos;}current;};
 struct daAlink_c:fopAc_ac_c{enum{PROC_WAIT,PROC_SERVICE_WAIT,PROC_TIRED_WAIT,PROC_ATTACK,BTN_A=1,BTN_Y=2};bool wolf=false;bool checkWolf(){return wolf;}struct{bool ground=true;bool ChkGroundHit(){return ground;}}mLinkAcch;float mNormalSpeed=0;int mProcID=PROC_WAIT,mItemTrigger=7;}link;
-std::vector<fopAc_ac_c*>actors;std::string stage="R_SP109";unsigned slot=0;bool running=true,allowed=true,active=true,readySave=true,lantern=false;int presses=3;bool lockL=false,uiFail=false;int trades=0,purchases=0,presented=0,claimed=0,closes=0;
+std::vector<fopAc_ac_c*>actors;std::string stage="R_SP109";unsigned slot=0;bool mart=true;bool daNpcF_chkEvtBit(int id){assert(id==124);return mart;}
+bool running=true,allowed=true,active=true,readySave=true,lantern=false;int presses=3;bool lockL=false,uiFail=false;int trades=0,purchases=0,presented=0,claimed=0,closes=0;
 int fopAcM_GetName(fopAc_ac_c* a){return a->profile;}int fopAcM_GetRoomNo(fopAc_ac_c* a){return a->room;}int fopAcM_GetGroup(fopAc_ac_c* a){return a->group;}int fopAcM_GetID(fopAc_ac_c* a){return a->id;}
 int fopAcM_seenActorAngleY(fopAc_ac_c*,fopAc_ac_c* a){return a->angle;}
 fopAc_ac_c* fopAcM_SearchByID(int id){for(auto*a:actors)if(a->id==id)return a;return nullptr;}

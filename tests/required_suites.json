@@ -24,5 +24,7 @@
   "treasure_ward_models",
   "treasure_callbacks",
   "ward_callbacks",
-  "guild_callbacks"
+  "guild_callbacks",
+  "dialogue_models",
+  "dialogue_callbacks"
 ]

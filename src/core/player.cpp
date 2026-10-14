@@ -1,4 +1,5 @@
 #include "core/player.hpp"
+#include "core/hooks.hpp"
 
 #include "combat/dodge.hpp"
 #include "combat/ward.hpp"
@@ -20,7 +21,7 @@
 namespace remaster::player {
 namespace {
 
-DEFINE_HOOK(&daAlink_c::execute, LinkExecute);
+using LinkExecute=hooks::LinkExecute;
 
 void on_execute_post(ModContext*, void* args, void*, void*) {
     if (!is_active()) {

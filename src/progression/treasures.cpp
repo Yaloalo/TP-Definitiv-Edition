@@ -8,6 +8,7 @@
 #include "economy/rare_model.hpp"
 #include "d/d_item_data.h"
 #include "d/d_com_inf_game.h"
+#include "d/actor/d_a_npc4.h"
 #include <cstring>
 #include <fmt/format.h>
 namespace remaster::progression::treasures {
@@ -73,6 +74,7 @@ bool ensure() {
     const std::pair<uint16_t,uint32_t> prizes[]={{0x2301,4},{0x3b10,8},{0x5908,16},{0x3e40,32}};
     uint32_t honors=model().honors;
     for(const auto& [flag,honor]:prizes)if(dComIfGs_isEventBit(flag))honors|=honor;
+    if(daNpcF_chkEvtBit(0x1d5))honors|=512;
     if(honors!=model().honors){model().honors=honors;persist();}
     return true;
 }

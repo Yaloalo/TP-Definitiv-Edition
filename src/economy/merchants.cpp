@@ -6,6 +6,7 @@
 #include "resources/recharge_model.hpp"
 #include "services.hpp"
 #include "d/d_com_inf_game.h"
+#include "d/actor/d_a_npc4.h"
 #include "d/d_item_data.h"
 #include "d/d_shop_system.h"
 #include "d/actor/d_a_shop_item.h"
@@ -31,7 +32,7 @@ bool near_merchant(const Relic& r) {
     return link && std::strcmp(dComIfGp_getStartStageName(), r.stage) == 0 && fopAcM_GetRoomNo(link) == r.room;
 }
 bool trade_requirements(const Relic& r) {
-    if (r.id==0x39) return dComIfGs_isCollectClothes(2);
+    if (r.id==0x39) return dComIfGs_isCollectClothes(2)&&daNpcF_chkEvtBit(124);
     if (r.id==0x38) {
         for(int i=0;i<3;++i) {
             const auto item=dComIfGs_getItem(SLOT_15+i,false);

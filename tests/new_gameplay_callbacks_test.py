@@ -252,6 +252,7 @@ struct Ui{void elem_set_text(ModContext*,int,const char*){}} ui;auto* svc_ui=&ui
 namespace fmt{template<class...T>std::string format(const char*,T...){return "status";}}
 namespace remaster::tuning{struct Values{bool removeCurrency=true,merchantRewards=true;} cfg;auto& get(){return cfg;}}
 namespace remaster::progression{Model state;bool ready(){return true;}Model& model(){return state;}void persist(){++persists;}}
+bool mart=true;bool daNpcF_chkEvtBit(int id){assert(id==124);return mart;}
 std::string stage="R_SP109";int room=3;u8 inventory[24];std::set<int> shield,clothes,firstBits,eventBits,crystals;int bombMax[3]={30,15,10};
 const char* dComIfGp_getStartStageName(){return stage.c_str();}
 bool dComIfGs_isCollectShield(int n){return shield.contains(n);}void dComIfGs_setCollectShield(int n){shield.insert(n);}

@@ -38,6 +38,7 @@
 #include "economy/currency.hpp"
 #include "economy/rare.hpp"
 #include "economy/conversations.hpp"
+#include "economy/dialogue.hpp"
 #include "economy/merchants.hpp"
 #include "resources/ammo.hpp"
 #include "healing/wolf.hpp"
@@ -112,6 +113,7 @@ constexpr Installer kInstallers[] = {
     {progression::treasures::install, "deliberate relic and exploration rewards"},
     {combat::ward::install, "Magic Armor rechargeable ward"},
     {progression::collections::install, "bug and Poe milestone gifts"},
+    {economy::dialogue::install, "economy dialogue with native quest controls"},
     {economy::conversations::install, "character equipment conversations"},
     {resources::ammo::install, "renewable ammunition"},
     {economy::merchants::install, "quest and relic merchants"},

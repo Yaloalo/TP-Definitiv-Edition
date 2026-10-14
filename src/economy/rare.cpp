@@ -6,6 +6,7 @@
 #include "core/tuning.hpp"
 #include "hud/idle_fade.hpp"
 #include "d/d_com_inf_game.h"
+#include "d/actor/d_a_npc4.h"
 #include "d/d_item_data.h"
 #include "m_Do/m_Do_ext.h"
 #include "JSystem/JUtility/JUTFont.h"
@@ -73,7 +74,7 @@ bool can_purchase(const Offer& item) {
     if (!enabled() || !progression::ready() || !link || progression::model().claimed.size()>=512 || owned(item) ||
         g_pending.contains(item.check) || progression::model().claimed.contains(item.check) ||
         std::strcmp(dComIfGp_getStartStageName(),item.stage)!=0 || fopAcM_GetRoomNo(link)!=item.room) return false;
-    const bool unlocked=item.item==dItemNo_HYLIA_SHIELD_e?bool(dComIfGs_isLightDropGetFlag(1)):bool(dComIfGs_isCollectCrystal(2));
+    const bool unlocked=item.item==dItemNo_HYLIA_SHIELD_e?bool(dComIfGs_isLightDropGetFlag(1)):bool(dComIfGs_isCollectCrystal(2)&&daNpcF_chkEvtBit(124));
     int reserved=0;for (const auto& check:g_pending) if (const auto* pending=offer(check)) reserved+=pending->cost;
     return unlocked && progression::model().rareRupees>=uint32_t(item.cost+reserved);
 }
@@ -90,7 +91,7 @@ bool resolve(const ItemCheckInfo* info,ItemCheckResolution* out) {
         *out={kRupeeCache,dItemNo_PURPLE_RUPEE_e,true};return true;
     }
     if (const auto* item=offer(info->name)) {
-        const bool unlocked=item->item==dItemNo_HYLIA_SHIELD_e?bool(dComIfGs_isLightDropGetFlag(1)):bool(dComIfGs_isCollectCrystal(2));
+        const bool unlocked=item->item==dItemNo_HYLIA_SHIELD_e?bool(dComIfGs_isLightDropGetFlag(1)):bool(dComIfGs_isCollectCrystal(2)&&daNpcF_chkEvtBit(124));
         const bool allowed=progression::ready() && unlocked && progression::model().claimed.size()<512 && !owned(*item) && !progression::model().claimed.contains(item->check) && progression::model().rareRupees>=uint32_t(item->cost);
         *out={uint8_t(allowed?item->item:dItemNo_NONE_e),uint8_t(allowed?item->item:dItemNo_NONE_e),true};return true;
     }

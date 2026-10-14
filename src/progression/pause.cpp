@@ -98,8 +98,8 @@ void draw_post(ModContext*,void* args,void*,void*) {
             line("HONORS OF HYRULE");
             if(m.equipmentUpgrades&2)line("Agitha's Golden Crest: twelve pairs welcomed");
             if(m.equipmentUpgrades&4)line("Jovani's Spirit Crest: sixty souls returned");
-            const char* names[]={"Wayfarer Crest: forty treasures","Archivist Crest: 160 treasures","STAR Champion","Snowpeak Champion","River Keeper","Cave of Ordeals Crest","Craft Crest","Ancient Crest","Hyrule Keeper Crest"};
-            for(unsigned i=0;i<9;++i)if(m.honors&(1u<<i))line(names[i]);
+            const char* names[]={"Wayfarer Crest: forty treasures","Archivist Crest: 160 treasures","STAR Champion","Snowpeak Champion","River Keeper","Cave of Ordeals Crest","Craft Crest","Ancient Crest","Hyrule Keeper Crest","Fishing Trial Crest"};
+            for(unsigned i=0;i<10;++i)if(m.honors&(1u<<i))line(names[i]);
             line("Original permanent side-quest prizes remain yours.");
             line("Relics are finite; revisiting a reward never creates another.");
         }

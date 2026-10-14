@@ -108,7 +108,7 @@ inline bool decode(const std::vector<uint8_t>& in, Model& out) {
     if(magic==0x33464454) {
         for(auto& v:m.relics)v=get();
         m.honors=get();m.wardCharges=get();const auto flag=get();m.wardReady=flag==1;
-        if(!valid || flag>1 || m.wardCharges>5 || m.honors>511 ||
+        if(!valid || flag>1 || m.wardCharges>5 || m.honors>1023 ||
             std::any_of(m.relics.begin(),m.relics.end(),[](auto v){return v>512;}))return false;
     }
     if (at != in.size()) return false;

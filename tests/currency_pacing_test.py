@@ -24,6 +24,7 @@ enum HookAction {HOOK_CONTINUE,HOOK_SKIP_ORIGINAL};
 namespace mods {template<class T>T arg(void* p,int i){return *static_cast<T*>(static_cast<void**>(p)[i]);}
 template<class T>T& arg_ref(void* p,int i){return *static_cast<T*>(static_cast<void**>(p)[i]);}}
 bool active=true; bool is_active(){return active;}
+namespace remaster::combat::ward {bool visual_rupees(uint16_t&){return false;}}
 namespace remaster::tuning {struct Values {bool removeCurrency=true,instantSaves=true,fastTransitions=true,instantText=true;} cfg; auto& get(){return cfg;}}
 struct mesg_flow_node_branch {u16 param=0;};
 struct Object {int input=0; void setInputValue(int n){input=n;}};
@@ -40,7 +41,7 @@ struct dMenu_save_c {enum {PROC_MEMCARD_DATA_SAVE_WAIT2=2};int mWaitTimer=20,mCm
 struct dOvlpFd3_c {int mTimer=-1;}; struct Z2SceneMgr {int load1stWait=10;};
 int fadeAudio=-1; void mDoAud_setFadeOutStart(int n){fadeAudio=n;}
 namespace economy {
-using remaster::tuning::get; unsigned g_feeScope=0;
+using namespace remaster;using remaster::tuning::get; unsigned g_feeScope=0;
 bool enabled(){return active&&get().removeCurrency;}
 '''
 native=(root/'dusklight/src/d/d_menu_save.cpp').read_text()
