@@ -87,7 +87,6 @@ struct Values {
     bool flaskEnabled = true;
     bool removeHeartDrops = true;
     bool removeCurrency = true;
-    bool rareCurrency = true;
     int64_t flaskStartingCharges = 3;
     int64_t flaskMaximumCharges = 8;
     int64_t flaskHealingHearts = 3;

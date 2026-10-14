@@ -5,6 +5,7 @@
 class daAlink_c;
 namespace remaster::economy::merchants {
 struct Relic;
+bool reward_owned(const Relic&);
 bool can_trade(const Relic&);
 bool trade(const Relic&);
 ModResult install();

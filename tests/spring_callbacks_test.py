@@ -3,21 +3,24 @@ from fixture import ROOT, function, run
 source=(ROOT/'src/progression/spring.cpp').read_text()
 code=r'''
 #include <cassert>
+#include <cmath>
 #include <cstring>
 #include <format>
 #include <string>
 #include <vector>
 #include "progression/model.hpp"
-struct ModContext{};using UiDialogHandle=uint64_t;constexpr int MOD_OK=0,MOD_ERROR=1,PAD_1=0,FALSE=0;using BOOL=int;
+struct ModContext{};using UiDialogHandle=uint64_t;constexpr int MOD_OK=0,MOD_ERROR=1,PAD_1=0,PAD_BUTTON_Y=8,FALSE=0;using BOOL=int;
 enum HookAction{HOOK_CONTINUE,HOOK_SKIP_ORIGINAL};ModContext* mod_ctx=nullptr;
 bool active=true,input=true,safe=true,forest=false;uint32_t slot=0;int room=1,life=16,persisted=0;std::string stage="F_SP104";
 bool is_active(){return active;}uint32_t dComIfGs_getDataNum(){return slot;}bool dComIfGs_isCollectCrystal(int){return forest;}
 const char* dComIfGp_getStartStageName(){return stage.c_str();}
-struct daAlink_c{enum{BTN_Y=8};int mItemTrigger=8;}link;auto* daAlink_getAlinkActorClass(){return &link;}int fopAcM_GetRoomNo(daAlink_c*){return room;}
+struct daAlink_c{enum{BTN_A=1,BTN_B=2,BTN_X=4,BTN_Y=8,PROC_WAIT,PROC_SERVICE_WAIT,PROC_TIRED_WAIT,PROC_CROUCH,PROC_WOLF_WAIT,PROC_WOLF_SERVICE_WAIT,PROC_WOLF_TIRED_WAIT,PROC_WOLF_SIT};int mItemTrigger=8,mProcID=PROC_WAIT;float mMoveValue=0,mNormalSpeed=0,speedF=0;struct{bool ChkGroundHit(){return true;}}mLinkAcch;}link;auto* daAlink_getAlinkActorClass(){return &link;}int fopAcM_GetRoomNo(daAlink_c*){return room;}
 namespace mods{template<class T>T arg(void* p,int i){return *static_cast<T*>(static_cast<void**>(p)[i]);}}
-struct mDoCPd_c{static inline bool held=true,trig=true;static bool getHoldLockL(int){return held;}static bool getTrigY(int){return trig;}};
+struct mDoCPd_c{static inline bool held=true,trig=true;static bool getHoldLockL(int){return held;}static bool getTrigY(int){return trig;}struct Pad{int mPressedButtonFlags=8;};static Pad&getCpadInfo(int){static Pad pad;return pad;}};
 namespace remaster::player{bool input_allowed(){return input&&active;}}
-namespace remaster::healing::stones{bool rest_available(daAlink_c*){return safe;}}
+int dComIfGs_getLife(){return life;}
+namespace remaster::healing::wolf{bool busy(){return false;}}
+namespace remaster::healing::stones{PRODUCTION_IDLE bool rest_available(daAlink_c* link){return safe&&idle(link);}}
 namespace remaster::progression{Model state;bool ready(){return active;}Model& model(){return state;}void persist(){++persisted;}}
 namespace remaster::progression::growth{bool ensure(){return active;}void apply_health(){life=std::min<int>(life,(3+remaster::progression::state.healthPoints)*4);}}
 namespace remaster::tuning{struct Values{int staminaMax=100;}cfg;auto& get(){return cfg;}}
@@ -35,6 +38,7 @@ struct Ui{int opens=0,closes=0,toasts=0;bool fails=false;std::string body;std::v
  int push_toast(ModContext*,UiToastDesc*){++toasts;return fails?MOD_ERROR:MOD_OK;}}ui;auto* svc_ui=&ui;
 namespace remaster::progression::spring{UiDialogHandle g_dialog=0;uint32_t g_slot=255;
 '''
+code=code.replace('PRODUCTION_IDLE',function((ROOT/'src/healing/rest_stones.cpp').read_text(),'idle'))
 code+=''.join(function(source,n) for n in ['here','valid_dialog','exchange_disabled','exchange_pressed','dismissed','reset','interact_pre','tick']).replace('description()','description()')
 # description returns std::string rather than the scalar types in the fixture helper.
 start=source.index('std::string description()');end=source.index('\nbool exchange_disabled',start)
@@ -43,10 +47,12 @@ code+='}\n'+r'''
 int main(){using namespace remaster::progression;using namespace spring;state.migrate_growth(15);state.add_growth(5);state.allocate(false);
  auto* p=&link;void* args[]={&p};int result=1;
  assert(interact_pre(nullptr,args,&result,nullptr)==HOOK_CONTINUE&&ui.opens==0); // story lock
- forest=true;ui.fails=true;assert(interact_pre(nullptr,args,&result,nullptr)==HOOK_CONTINUE&&!g_dialog);ui.fails=false;
- assert(interact_pre(nullptr,args,&result,nullptr)==HOOK_SKIP_ORIGINAL&&g_dialog&&g_slot==0&&result==0&&link.mItemTrigger==0);
+ forest=true;link.mItemTrigger=daAlink_c::BTN_Y|daAlink_c::BTN_A;
+ assert(interact_pre(nullptr,args,&result,nullptr)==HOOK_CONTINUE&&!g_dialog&&link.mItemTrigger==9);link.mItemTrigger=8;
+ ui.fails=true;assert(interact_pre(nullptr,args,&result,nullptr)==HOOK_CONTINUE&&!g_dialog);assert(link.mItemTrigger==8&&mDoCPd_c::getCpadInfo(0).mPressedButtonFlags==8);ui.fails=false;
+ assert(interact_pre(nullptr,args,&result,nullptr)==HOOK_CONTINUE&&g_dialog&&g_slot==0&&result==1&&link.mItemTrigger==0&&mDoCPd_c::getCpadInfo(0).mPressedButtonFlags==0);
  assert(ui.actions.size()==3&&!exchange_disabled(nullptr,&g_slot)&&exchange_disabled(nullptr,nullptr));
- const auto earned=state.growthFragments;exchange_pressed(nullptr,g_dialog,&g_slot);
+ assert(here());const auto earned=state.growthFragments;exchange_pressed(nullptr,g_dialog,&g_slot);
  assert(state.healthPoints==0&&state.staminaPoints==1&&life==12&&state.growthFragments==earned&&ui.body.find("Stamina: 120")!=std::string::npos);
  exchange_pressed(nullptr,g_dialog,nullptr);assert(state.healthPoints==1&&state.staminaPoints==0&&life==12&&state.growthFragments==earned);
  slot=1;exchange_pressed(nullptr,g_dialog,&g_slot);assert(state.healthPoints==1);tick();assert(!g_dialog&&ui.closes==1);slot=0;

@@ -5,7 +5,7 @@ source=(ROOT/'src/economy/rare.cpp').read_text()
 items=(ROOT/'dusklight/include/d/d_item_data.h').read_text()
 ids={n:int(v,16) for v,n in re.findall(r'/\*\s*(0x[0-9A-Fa-f]+)\s*\*/\s*(dItemNo_\w+)',items)}
 selected=''.join(function(source,n) for n in ['enabled','ensure','owned','can_purchase','purchase','resolve','give','reset'])
-constants='\n'.join(f'constexpr int {n}={ids[n]};' for n in set(re.findall(r'dItemNo_\w+',selected)))
+constants='\n'.join(f'constexpr int {n}={ids[n]};' for n in set(re.findall(r'dItemNo_\w+',selected))|{'dItemNo_RED_BOTTLE_e','dItemNo_KAKERA_HEART_e'})
 code=r'''
 #include <cassert>
 #include <cstring>
@@ -20,12 +20,20 @@ auto* daAlink_getAlinkActorClass(){return &link;}int fopAcM_GetRoomNo(daAlink_c*
 bool dComIfGs_isCollectShield(int){return shield;}bool dComIfGs_isCollectClothes(int){return armor;}
 void dComIfGs_setCollectShield(int){shield=true;}void dComIfGs_setCollectClothes(int){armor=true;}
 bool dComIfGs_isLightDropGetFlag(int){return light;}bool dComIfGs_isCollectCrystal(int){return lakebed;}
-namespace remaster::tuning{struct Values{bool removeCurrency=true,rareCurrency=true;}cfg;auto& get(){return cfg;}}
+namespace remaster::tuning{struct Values{bool removeCurrency=true,flaskEnabled=true;}cfg;auto& get(){return cfg;}}
 namespace remaster::progression{Model state;bool valid=true;bool ready(){return valid;}Model& model(){return state;}void persist(){++persisted;}}
 namespace remaster::progression::growth{bool ensure(){if(!remaster::progression::ready()||!active)return false;remaster::progression::state.migrate_growth(15);return true;}}
 struct ItemCheckInfo{const char* name;uint8_t vanilla_item;};struct ItemCheckResolution{uint8_t item,display;bool animation;};struct ItemGiveInfo{const char* check_name;uint8_t item;};
 struct Items{int give_item(ModContext*,const char*,uint8_t,int flags){assert(flags==(ITEM_GIVE_RESOLVE|ITEM_GIVE_SILENT));++gives;return fail?MOD_ERROR:MOD_OK;}}items;auto* svc_item=&items;
 '''+constants+'\nnamespace remaster::economy::rare{std::set<std::string>g_pending;\n'+selected+'}\n'
+reward_source=(ROOT/'src/progression/rewards.cpp').read_text()
+world_checks=re.search(r'constexpr std::array<std::string_view, \d+> kFlaskChecks = \{.*?\};',reward_source,re.S).group()
+code+=r'''
+namespace remaster::resources::ammo{bool removes_pickup(int){return false;}}
+namespace remaster::economy::merchants{bool resolve(const ItemCheckInfo*,ItemCheckResolution*){return false;}}
+namespace remaster::progression::collections{bool resolve(const ItemCheckInfo*,ItemCheckResolution*){return false;}}
+namespace remaster::progression{constexpr uint8_t kFlaskShard=0x13,kStaminaFragment=0x14;
+'''+world_checks+function(reward_source,'rupee')+function(reward_source,'resolve')+'}\n'
 code+=r'''
 int main(){using namespace remaster;using namespace economy::rare;
  ItemCheckInfo check{kCaches[0].data(),5};ItemCheckResolution out{};assert(resolve(&check,&out)&&out.item==kRupeeCache);
@@ -45,7 +53,8 @@ int main(){using namespace remaster;using namespace economy::rare;
  // Same-slot load can discard our pending set. Dispatch rechecks actual saved funds before granting.
  armor=false;progression::state.claimed.erase(kOffers[1].check);progression::state.rareRupees=0;reset(nullptr,0,nullptr);
  check={kOffers[1].check,kOffers[1].item};assert(resolve(&check,&out)&&out.item==255);delivered={kOffers[1].check,255};give(nullptr,&delivered,nullptr);assert(!armor&&progression::state.rareRupees==0);
- active=false;check={kCaches[0].data(),5};assert(!resolve(&check,&out));active=true;
+ check={kOffers[0].check,kOffers[0].item};tuning::cfg.removeCurrency=false;assert(resolve(&check,&out)&&out.item==255);tuning::cfg.removeCurrency=true;
+ active=false;assert(resolve(&check,&out)&&out.item==255);assert(progression::resolve(nullptr,&check,&out,nullptr)&&out.item==255);check={kCaches[0].data(),5};assert(!resolve(&check,&out));active=true;
  // Credit previously opened caches once and preserve legacy relic provenance.
  progression::Model old;old.claim(kCaches[0].data(),0x14);old.claim("chest:F_SP115:6",0x38);old.claim("chest:F_SP117:2",0x39);
  assert(migrate_economy(old)&&old.rareRupees==45&&old.claimed.contains("collection:bugs:3")&&old.claimed.contains("collection:poes:20"));

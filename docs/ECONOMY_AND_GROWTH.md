@@ -118,3 +118,27 @@ combinations, indexed native flags, duplicates, failed queues, pure previews,
 corrupt/full ledgers and save changes, alongside actor-context/input/dialog
 regressions. Appearance, controller navigation, NPC placement and complete
 story routes still need in-game validation.
+
+## Review corrections (0.10.1)
+
+The gameplay and architecture reviews found two native integration faults that
+function-only mocks missed. Already claimed Jovani rewards now present an inert
+acknowledgment instead of NONE: his native actor-waiting branch can continue,
+with no duplicate gift. Native duplicate bug hand-ins use the same safe pattern.
+The regression executes the pinned presentation function and Pouya branch.
+Ordonna's L+Y interaction now runs before native stick dispatch and masks only
+its own Y edge while checking actual stone idle safety; failed dialogs restore
+input and unrelated simultaneous actions still prevent the interaction.
+
+Failed blob size probes, oversized blobs, failed/changed reads and corrupt bytes
+leave progression unavailable and unwritable. Synthetic purchase/trade/gift
+checks explicitly cancel across disabled settings or mode changes; the outer
+resolver handles them before its native-mode guard. Native vanilla sources
+continue to fall through. Queue cancellation clears pending reservations.
+
+There is one **Overhauled economy** toggle for coin suppression, finite currency
+and permanent purchases. A separate rare-currency toggle would leave equipment
+unavailable when the rest of the economy remained enabled, so it was removed.
+Quest/relic gifts have their own control; they do not remove permanent purchase
+choices. Barnes's hints avoid future boss/item spoilers, and obsolete legacy
+relics report that their equipment is already owned.

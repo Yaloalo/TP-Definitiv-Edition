@@ -18,6 +18,7 @@ struct dMenu_Collect2D_c{int sub=0;int getSubWindowOpenCheck(){return sub;}};
 struct mDoCPd_c{static inline int trig=0;static int getTrigZ(int){return trig&1;}static int getTrigB(int){return trig&2;}
 static int getTrigA(int){return trig&4;}static int getTrigX(int){return trig&8;}};
 namespace remaster::progression{Model state;bool valid=true;bool ready(){return valid;}Model& model(){return state;}}
+namespace remaster::economy::merchants{bool reward_owned(const Relic&){return true;}}
 namespace remaster::progression::collections{int pairs(){return 12;}int souls(){return 60;}}
 namespace remaster::progression::growth{bool ensure(){return active&&remaster::progression::ready();}bool allocate(bool s){return ensure()&&remaster::progression::model().allocate(s);}}
 namespace remaster::tuning{struct Values{int staminaMax=100,flaskStartingCharges=3,flaskMaximumCharges=8,flaskHealingHearts=3;}cfg;auto& get(){return cfg;}}
@@ -47,6 +48,7 @@ int main(){using namespace remaster::progression;using namespace pause;state.mig
  for(auto& line:font.text){health|=line.find("Health: 4")!=std::string::npos;stamina|=line.find("Stamina: 120")!=std::string::npos;
  flask|=line.find("Sacred Flask")!=std::string::npos;gear|=line.find("Bomb capacities")!=std::string::npos;}
  assert(health&&stamina&&flask&&gear);
+ bool obsolete=false;for(auto&row:font.text)obsolete|=row.find("Surveyor's Lens: equipment already owned")!=std::string::npos;assert(obsolete);
  for(int gate=0;gate<4;++gate){font.text.clear();active=gate!=0;visible=gate==1;valid=gate!=2;menu.sub=gate==3?1:0;
  assert(wait_pre(nullptr,a,nullptr,nullptr)==HOOK_CONTINUE);draw_post(nullptr,a,nullptr,nullptr);assert(font.text.empty()&&!g_open);}
  active=valid=true;visible=false;menu.sub=0;mDoCPd_c::trig=1;wait_pre(nullptr,a,nullptr,nullptr);

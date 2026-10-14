@@ -16,13 +16,15 @@
 namespace remaster::economy::rare {
 namespace {
 std::set<std::string> g_pending;
-MessageId g_cacheMessage=0,g_blessingMessage=0,g_flaskMessage=0;
+MessageId g_cacheMessage=0,g_blessingMessage=0,g_flaskMessage=0,g_storyMessage=0;
 void reset(ModContext*,uint32_t,void*) { g_pending.clear(); }
 bool owned(const Offer& item) {
     return item.item==dItemNo_HYLIA_SHIELD_e?dComIfGs_isCollectShield(COLLECT_HYLIAN_SHIELD):dComIfGs_isCollectClothes(2);
 }
 void give(ModContext*,const ItemGiveInfo* info,void*) {
-    if (!info || !info->check_name || !ensure()) return;
+    if (!info || !info->check_name) return;
+    g_pending.erase(info->check_name);
+    if (!ensure()) return;
     auto& m=progression::model();
     if (info->item==kRupeeCache && award_cache(m,info->check_name)) progression::persist();
     if (const auto* item=offer(info->check_name)) {
@@ -53,7 +55,7 @@ ModResult text(const char* value,MessageId* id) {
     MessageHandle handle=0;return svc_message->register_message(mod_ctx,0,variants.data(),variants.size(),id,&handle);
 }
 }
-bool enabled() { return is_active() && tuning::get().removeCurrency && tuning::get().rareCurrency; }
+bool enabled() { return is_active() && tuning::get().removeCurrency; }
 bool ensure() {
     if (!enabled() || !progression::growth::ensure()) return false;
     if (!progression::model().claimed.contains("migration:rare-economy-v1")) {
@@ -65,7 +67,7 @@ bool ensure() {
     if(m.claimed.contains("trade:sigil")&&!(m.equipmentUpgrades&1)){m.equipmentUpgrades|=1;progression::persist();}
     return true;
 }
-bool custom_item(uint8_t item) { return item==kRupeeCache || item==kBlessing || item==kFlaskBlessing; }
+bool custom_item(uint8_t item) { return item==kRupeeCache || item==kBlessing || item==kFlaskBlessing || item==kStoryAcknowledgment; }
 bool can_purchase(const Offer& item) {
     auto* link=daAlink_getAlinkActorClass();
     if (!enabled() || !progression::ready() || !link || progression::model().claimed.size()>=512 || owned(item) ||
@@ -80,7 +82,10 @@ bool purchase(const Offer& item) {
     g_pending.insert(item.check);return true;
 }
 bool resolve(const ItemCheckInfo* info,ItemCheckResolution* out) {
-    if (!enabled() || !info || !info->name) return false;
+    if (!info || !info->name || !out) return false;
+    // Synthetic grants must cancel rather than fall through after a toggle/mode change.
+    if(offer(info->name)&&!enabled()) { *out={dItemNo_NONE_e,dItemNo_NONE_e,true};return true; }
+    if (!enabled()) return false;
     if (cache(info->name) && ((info->vanilla_item>=1 && info->vanilla_item<=7) || info->vanilla_item==dItemNo_LINKS_SAVINGS_e)) {
         *out={kRupeeCache,dItemNo_PURPLE_RUPEE_e,true};return true;
     }
@@ -92,6 +97,7 @@ bool resolve(const ItemCheckInfo* info,ItemCheckResolution* out) {
     return false;
 }
 uint32_t message(uint32_t id) {
+    if(is_active() && id==kStoryAcknowledgment+0x65)return g_storyMessage;
     if (!enabled()) return id;
     if (id==kRupeeCache+0x65) return g_cacheMessage;
     if (id==kBlessing+0x65) return g_blessingMessage;
@@ -106,6 +112,7 @@ ModResult install() {
     if (r==MOD_OK) r=text("You found 15 Hylian rupees!\nRare treasure for permanent equipment. There are no repeatable payouts.",&g_cacheMessage);
     if (r==MOD_OK) r=text("A blessing of Hyrule!\nCheck Growth & Equipment in your pause menu.",&g_blessingMessage);
     if (r==MOD_OK) r=text("Your Sacred Flask grows stronger!\nFour shards add one charge.",&g_flaskMessage);
+    if (r==MOD_OK) r=text("Your kindness is remembered in Hyrule.", &g_storyMessage);
     return r;
 }
 }

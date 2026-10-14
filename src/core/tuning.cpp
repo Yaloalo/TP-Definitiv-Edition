@@ -103,8 +103,7 @@ VarSpec g_specs[] = {
 
     BOOL_VAR("Healing and economy", flaskEnabled, "Sacred Flask (renewable bottle healing)"),
     BOOL_VAR(nullptr, removeHeartDrops, "Remove disposable heart drops"),
-    BOOL_VAR(nullptr, removeCurrency, "Remove ordinary currency drops and story fees"),
-    BOOL_VAR(nullptr, rareCurrency, "Rare rupees for permanent equipment"),
+    BOOL_VAR(nullptr, removeCurrency, "Overhauled economy: rare treasure and permanent purchases"),
     INT_VAR(nullptr, flaskStartingCharges, "Starting flask charges", 1, 8, 1, nullptr),
     INT_VAR(nullptr, flaskMaximumCharges, "Maximum flask charges", 1, 12, 1, nullptr),
     INT_VAR(nullptr, flaskHealingHearts, "Starting healing per charge", 1, 10, 1, " hearts"),

@@ -41,9 +41,9 @@ namespace mods{template<class T>T arg(void* p,int i){return *static_cast<T*>(sta
 namespace fmt{template<class...T>std::string format(std::string_view f,T...args){return std::vformat(f,std::make_format_args(args...));}}
 namespace remaster::player{bool input_allowed(){return allowed;}bool gameplay_running(){return running;}}
 namespace remaster::progression{Model state;bool ready(){return readySave;}auto& model(){return state;}}
-namespace remaster::progression::collections{bool ensure(){return readySave;}int pairs(){return 3;}int souls(){return 20;}int unpresented(){return 2;}bool rewards_available(bool){return true;}void present_bugs(){++presented;}void claim_rewards(bool){++claimed;}}
+namespace remaster::progression::collections{bool enabled(){return active;}bool ensure(){return readySave;}int pairs(){return 3;}int souls(){return 20;}int unpresented(){return 2;}bool rewards_available(bool){return true;}void present_bugs(){++presented;}void claim_rewards(bool){++claimed;}}
 namespace remaster::economy::rare{bool enabled(){return active;}bool ensure(){return readySave;}bool can_purchase(const Offer&){return progression::state.rareRupees>=60;}void purchase(const Offer&){++purchases;}}
-namespace remaster::economy::merchants{bool can_trade(const Relic&){return true;}void trade(const Relic&){++trades;}}
+namespace remaster::economy::merchants{bool enabled(){return active;}bool can_trade(const Relic&){return true;}void trade(const Relic&){++trades;}}
 struct UiDialogAction{const char*label=nullptr;void(*on_pressed)(ModContext*,UiDialogHandle,void*)=nullptr;void*user_data=nullptr;bool keep_open=false;bool(*is_disabled)(ModContext*,void*)=nullptr;};
 #define UI_DIALOG_ACTION_INIT {}
 struct UiDialogDesc{const char*title=nullptr;const char*body_rml=nullptr;UiDialogAction*actions=nullptr;unsigned action_count=0;void(*on_dismiss)(ModContext*,UiDialogHandle,void*)=nullptr;};

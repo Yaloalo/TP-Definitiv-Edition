@@ -7,7 +7,7 @@ if (NOT DEFINED CMAKE_BUILD_TYPE AND NOT DEFINED ENV{CMAKE_BUILD_TYPE})
     set(CMAKE_BUILD_TYPE "RelWithDebInfo" CACHE STRING "Build type")
 endif ()
 
-project(tp_remaster VERSION 0.10.0 LANGUAGES CXX)
+project(tp_remaster VERSION 0.10.1 LANGUAGES CXX)
 
 # Must match the Dusklight release the mod runs on: game structs and symbols are version-specific.
 if (NOT DUSKLIGHT_VERSION)
@@ -123,6 +123,8 @@ if (BUILD_TESTING AND NOT CMAKE_CROSSCOMPILING AND NOT MSVC)
         COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/collection_callbacks_test.py")
     add_test(NAME npc_conversations
         COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/conversation_callbacks_test.py")
+    add_test(NAME save_load_safety
+        COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/save_load_callbacks_test.py")
     # Keep assertions enabled in RelWithDebInfo/Release test binaries.
     target_compile_options(enemy_timing_test PRIVATE -UNDEBUG)
 

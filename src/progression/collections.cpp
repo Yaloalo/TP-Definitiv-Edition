@@ -23,7 +23,9 @@ bool notice(const char* text) {
 }
 void reset(ModContext*,uint32_t,void*) { g_pending.clear(); }
 void give(ModContext*,const ItemGiveInfo* info,void*) {
-    if (!info || !info->check_name || !ensure()) return;
+    if (!info || !info->check_name) return;
+    g_pending.erase(info->check_name);
+    if (!ensure()) return;
     const std::string_view name(info->check_name);
     if (name.starts_with("bug:") && info->item==economy::rare::kBlessing) {
         if (model().claim(info->check_name,0x14)) { growth::apply_health();persist(); }
@@ -42,8 +44,10 @@ void give(ModContext*,const ItemGiveInfo* info,void*) {
     g_pending.erase(info->check_name);
 }
 }
+bool enabled() { return is_active() && tuning::get().removeCurrency && tuning::get().merchantRewards; }
 bool ensure() {
-    if (!economy::rare::ensure()) return false;
+    if (!enabled() || !growth::ensure()) return false;
+    if (economy::rare::enabled() && !economy::rare::ensure()) return false;
     if (!model().claimed.contains("migration:collection-gifts-v1")) {
         auto candidate=model();
         if (!candidate.claim("migration:collection-gifts-v1",0xff)) return false;
@@ -70,7 +74,7 @@ bool present_bugs() {
     claim_rewards(true);return changed;
 }
 bool rewards_available(bool bugs) {
-    if (!economy::rare::enabled() || !ready() || model().claimed.size()>=512) return false;
+    if (!enabled() || !ready() || model().claimed.size()>=512) return false;
     const int count=bugs?pairs():souls();
     const auto eligible=[&](const auto& table){for(const auto& r:table) if(count>=int(r.threshold)&&!model().claimed.contains(r.check)&&!g_pending.contains(r.check))return true;return false;};
     return bugs?eligible(kBugs):eligible(kPoes);
@@ -84,13 +88,15 @@ bool claim_rewards(bool bugs) {
     if(bugs)queue(kBugs);else queue(kPoes);return queued;
 }
 bool resolve(const ItemCheckInfo* info,ItemCheckResolution* out) {
-    if (!economy::rare::enabled() || !info || !info->name || !out) return false;
+    if (!info || !info->name || !out) return false;
+    if(milestone(info->name) && !enabled()) { *out={dItemNo_NONE_e,dItemNo_NONE_e,true};return true; }
+    if(!enabled())return false;
     const std::string_view name(info->name);
     if (name.starts_with("bug:")) {
         int id=0;const auto text=name.substr(4);const auto parse=std::from_chars(text.data(),text.data()+text.size(),id);
         if(parse.ec!=std::errc{} || parse.ptr!=text.data()+text.size() || id<dItemNo_M_BEETLE_e || id>dItemNo_F_MAYFLY_e)return false;
         const bool valid=ready()&&!model().claimed.contains(std::string(name))&&model().claimed.size()<512;
-        *out={uint8_t(valid?economy::rare::kBlessing:dItemNo_NONE_e),uint8_t(valid?dItemNo_KAKERA_HEART_e:dItemNo_NONE_e),true};return true;
+        *out={uint8_t(valid?economy::rare::kBlessing:economy::rare::kStoryAcknowledgment),uint8_t(valid?dItemNo_KAKERA_HEART_e:dItemNo_ZORAS_JEWEL_e),true};return true;
     }
     const Milestone* reward=milestone(name);
     if(name=="jovani_reward_1")reward=&kPoes[2];
@@ -100,7 +106,11 @@ bool resolve(const ItemCheckInfo* info,ItemCheckResolution* out) {
     const bool valid=((bugs?pairs():souls())>=int(reward->threshold)&&ready()&&!model().claimed.contains(reward->check)&&model().claimed.size()<512);
     const uint8_t display=reward->item==0x38||reward->item==0x39?dItemNo_ZORAS_JEWEL_e:
         reward->shards?dItemNo_RED_BOTTLE_e:dItemNo_UTAWA_HEART_e;
-    *out={uint8_t(valid?reward->item:dItemNo_NONE_e),uint8_t(valid?display:dItemNo_NONE_e),true};return true;
+    const bool native=name=="jovani_reward_1"||name=="jovani_reward_2";
+    // Pouya's native event waits for a presentation actor. NONE cannot spawn one.
+    // An inert token keeps that event progressing without granting a duplicate gift.
+    const auto item=valid?reward->item:native?economy::rare::kStoryAcknowledgment:dItemNo_NONE_e;
+    *out={uint8_t(item),uint8_t(valid?display:native?dItemNo_ZORAS_JEWEL_e:dItemNo_NONE_e),true};return true;
 }
 void tick() {if(player::input_allowed())ensure();}
 ModResult install() {

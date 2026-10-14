@@ -3,6 +3,7 @@
 #include "progression/growth.hpp"
 #include "progression/collections.hpp"
 #include "economy/merchant_model.hpp"
+#include "economy/merchants.hpp"
 #include "core/tuning.hpp"
 #include "core/hooks.hpp"
 #include "d/d_com_inf_game.h"
@@ -62,7 +63,7 @@ void draw_post(ModContext*,void* args,void*,void*) {
         line(fmt::format("Rare rupees: {}",m.rareRupees));
         line(fmt::format("Agitha: {}/12 pairs   Jovani: {}/60 souls",collections::pairs(),collections::souls()));
         for (const auto& relic:economy::merchants::kRelics)
-            if (economy::merchants::owns_relic(m,relic)) line(fmt::format("{}: {}",relic.name,economy::merchants::redeemed(m,relic)?"upgrade complete":"ready to exchange"));
+            if (economy::merchants::owns_relic(m,relic)) line(fmt::format("{}: {}",relic.name,economy::merchants::redeemed(m,relic)?"upgrade complete":economy::merchants::reward_owned(relic)?"equipment already owned":"ready to exchange"));
         if (m.equipmentUpgrades & 1) line("Twilight Sigil: improved Magic Armor efficiency");
         if (m.equipmentUpgrades & 2) line("Agitha's Golden Crest: honored guest");
         if (m.equipmentUpgrades & 4) line("Jovani's Spirit Crest: earned");

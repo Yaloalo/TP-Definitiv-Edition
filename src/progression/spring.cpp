@@ -46,10 +46,16 @@ void reset(ModContext*,uint32_t,void*) {
     g_dialog=0; g_slot=255;
 }
 HookAction interact_pre(ModContext*,void* args,void* result,void*) {
-    if (g_dialog || !player::input_allowed() || !here() ||
-        !mDoCPd_c::getHoldLockL(PAD_1) || !mDoCPd_c::getTrigY(PAD_1)) return HOOK_CONTINUE;
+    if (g_dialog || !player::input_allowed() || !mDoCPd_c::getHoldLockL(PAD_1) ||
+        !mDoCPd_c::getTrigY(PAD_1)) return HOOK_CONTINUE;
     auto* link=mods::arg<daAlink_c*>(args,0);
-    if (link!=daAlink_getAlinkActorClass()) return HOOK_CONTINUE;
+    if(!link || link!=daAlink_getAlinkActorClass())return HOOK_CONTINUE;
+    // Validate rest safety without mistaking our own interaction edge for an item attack.
+    const auto triggers=link->mItemTrigger;
+    link->mItemTrigger&=~daAlink_c::BTN_Y;
+    const bool available=here();
+    link->mItemTrigger=triggers;
+    if(!available)return HOOK_CONTINUE;
     UiDialogAction actions[3]={UI_DIALOG_ACTION_INIT,UI_DIALOG_ACTION_INIT,UI_DIALOG_ACTION_INIT};
     actions[0].label="One heart → 20 stamina"; actions[0].on_pressed=exchange_pressed;
     actions[0].user_data=&g_slot; actions[0].keep_open=true; actions[0].is_disabled=exchange_disabled;
@@ -61,7 +67,8 @@ HookAction interact_pre(ModContext*,void* args,void* result,void*) {
     desc.action_count=3; desc.on_dismiss=dismissed;
     if (svc_ui->dialog_push(mod_ctx,&desc,&g_dialog)!=MOD_OK) { g_dialog=0; return HOOK_CONTINUE; }
     g_slot=dComIfGs_getDataNum(); link->mItemTrigger&=~daAlink_c::BTN_Y;
-    *static_cast<BOOL*>(result)=FALSE; return HOOK_SKIP_ORIGINAL;
+    mDoCPd_c::getCpadInfo(PAD_1).mPressedButtonFlags&=~PAD_BUTTON_Y;
+    return HOOK_CONTINUE;
 }
 void hud_post(ModContext*,void*,void*,void*) {
     if (!player::input_allowed() || !here()) return;
@@ -83,7 +90,7 @@ void tick() {
 }
 ModResult install() {
     HookOptions early=HOOK_OPTIONS_INIT; early.priority=20000;
-    auto r=mods::hook::add_pre<hooks::Shared0>(interact_pre,&early);
+    auto r=mods::hook::add_pre<hooks::StickData>(interact_pre,&early);
     if (r==MOD_OK) r=mods::hook::add_post<hooks::Shared1>(hud_post);
     if (r==MOD_OK) r=svc_save->observe_saves(mod_ctx,reset,reset,nullptr,nullptr,nullptr);
     return r;

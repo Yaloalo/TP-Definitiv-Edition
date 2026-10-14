@@ -68,10 +68,12 @@ engine, load game assets or traverse the story.
 
 | `shared_growth` | Native heart functions/flags, fragment accounting, caps, old-save migration and allocation safety |
 | `pause_progression` | Native equipment-sheet input gates, progression display and bounded layout |
-| `spring_redistribution` | Ordonna unlock, safe physical interaction, conserved blessings and no respec healing |
+| `spring_redistribution` | Ordonna unlock, physical interaction with actual stone idle safety, restored failed-input edges, conserved blessings and no respec healing |
 | `rare_economy` | Finite cache budget, delivery-only spending, repeated grants and atomic migration |
-| `collection_rewards` | All 4,096 pair masks, native indexed bug flags, milestone budgets, duplicate/native gifts, failed queues and full/corrupt saves |
+| `collection_rewards` | All 4,096 pair masks, indexed bug flags, budgets, duplicate gifts, failed queues, full/corrupt saves and pinned native Jovani/presentation continuation |
 | `npc_conversations` | Actor/scene/proximity/threat routing, modal lifecycle, failure-safe input and native story passthrough |
+
+| `save_load_safety` | Actual blob probes/reads, oversize/error/corruption/no-slot rejection and unwritable invalid progress |
 
 `tests/required_suites.json` prevents missing or accidentally unregistered suites
 from yielding a passing gate. Skipped tests and timeouts fail. Hook checks also

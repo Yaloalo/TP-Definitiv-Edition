@@ -19,5 +19,6 @@
   "spring_redistribution",
   "rare_economy",
   "collection_rewards",
-  "npc_conversations"
+  "npc_conversations",
+  "save_load_safety"
 ]

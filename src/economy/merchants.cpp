@@ -77,10 +77,15 @@ ModResult register_relic_message(size_t i) {
 }
 bool enabled() { return is_active() && tuning::get().removeCurrency && tuning::get().merchantRewards; }
 bool custom_item(uint8_t item) { return relic_for_item(item) != nullptr; }
+bool reward_owned(const Relic& r) { return owns_reward(r); }
 bool can_trade(const Relic& r) { return trade_available(r); }
 bool trade(const Relic& r) { return trade_available(r) && queue(r.trade,r.reward); }
 bool resolve(const ItemCheckInfo* info, ItemCheckResolution* out) {
-    if (!enabled() || !info || !info->name) return false;
+    if (!info || !info->name || !out) return false;
+    for(const auto& relic:kRelics) if(std::string_view(info->name)==relic.trade && !enabled()) {
+        *out={dItemNo_NONE_e,dItemNo_NONE_e,true};return true;
+    }
+    if (!enabled()) return false;
     for(const auto& relic:kRelics) if(std::string_view(info->name)==relic.trade) {
         const bool allowed=progression::ready()&&progression::model().claimed.size()<512&&
             owns_relic(progression::model(),relic)&&!redeemed(progression::model(),relic)&&!owns_reward(relic)&&trade_requirements(relic);

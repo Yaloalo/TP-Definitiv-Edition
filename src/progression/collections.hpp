@@ -2,6 +2,7 @@
 #include "services.hpp"
 namespace remaster::progression::collections {
 ModResult install();
+bool enabled();
 bool ensure();
 int pairs();
 int souls();

@@ -4,6 +4,8 @@
 #include <string_view>
 namespace remaster::economy::rare {
 inline constexpr uint8_t kRupeeCache=0x3a,kBlessing=0x3b,kFlaskBlessing=0x3c;
+// Native NOENTRY 0x4d: presentation-only acknowledgment, never a progression reward.
+inline constexpr uint8_t kStoryAcknowledgment=0x4d;
 inline constexpr std::array<std::string_view,20> kCaches={
     "chest:F_SP108:28","chest:F_SP108:27","chest:F_SP108:63","chest:D_MN05:7","chest:D_MN05:24","chest:D_MN05:26",
     "chest:R_SP109:17","chest:F_SP109:20","chest:D_MN04:27","chest:D_MN04:24",

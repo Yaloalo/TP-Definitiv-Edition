@@ -31,10 +31,11 @@ constexpr std::array<std::string_view, 12> kFlaskChecks = {
 };
 bool rupee(uint8_t i) { return (i >= 1 && i <= 7) || i == dItemNo_LINKS_SAVINGS_e; }
 bool resolve(ModContext*, const ItemCheckInfo* info, ItemCheckResolution* out, void*) {
-    if (!is_active() || !info || !info->name) return false;
+    if (!info || !info->name || !out) return false;
     if (economy::rare::resolve(info,out)) return true;
     if (collections::resolve(info,out)) return true;
     if (economy::merchants::resolve(info, out)) return true;
+    if (!is_active()) return false;
     const std::string_view name(info->name);
     // Shop stock must preserve equipment/quest checks, and can never award farmable shards.
     if (!(tuning::get().removeCurrency && rupee(info->vanilla_item)) && !resources::ammo::removes_pickup(info->vanilla_item)) return false;
@@ -121,12 +122,18 @@ void load() {
     g_ready = is_active(); if (!g_ready) return;
     size_t size = 0;
     g_model = {}; g_model.refill(tuning::get().flaskStartingCharges, tuning::get().flaskMaximumCharges);
-    if (svc_save->get_blob(mod_ctx, "progression-v1", nullptr, &size) == MOD_OK && size <= SAVE_BLOB_BUDGET_BYTES) {
-        std::vector<uint8_t> bytes(size);
-        if (svc_save->get_blob(mod_ctx, "progression-v1", bytes.data(), &size) != MOD_OK || !decode(bytes, g_model)) {
-            g_ready = false;
-            mods::log::error("Invalid Definitive Edition progress blob; left untouched");
-        }
+    const auto probe=svc_save->get_blob(mod_ctx,"progression-v1",nullptr,&size);
+    if(probe==MOD_UNAVAILABLE && dComIfGs_getDataNum()<=2)return; // no prior mod progress in this slot
+    if(probe!=MOD_OK || size>SAVE_BLOB_BUDGET_BYTES) {
+        g_ready=false;
+        mods::log::error("Could not safely read Definitive Edition progress; left untouched");
+        return;
+    }
+    std::vector<uint8_t> bytes(size);
+    const auto read=svc_save->get_blob(mod_ctx,"progression-v1",bytes.data(),&size);
+    if(read!=MOD_OK || size!=bytes.size() || !decode(bytes,g_model)) {
+        g_ready=false;
+        mods::log::error("Invalid Definitive Edition progress blob; left untouched");
     }
 }
 ModResult install() {

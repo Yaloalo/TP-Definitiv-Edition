@@ -305,7 +305,8 @@ int main(){using namespace remaster;using namespace economy::merchants;
  ItemGiveInfo slingshot{"quest:sera_slingshot",dItemNo_PACHINKO_e};inventory[SLOT_23]=dItemNo_PACHINKO_e;on_give(&slingshot);assert(eventBits.contains(0x4902));
  crystals.insert(1);tick();assert(g_pending.contains("quest:fyrus_bomb_bag"));
  reset();inventory[SLOT_15]=0x70;clothes.insert(1);crystals.insert(2);tick();assert(g_pending.contains("quest:zora_water_bombs")&&g_pending.contains("quest:lakebed_bomblings"));
- reset();active=false;tick();assert(g_pending.empty()&&!resolve(&check,&out));
+ reset();active=false;tick();assert(g_pending.empty()&&resolve(&check,&out)&&out.item==255);
+ check={kRelics[2].trade,kRelics[2].reward};assert(resolve(&check,&out)&&out.item==255);active=true;tuning::cfg.merchantRewards=false;assert(resolve(&check,&out)&&out.item==255);
  std::cout<<"Production rewards: preview safety, delayed grants, non-farmable trades, native ownership, quest unlocks and message isolation passed\n";
 }
 '''

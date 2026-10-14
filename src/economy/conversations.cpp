@@ -45,7 +45,7 @@ Kind kind(fopAc_ac_c* actor) {
     return Kind::None;
 }
 bool safe(daAlink_c* link) {
-    return rare::enabled()&&progression::ready()&&link&&!link->checkWolf()&&player::gameplay_running()&&
+    return (rare::enabled()||merchants::enabled())&&progression::ready()&&link&&!link->checkWolf()&&player::gameplay_running()&&
         link->mLinkAcch.ChkGroundHit()&&std::abs(link->mNormalSpeed)<0.1f&&
         (link->mProcID==daAlink_c::PROC_WAIT||link->mProcID==daAlink_c::PROC_SERVICE_WAIT||link->mProcID==daAlink_c::PROC_TIRED_WAIT);
 }
@@ -78,7 +78,7 @@ std::string body() {
     const char* text="";
     switch(g_context.kind){
     case Kind::Malo:text="A dependable shield is worth keeping. Sixty rupees buys the Hylian Shield.<br/>Your Hawkeye comes with the Bow. You won't need to buy it here.";break;
-    case Kind::Barnes:text="Bring me Agitha's Deepwater Craft Relic and I'll enlarge your bomb reserves.<br/>Your first bag follows Fyrus; Zora Armor and Lakebed victory unlock the other bomb types.";break;
+    case Kind::Barnes:text="Bring me Agitha's Deepwater Craft Relic and I'll enlarge your bomb reserves.<br/>Your bomb bags gain new possibilities as your journey continues.";break;
     case Kind::Armorer:text="Magic Armor costs 180 rupees. Its protection draws on stamina.<br/>Jovani's Twilight Sigil helps it use that strength more efficiently.";break;
     case Kind::Agitha:text="Every golden guest deserves a place at my ball! Bring their partners too.<br/>I'll reward the first pair, then three, six and twelve pairs.";break;
     case Kind::Jovani:text="Each lost soul you return loosens the curse.<br/>Gifts await at five, ten, twenty, forty and sixty souls.<br/>Speak about the curse at twenty and sixty to continue my story.";break;
@@ -110,17 +110,18 @@ void pressed(ModContext*,UiDialogHandle,void* data) {
     const auto text=body();svc_ui->dialog_set_body(mod_ctx,g_dialog,text.c_str());
 }
 bool open(fopAc_ac_c* actor) {
-    if(g_dialog||!rare::ensure()||!progression::collections::ensure())return false;
+    if(g_dialog || (rare::enabled()&&!rare::ensure()) ||
+        (progression::collections::enabled()&&!progression::collections::ensure()))return false;
     auto* link=daAlink_getAlinkActorClass();
     g_context={fopAcM_GetID(actor),fopAcM_GetName(actor),fopAcM_GetRoomNo(link),dComIfGs_getDataNum(),kind(actor),dComIfGp_getStartStageName()};
     if(!valid())return false;
     g_choices.clear();g_choices.reserve(10);
     std::vector<const char*> labels;
     const auto add=[&](Choice choice,const char* label){g_choices.push_back(choice);labels.push_back(label);};
-    for(const auto& offer:rare::kOffers)if(g_context.stage==offer.stage&&g_context.room==offer.room)add({Action::Purchase,&offer},offer.label);
-    for(const auto& relic:merchants::kRelics)if(g_context.stage==relic.stage&&g_context.room==relic.room&&merchants::owns_relic(progression::model(),relic))add({Action::Trade,nullptr,&relic},relic.label);
-    if(g_context.kind==Kind::Agitha)add({Action::Present},"Welcome the bugs I've found");
-    if(g_context.kind==Kind::Agitha||g_context.kind==Kind::Jovani)add({Action::Claim},"Receive my collection gifts");
+    for(const auto& offer:rare::kOffers)if(rare::enabled()&&g_context.stage==offer.stage&&g_context.room==offer.room)add({Action::Purchase,&offer},offer.label);
+    for(const auto& relic:merchants::kRelics)if(merchants::enabled()&&g_context.stage==relic.stage&&g_context.room==relic.room&&merchants::owns_relic(progression::model(),relic))add({Action::Trade,nullptr,&relic},relic.label);
+    if(progression::collections::enabled()&&g_context.kind==Kind::Agitha)add({Action::Present},"Welcome the bugs I've found");
+    if(progression::collections::enabled()&&(g_context.kind==Kind::Agitha||g_context.kind==Kind::Jovani))add({Action::Claim},"Receive my collection gifts");
     add({Action::Native},g_context.kind==Kind::Jovani?"Discuss the curse":"Talk about other matters");
     add({Action::Leave},"Farewell");
     std::vector<UiDialogAction> actions(g_choices.size(),UiDialogAction UI_DIALOG_ACTION_INIT);
