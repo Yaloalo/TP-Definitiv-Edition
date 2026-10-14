@@ -83,6 +83,8 @@ uint32_t message(daAlink_c* link, uint32_t id) {
 }
 void on_give(const ItemGiveInfo* info) {
     if (!is_active() || !progression::ready() || !info) return;
+    if (info->item == dItemNo_BOW_e && dComIfGs_getItem(SLOT_5, false) != dItemNo_HAWK_EYE_e)
+        queue("quest:bow_hawkeye", dItemNo_HAWK_EYE_e);
     if (const auto* relic = relic_for_item(info->item)) {
         if (progression::model().claim(info->check_name, relic->id)) progression::persist();
     }
@@ -108,6 +110,8 @@ void tick() {
     if (!enabled() || !progression::ready()) return;
     if (player::input_allowed()) {
         auto& model = progression::model();
+        if (dComIfGs_isItemFirstBit(dItemNo_BOW_e) && dComIfGs_getItem(SLOT_5, false) != dItemNo_HAWK_EYE_e)
+            queue("quest:bow_hawkeye", dItemNo_HAWK_EYE_e);
         const bool catHelped = model.claimed.contains("quest:sera_helped") ||
             (dComIfGs_isEventBit(0x1408) && dComIfGs_isItemFirstBit(dItemNo_HALF_MILK_BOTTLE_e));
         if (catHelped && dComIfGs_getItem(SLOT_23, false) != dItemNo_PACHINKO_e) queue("quest:sera_slingshot", dItemNo_PACHINKO_e);

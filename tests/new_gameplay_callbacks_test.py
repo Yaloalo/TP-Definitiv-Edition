@@ -287,6 +287,12 @@ int main(){using namespace remaster;using namespace economy::merchants;
  link.mProcVar2.field_0x300c=0x37;assert(message(&link,0x9c)==10001);link.mProcVar2.field_0x300c=8;assert(message(&link,0x9c)==0x9c);
  link.mProcID=0;link.mProcVar2.field_0x300c=0x37;assert(message(&link,0x9c)==0x9c);
  progression::state={};reset();eventBits.clear();clothes.clear();allowed=true;tick();assert(g_pending.empty());
+ ItemGiveInfo bow{"bow_chest",dItemNo_BOW_e};on_give(&bow);assert(g_pending.contains("quest:bow_hawkeye"));
+ assert(!progression::state.claimed.contains("quest:bow_hawkeye"));
+ reset();firstBits.insert(dItemNo_BOW_e);tick();assert(g_pending.contains("quest:bow_hawkeye"));
+ inventory[SLOT_5]=dItemNo_HAWK_EYE_e;ItemGiveInfo hawkeye{"quest:bow_hawkeye",dItemNo_HAWK_EYE_e};on_give(&hawkeye);
+ assert(progression::state.claimed.contains("quest:bow_hawkeye")&&!g_pending.contains("quest:bow_hawkeye"));
+ firstBits.clear();reset();tick();assert(g_pending.empty());
  ItemGiveInfo sera{"sera_reward",dItemNo_HALF_MILK_BOTTLE_e};on_give(&sera);tick();assert(g_pending.contains("quest:sera_slingshot")&&!progression::state.claimed.contains("quest:sera_slingshot"));
  reset();tick();assert(g_pending.contains("quest:sera_slingshot")); // interrupted queue/load remains eligible
  ItemGiveInfo slingshot{"quest:sera_slingshot",dItemNo_PACHINKO_e};inventory[SLOT_23]=dItemNo_PACHINKO_e;on_give(&slingshot);assert(eventBits.contains(0x4902));
