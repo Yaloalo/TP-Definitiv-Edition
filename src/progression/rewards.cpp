@@ -4,6 +4,7 @@
 #include "healing/snowpeak_hearts.hpp"
 #include "resources/ammo.hpp"
 #include "economy/merchants.hpp"
+#include "economy/rare.hpp"
 #include "services.hpp"
 #include "d/d_item.h"
 #include "d/actor/d_a_alink.h"
@@ -32,6 +33,7 @@ constexpr std::array<std::string_view, 20> kFlaskChecks = {
 bool rupee(uint8_t i) { return (i >= 1 && i <= 7) || i == dItemNo_LINKS_SAVINGS_e; }
 bool resolve(ModContext*, const ItemCheckInfo* info, ItemCheckResolution* out, void*) {
     if (!is_active() || !info || !info->name) return false;
+    if (economy::rare::resolve(info,out)) return true;
     if (economy::merchants::resolve(info, out)) return true;
     const std::string_view name(info->name);
     // Shop stock must preserve equipment/quest checks, and can never award farmable shards.
@@ -59,7 +61,7 @@ void give(ModContext*, const ItemGiveInfo* info, void*) {
 HookAction item_pre(ModContext*, void* args, void*, void*) {
     if (!is_active()) return HOOK_CONTINUE;
     const uint8_t item = mods::arg<uint8_t>(args, 0);
-    if (item == kFlaskShard || item == kStaminaFragment || economy::merchants::custom_item(item) || resources::ammo::removes_pickup(item) ||
+    if (item == kFlaskShard || item == kStaminaFragment || economy::rare::custom_item(item) || economy::merchants::custom_item(item) || resources::ammo::removes_pickup(item) ||
         (tuning::get().removeCurrency && rupee(item)) ||
         (tuning::get().removeHeartDrops && (item == dItemNo_HEART_e || item == dItemNo_TRIPLE_HEART_e) && !healing::snowpeak::allows_grant()) ||
         (tuning::get().flaskEnabled && item == dItemNo_RECOVERY_FAILY_e))
@@ -80,6 +82,7 @@ void check_message_post(ModContext*, void*, void* result, void*) {
     auto& id = *static_cast<u32*>(result);
     if (id == kFlaskShard + 0x65) id = g_shardMessage;
     else if (id == kStaminaFragment + 0x65) id = g_staminaMessage;
+    id=economy::rare::message(id);
 }
 HookAction item_message(ModContext*, void* args, void*, void*) {
     if (!is_active()) return HOOK_CONTINUE;
@@ -87,6 +90,7 @@ HookAction item_message(ModContext*, void* args, void*, void*) {
     id = economy::merchants::message(mods::arg<daAlink_c*>(args, 0), id);
     if (id == kFlaskShard + 0x65) id = g_shardMessage;
     if (id == kStaminaFragment + 0x65) id = g_staminaMessage;
+    id=economy::rare::message(id);
     return HOOK_CONTINUE;
 }
 ModResult register_text(const char* text, MessageId* id) {

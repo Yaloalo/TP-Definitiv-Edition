@@ -69,6 +69,7 @@ namespace remaster::healing::wolf {int interrupts=0;void interrupt(daAlink_c*){+
 namespace remaster::healing::stones {void damage_received(){}}
 struct ItemCheckInfo;struct ItemCheckResolution;
 namespace remaster::economy::merchants {bool enabled(){return false;}bool custom_item(uint8_t){return false;}bool resolve(const ItemCheckInfo*,ItemCheckResolution*){return false;}}
+namespace remaster::economy::rare {bool custom_item(uint8_t){return false;}bool resolve(const ItemCheckInfo*,ItemCheckResolution*){return false;}}
 namespace remaster::healing {
 void damage_interrupted(daAlink_c*);
 daAlink_c* g_drinking=nullptr; bool g_healed=false,g_retry=false; unsigned g_bottleDepth=0; uint32_t g_saveSlot=0,g_retrySlot=255;

@@ -33,6 +33,7 @@
 #include "healing/flask.hpp"
 #include "healing/rest_stones.hpp"
 #include "economy/currency.hpp"
+#include "economy/rare.hpp"
 #include "economy/merchants.hpp"
 #include "resources/ammo.hpp"
 #include "healing/wolf.hpp"
@@ -101,6 +102,7 @@ constexpr Installer kInstallers[] = {
     {progression::growth::install, "shared health and stamina growth"},
     {progression::pause::install, "equipment-menu growth and upgrades"},
     {progression::spring::install, "Ordonna growth redistribution"},
+    {economy::rare::install, "rare Hylian currency"},
     {resources::ammo::install, "renewable ammunition"},
     {economy::merchants::install, "quest and relic merchants"},
     {healing::wolf::install, "wolf recovery"},
@@ -216,6 +218,7 @@ MOD_EXPORT ModResult mod_initialize(ModError* error) {
 
 MOD_EXPORT ModResult mod_update(ModError*) {
     remaster::progression::spring::tick();
+    remaster::economy::rare::tick();
     return MOD_OK;
 }
 

@@ -48,6 +48,27 @@ the conversation. The pause menu remains the place to assign new blessings.
 
 ## Subsequent approved milestones
 
+## Rare Hylian rupees (0.9.0)
+
+Twenty named currency chests contain fifteen rupees each: **300 rupees** total.
+Permanent equipment costs **60** for Malo's Hylian Shield and **180** for Castle
+Town Magic Armor, leaving sixty spare. Hawkeye is a Bow acquisition gift. There
+are no oil purchases. Cache names are in `src/economy/rare_model.hpp`; their
+original currency items were checked against the local location catalogue.
+
+The owned balance appears in the native HUD and equipment sheet and lives in
+the versioned save blob. Native wallet limits, armor currency effects, loose
+coins, repeated NPC/minigame payouts and death deductions cannot spend or mint
+this balance. Required services keep the existing currency-free quest callbacks.
+Purchase queues reserve funds; payment is recorded only after actual delivery.
+Dispatch rechecks saved funds/ownership, including after an interrupted load.
+
+Old saves receive credit for already opened cache locations once. Their former
+craft/Twilight relic provenance is captured before reusing the chest locations.
+Migration uses a transactional copy; a full ledger cannot repeatedly credit
+money. The merchant conversation milestone supplies the player-facing purchase
+choices. The purchase functions are not ordinary native shop stock.
+
 - Rare rupees from curated one-time treasures/quests, without drops, farming,
   wallet limits, death loss or required story purchases.
 - Merchant dialogue choices for permanent purchases and specific relic hand-ins.

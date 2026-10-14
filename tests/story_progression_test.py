@@ -24,6 +24,7 @@ namespace remaster::tuning{struct Values{bool difficultyCurve=true,removeCurrenc
 namespace remaster::resources::ammo{bool removes_pickup(int n){return active&&remaster::tuning::get().removeConsumableDrops&&remaster::resources::ammo_pickup(n);}}
 struct ItemCheckInfo{const char* name;uint8_t vanilla_item;};struct ItemCheckResolution{uint8_t item,display;bool animation;};
 namespace remaster::economy::merchants{bool resolve(const ItemCheckInfo*,ItemCheckResolution*){return false;}bool custom_item(uint8_t){return false;}}
+namespace remaster::economy::rare{bool resolve(const ItemCheckInfo*,ItemCheckResolution*){return false;}bool custom_item(uint8_t){return false;}}
 namespace remaster::healing::snowpeak{bool allows_grant(){return false;}}
 '''
 constants = '\n'.join(f'constexpr int {name}={value};' for name, value in ids.items())
