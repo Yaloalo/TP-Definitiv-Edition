@@ -1,6 +1,8 @@
 #include <fmt/format.h>
 
 #include "combat/damage.hpp"
+#include "combat/ward.hpp"
+#include "progression/treasures.hpp"
 #include "combat/dodge.hpp"
 #include "combat/manual_shield.hpp"
 #include "combat/enemy_slow_motion.hpp"
@@ -73,6 +75,7 @@ ModResult on_activated(void*, ModError*) {
     healing::snowpeak::reset();
     resources::ammo::reset();
     economy::merchants::reset();
+    combat::ward::reset();
     mods::log::info("Definitive Overhaul activated");
     return MOD_OK;
 }
@@ -87,6 +90,7 @@ ModResult on_deactivated(void*, ModError*) {
     healing::snowpeak::reset();
     resources::ammo::reset();
     economy::merchants::reset();
+    combat::ward::reset();
     input::mouse_controls::reset();
     combat::enemies::reset_enemy_slow_motion();
     combat::enemies::reset_boss_hard_mode();
@@ -105,6 +109,8 @@ constexpr Installer kInstallers[] = {
     {progression::pause::install, "equipment-menu growth and upgrades"},
     {progression::spring::install, "Ordonna growth redistribution"},
     {economy::rare::install, "rare Hylian currency"},
+    {progression::treasures::install, "deliberate relic and exploration rewards"},
+    {combat::ward::install, "Magic Armor rechargeable ward"},
     {progression::collections::install, "bug and Poe milestone gifts"},
     {economy::conversations::install, "character equipment conversations"},
     {resources::ammo::install, "renewable ammunition"},
@@ -224,6 +230,7 @@ MOD_EXPORT ModResult mod_update(ModError*) {
     remaster::progression::spring::tick();
     remaster::economy::rare::tick();
     remaster::progression::collections::tick();
+    remaster::progression::treasures::tick();
     remaster::economy::conversations::tick();
     return MOD_OK;
 }

@@ -1,6 +1,7 @@
 #include "core/player.hpp"
 
 #include "combat/dodge.hpp"
+#include "combat/ward.hpp"
 #include "combat/stamina.hpp"
 #include "d/actor/d_a_alink.h"
 #include "movement/sprint.hpp"
@@ -32,6 +33,7 @@ void on_execute_post(ModContext*, void* args, void*, void*) {
     progression::growth::tick();
     healing::tick(link);
     resources::ammo::tick(link);
+    combat::ward::tick(link);
     economy::merchants::tick();
     // Drains first, so stamina::tick sees this tick's spending before it regenerates.
     movement::sprint::tick(link);

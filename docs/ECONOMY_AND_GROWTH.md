@@ -142,3 +142,11 @@ unavailable when the rest of the economy remained enabled, so it was removed.
 Quest/relic gifts have their own control; they do not remove permanent purchase
 choices. Barnes's hints avoid future boss/item spoilers, and obsolete legacy
 relics report that their equipment is already owned.
+
+## Deliberate rewards and armor (0.11.0)
+
+The [current progression/ward design](PROGRESSION_AND_WARD.md) supersedes the
+blanket Growth Fragment replacement, individual-bug growth and stamina-based
+Magic Armor described in the historical milestones above. Existing earned
+benefits remain. New placements are explicit and Magic Armor uses renewable
+ward charges, with Sigil, Sunward and Mirror progression.

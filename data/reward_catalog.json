@@ -1,0 +1,1679 @@
+{
+  "source": "Dusklight Randomizer location catalogue, local pinned checkout; only names/check coordinates and original item IDs. Assignments are Definitive Edition design.",
+  "growth_budget": {
+    "native_heart_fragments": 85,
+    "collection_fragments": 11,
+    "curated_fragments": 14,
+    "total": 110
+  },
+  "finds": [
+    {
+      "check": "chest:D_MN01:1",
+      "location": "Lakebed Temple Central Room Small Chest",
+      "original": 15,
+      "kind": "Craft"
+    },
+    {
+      "check": "chest:D_MN01:11",
+      "location": "Lakebed Temple East Water Supply Clawshot Chest",
+      "original": 5,
+      "kind": "Flask"
+    },
+    {
+      "check": "chest:D_MN01:13",
+      "location": "Lakebed Temple West Second Floor Northeast Chest",
+      "original": 24,
+      "kind": "Craft"
+    },
+    {
+      "check": "chest:D_MN01:14",
+      "location": "Lakebed Temple Before Deku Toad Underwater Right Chest",
+      "original": 22,
+      "kind": "Craft"
+    },
+    {
+      "check": "chest:D_MN01:15",
+      "location": "Lakebed Temple Before Deku Toad Underwater Left Chest",
+      "original": 4,
+      "kind": "Craft"
+    },
+    {
+      "check": "chest:D_MN01:16",
+      "location": "Lakebed Temple Central Room Spire Chest",
+      "original": 4,
+      "kind": "Rupees"
+    },
+    {
+      "check": "chest:D_MN01:18",
+      "location": "Lakebed Temple Underwater Maze Small Chest",
+      "original": 22,
+      "kind": "Craft"
+    },
+    {
+      "check": "chest:D_MN01:19",
+      "location": "Lakebed Temple West Second Floor Central Small Chest",
+      "original": 4,
+      "kind": "Growth"
+    },
+    {
+      "check": "chest:D_MN01:21",
+      "location": "Lakebed Temple West Water Supply Small Chest",
+      "original": 23,
+      "kind": "Craft"
+    },
+    {
+      "check": "chest:D_MN01:24",
+      "location": "Lakebed Temple East Second Floor Southwest Chest",
+      "original": 22,
+      "kind": "Craft"
+    },
+    {
+      "check": "chest:D_MN01:25",
+      "location": "Lakebed Temple West Second Floor Southwest Underwater Chest",
+      "original": 4,
+      "kind": "Growth"
+    },
+    {
+      "check": "chest:D_MN01:27",
+      "location": "Lakebed Temple East Water Supply Small Chest",
+      "original": 23,
+      "kind": "Craft"
+    },
+    {
+      "check": "chest:D_MN01:28",
+      "location": "Lakebed Temple Lobby Left Chest",
+      "original": 15,
+      "kind": "Craft"
+    },
+    {
+      "check": "chest:D_MN01:29",
+      "location": "Lakebed Temple Lobby Rear Chest",
+      "original": 23,
+      "kind": "Craft"
+    },
+    {
+      "check": "chest:D_MN01:3",
+      "location": "Lakebed Temple Stalactite Room Chest",
+      "original": 23,
+      "kind": "Craft"
+    },
+    {
+      "check": "chest:D_MN01:30",
+      "location": "Lakebed Temple West Lower Small Chest",
+      "original": 23,
+      "kind": "Craft"
+    },
+    {
+      "check": "chest:D_MN01:7",
+      "location": "Lakebed Temple West Second Floor Southeast Chest",
+      "original": 4,
+      "kind": "Craft"
+    },
+    {
+      "check": "chest:D_MN04:13",
+      "location": "Goron Mines Chest Before Dangoro",
+      "original": 3,
+      "kind": "Craft"
+    },
+    {
+      "check": "chest:D_MN04:14",
+      "location": "Goron Mines Outside Clawshot Chest",
+      "original": 5,
+      "kind": "Craft"
+    },
+    {
+      "check": "chest:D_MN04:21",
+      "location": "Goron Mines Outside Underwater Chest",
+      "original": 5,
+      "kind": "Flask"
+    },
+    {
+      "check": "chest:D_MN04:24",
+      "location": "Goron Mines Gor Amato Small Chest",
+      "original": 4,
+      "kind": "Rupees"
+    },
+    {
+      "check": "chest:D_MN04:25",
+      "location": "Goron Mines Gor Ebizo Chest",
+      "original": 3,
+      "kind": "Craft"
+    },
+    {
+      "check": "chest:D_MN04:26",
+      "location": "Goron Mines Gor Liggs Chest",
+      "original": 5,
+      "kind": "Craft"
+    },
+    {
+      "check": "chest:D_MN04:27",
+      "location": "Goron Mines Entrance Chest",
+      "original": 4,
+      "kind": "Rupees"
+    },
+    {
+      "check": "chest:D_MN04:28",
+      "location": "Goron Mines Crystal Switch Room Small Chest",
+      "original": 4,
+      "kind": "Growth"
+    },
+    {
+      "check": "chest:D_MN04:30",
+      "location": "Goron Mines Main Magnet Room Top Chest",
+      "original": 5,
+      "kind": "Growth"
+    },
+    {
+      "check": "chest:D_MN05:1",
+      "location": "Forest Temple East Tile Worm Chest",
+      "original": 4,
+      "kind": "Growth"
+    },
+    {
+      "check": "chest:D_MN05:24",
+      "location": "Forest Temple West Tile Worm Room Vines Chest",
+      "original": 4,
+      "kind": "Rupees"
+    },
+    {
+      "check": "chest:D_MN05:26",
+      "location": "Forest Temple East Water Cave Chest",
+      "original": 3,
+      "kind": "Rupees"
+    },
+    {
+      "check": "chest:D_MN05:37",
+      "location": "Forest Temple Central Chest Behind Stairs",
+      "original": 4,
+      "kind": "Flask"
+    },
+    {
+      "check": "chest:D_MN05:7",
+      "location": "Forest Temple Entrance Vines Chest",
+      "original": 3,
+      "kind": "Rupees"
+    },
+    {
+      "check": "chest:D_MN05:9",
+      "location": "Forest Temple Second Monkey Under Bridge Chest",
+      "original": 3,
+      "kind": "Growth"
+    },
+    {
+      "check": "chest:D_MN06:2",
+      "location": "Temple of Time First Staircase Gohma Gate Chest",
+      "original": 16,
+      "kind": "Ancient"
+    },
+    {
+      "check": "chest:D_MN06:43",
+      "location": "Temple of Time Chest Before Darknut",
+      "original": 5,
+      "kind": "Ancient"
+    },
+    {
+      "check": "chest:D_MN06:44",
+      "location": "Temple of Time Scales Gohma Chest",
+      "original": 5,
+      "kind": "Ancient"
+    },
+    {
+      "check": "chest:D_MN06:45",
+      "location": "Temple of Time First Staircase Window Chest",
+      "original": 4,
+      "kind": "Rupees"
+    },
+    {
+      "check": "chest:D_MN06:46",
+      "location": "Temple of Time Armos Antechamber North Chest",
+      "original": 4,
+      "kind": "Ancient"
+    },
+    {
+      "check": "chest:D_MN06:47",
+      "location": "Temple of Time Scales Upper Chest",
+      "original": 4,
+      "kind": "Growth"
+    },
+    {
+      "check": "chest:D_MN06:48",
+      "location": "Temple of Time Floor Switch Puzzle Room Upper Chest",
+      "original": 4,
+      "kind": "Ancient"
+    },
+    {
+      "check": "chest:D_MN07:11",
+      "location": "City in the Sky West Garden Lower Chest",
+      "original": 10,
+      "kind": "Ancient"
+    },
+    {
+      "check": "chest:D_MN07:12",
+      "location": "City in the Sky Central Outside Poe Island Chest",
+      "original": 5,
+      "kind": "Ancient"
+    },
+    {
+      "check": "chest:D_MN07:14",
+      "location": "City in the Sky Chest Below Big Key Chest",
+      "original": 4,
+      "kind": "Ancient"
+    },
+    {
+      "check": "chest:D_MN07:15",
+      "location": "City in the Sky West Garden Corner Chest",
+      "original": 4,
+      "kind": "Ancient"
+    },
+    {
+      "check": "chest:D_MN07:17",
+      "location": "City in the Sky Chest Behind North Fan",
+      "original": 5,
+      "kind": "Ancient"
+    },
+    {
+      "check": "chest:D_MN07:18",
+      "location": "City in the Sky East Wing After Dinalfos Alcove Chest",
+      "original": 4,
+      "kind": "Ancient"
+    },
+    {
+      "check": "chest:D_MN07:19",
+      "location": "City in the Sky East Tile Worm Small Chest",
+      "original": 3,
+      "kind": "Ancient"
+    },
+    {
+      "check": "chest:D_MN07:20",
+      "location": "City in the Sky West Wing Tile Worm Chest",
+      "original": 11,
+      "kind": "Ancient"
+    },
+    {
+      "check": "chest:D_MN07:21",
+      "location": "City in the Sky West Wing Baba Balcony Chest",
+      "original": 15,
+      "kind": "Ancient"
+    },
+    {
+      "check": "chest:D_MN07:22",
+      "location": "City in the Sky West Wing Narrow Ledge Chest",
+      "original": 4,
+      "kind": "Ancient"
+    },
+    {
+      "check": "chest:D_MN07:23",
+      "location": "City in the Sky Baba Tower Narrow Ledge Chest",
+      "original": 15,
+      "kind": "Ancient"
+    },
+    {
+      "check": "chest:D_MN07:24",
+      "location": "City in the Sky Central Outside Ledge Chest",
+      "original": 4,
+      "kind": "Ancient"
+    },
+    {
+      "check": "chest:D_MN07:25",
+      "location": "City in the Sky West Garden Lone Island Chest",
+      "original": 5,
+      "kind": "Flask"
+    },
+    {
+      "check": "chest:D_MN07:26",
+      "location": "City in the Sky East Wing After Dinalfos Ledge Chest",
+      "original": 5,
+      "kind": "Ancient"
+    },
+    {
+      "check": "chest:D_MN07:27",
+      "location": "City in the Sky Underwater East Chest",
+      "original": 4,
+      "kind": "Rupees"
+    },
+    {
+      "check": "chest:D_MN07:3",
+      "location": "City in the Sky Underwater West Chest",
+      "original": 24,
+      "kind": "Ancient"
+    },
+    {
+      "check": "chest:D_MN07:7",
+      "location": "City in the Sky Baba Tower Top Small Chest",
+      "original": 3,
+      "kind": "Growth"
+    },
+    {
+      "check": "chest:D_MN08:25",
+      "location": "Palace of Twilight West Wing Second Room Southeast Chest",
+      "original": 6,
+      "kind": "Flask"
+    },
+    {
+      "check": "chest:D_MN08:27",
+      "location": "Palace of Twilight East Wing First Room West Alcove Chest",
+      "original": 5,
+      "kind": "Ancient"
+    },
+    {
+      "check": "chest:D_MN08:28",
+      "location": "Palace of Twilight East Wing Second Room Northeast Chest",
+      "original": 5,
+      "kind": "Growth"
+    },
+    {
+      "check": "chest:D_MN08:29",
+      "location": "Palace of Twilight East Wing Second Room Northwest Chest",
+      "original": 5,
+      "kind": "Mirror"
+    },
+    {
+      "check": "chest:D_MN08:36",
+      "location": "Palace of Twilight East Wing First Room North Small Chest",
+      "original": 5,
+      "kind": "Rupees"
+    },
+    {
+      "check": "chest:D_MN09:11",
+      "location": "Hyrule Castle East Wing Balcony Chest",
+      "original": 3,
+      "kind": "Ancient"
+    },
+    {
+      "check": "chest:D_MN09:13",
+      "location": "Hyrule Castle Main Hall Northwest Chest",
+      "original": 7,
+      "kind": "Ancient"
+    },
+    {
+      "check": "chest:D_MN09:15",
+      "location": "Hyrule Castle Treasure Room First Chest",
+      "original": 6,
+      "kind": "Ancient"
+    },
+    {
+      "check": "chest:D_MN09:16",
+      "location": "Hyrule Castle Treasure Room Second Chest",
+      "original": 18,
+      "kind": "Ancient"
+    },
+    {
+      "check": "chest:D_MN09:17",
+      "location": "Hyrule Castle Treasure Room Third Chest",
+      "original": 7,
+      "kind": "Ancient"
+    },
+    {
+      "check": "chest:D_MN09:18",
+      "location": "Hyrule Castle Treasure Room Fourth Chest",
+      "original": 27,
+      "kind": "Ancient"
+    },
+    {
+      "check": "chest:D_MN09:19",
+      "location": "Hyrule Castle Treasure Room Fifth Chest",
+      "original": 5,
+      "kind": "Ancient"
+    },
+    {
+      "check": "chest:D_MN09:2",
+      "location": "Hyrule Castle Main Hall Southwest Chest",
+      "original": 5,
+      "kind": "Ancient"
+    },
+    {
+      "check": "chest:D_MN09:21",
+      "location": "Hyrule Castle Treasure Room Third Small Chest",
+      "original": 12,
+      "kind": "Ancient"
+    },
+    {
+      "check": "chest:D_MN09:22",
+      "location": "Hyrule Castle Treasure Room Fifth Small Chest",
+      "original": 24,
+      "kind": "Ancient"
+    },
+    {
+      "check": "chest:D_MN09:23",
+      "location": "Hyrule Castle Treasure Room Fourth Small Chest",
+      "original": 15,
+      "kind": "Ancient"
+    },
+    {
+      "check": "chest:D_MN09:25",
+      "location": "Hyrule Castle Lantern Staircase Chest",
+      "original": 5,
+      "kind": "Ancient"
+    },
+    {
+      "check": "chest:D_MN09:26",
+      "location": "Hyrule Castle Treasure Room Sixth Small Chest",
+      "original": 4,
+      "kind": "Ancient"
+    },
+    {
+      "check": "chest:D_MN09:27",
+      "location": "Hyrule Castle Treasure Room Seventh Small Chest",
+      "original": 3,
+      "kind": "Ancient"
+    },
+    {
+      "check": "chest:D_MN09:28",
+      "location": "Hyrule Castle Treasure Room Eighth Small Chest",
+      "original": 2,
+      "kind": "Ancient"
+    },
+    {
+      "check": "chest:D_MN09:29",
+      "location": "Hyrule Castle Treasure Room Second Small Chest",
+      "original": 1,
+      "kind": "Ancient"
+    },
+    {
+      "check": "chest:D_MN09:30",
+      "location": "Hyrule Castle Graveyard Grave Switch Room Right Chest",
+      "original": 6,
+      "kind": "Ancient"
+    },
+    {
+      "check": "chest:D_MN09:33",
+      "location": "Hyrule Castle Graveyard Grave Switch Room Front Left Chest",
+      "original": 1,
+      "kind": "Ancient"
+    },
+    {
+      "check": "chest:D_MN09:34",
+      "location": "Hyrule Castle Graveyard Grave Switch Room Back Left Chest",
+      "original": 4,
+      "kind": "Ancient"
+    },
+    {
+      "check": "chest:D_MN09:35",
+      "location": "Hyrule Castle Treasure Room First Small Chest",
+      "original": 16,
+      "kind": "Ancient"
+    },
+    {
+      "check": "chest:D_MN09:5",
+      "location": "Hyrule Castle West Courtyard Central Small Chest",
+      "original": 4,
+      "kind": "Ancient"
+    },
+    {
+      "check": "chest:D_MN09:9",
+      "location": "Hyrule Castle West Courtyard North Small Chest",
+      "original": 4,
+      "kind": "Ancient"
+    },
+    {
+      "check": "chest:D_MN10:16",
+      "location": "Arbiters Grounds West Stalfos Northeast Chest",
+      "original": 10,
+      "kind": "Ancient"
+    },
+    {
+      "check": "chest:D_MN10:17",
+      "location": "Arbiters Grounds West Stalfos West Chest",
+      "original": 10,
+      "kind": "Ancient"
+    },
+    {
+      "check": "chest:D_MN10:25",
+      "location": "Arbiters Grounds West Small Chest Behind Block",
+      "original": 4,
+      "kind": "Flask"
+    },
+    {
+      "check": "chest:D_MN10:27",
+      "location": "Arbiters Grounds Spinner Room Second Small Chest",
+      "original": 4,
+      "kind": "Ancient"
+    },
+    {
+      "check": "chest:D_MN10:28",
+      "location": "Arbiters Grounds Spinner Room First Small Chest",
+      "original": 11,
+      "kind": "Sunward"
+    },
+    {
+      "check": "chest:D_MN10:29",
+      "location": "Arbiters Grounds Spinner Room Lower Central Small Chest",
+      "original": 3,
+      "kind": "Growth"
+    },
+    {
+      "check": "chest:D_MN10:3",
+      "location": "Arbiters Grounds West Chandelier Chest",
+      "original": 4,
+      "kind": "Rupees"
+    },
+    {
+      "check": "chest:D_MN10:30",
+      "location": "Arbiters Grounds Spinner Room Lower North Chest",
+      "original": 3,
+      "kind": "Growth"
+    },
+    {
+      "check": "chest:D_MN11:1",
+      "location": "Snowpeak Ruins Wooden Beam Central Chest",
+      "original": 4,
+      "kind": "Growth"
+    },
+    {
+      "check": "chest:D_MN11:14",
+      "location": "Snowpeak Ruins East Courtyard Buried Chest",
+      "original": 4,
+      "kind": "Ancient"
+    },
+    {
+      "check": "chest:D_MN11:19",
+      "location": "Snowpeak Ruins West Cannon Room Corner Chest",
+      "original": 10,
+      "kind": "Ancient"
+    },
+    {
+      "check": "chest:D_MN11:20",
+      "location": "Snowpeak Ruins West Cannon Room Central Chest",
+      "original": 4,
+      "kind": "Flask"
+    },
+    {
+      "check": "chest:D_MN11:22",
+      "location": "Snowpeak Ruins Lobby East Armor Chest",
+      "original": 3,
+      "kind": "Ancient"
+    },
+    {
+      "check": "chest:D_MN11:23",
+      "location": "Snowpeak Ruins Lobby West Armor Chest",
+      "original": 4,
+      "kind": "Rupees"
+    },
+    {
+      "check": "chest:D_MN11:3",
+      "location": "Snowpeak Ruins Courtyard Central Chest",
+      "original": 10,
+      "kind": "Ancient"
+    },
+    {
+      "check": "chest:D_SB02:61",
+      "location": "Eldin Lantern Cave First Chest",
+      "original": 4,
+      "kind": "Craft"
+    },
+    {
+      "check": "chest:D_SB02:63",
+      "location": "Eldin Lantern Cave Second Chest",
+      "original": 5,
+      "kind": "Craft"
+    },
+    {
+      "check": "chest:D_SB03:0",
+      "location": "Lake Lantern Cave Fourth Chest",
+      "original": 14,
+      "kind": "Craft"
+    },
+    {
+      "check": "chest:D_SB03:1",
+      "location": "Lake Lantern Cave First Chest",
+      "original": 26,
+      "kind": "Craft"
+    },
+    {
+      "check": "chest:D_SB03:10",
+      "location": "Lake Lantern Cave Eighth Chest",
+      "original": 4,
+      "kind": "Craft"
+    },
+    {
+      "check": "chest:D_SB03:11",
+      "location": "Lake Lantern Cave Twelfth Chest",
+      "original": 5,
+      "kind": "Craft"
+    },
+    {
+      "check": "chest:D_SB03:12",
+      "location": "Lake Lantern Cave Thirteenth Chest",
+      "original": 18,
+      "kind": "Craft"
+    },
+    {
+      "check": "chest:D_SB03:13",
+      "location": "Lake Lantern Cave Fourteenth Chest",
+      "original": 6,
+      "kind": "Craft"
+    },
+    {
+      "check": "chest:D_SB03:14",
+      "location": "Lake Lantern Cave Seventh Chest",
+      "original": 26,
+      "kind": "Craft"
+    },
+    {
+      "check": "chest:D_SB03:2",
+      "location": "Lake Lantern Cave Second Chest",
+      "original": 3,
+      "kind": "Craft"
+    },
+    {
+      "check": "chest:D_SB03:4",
+      "location": "Lake Lantern Cave Eleventh Chest",
+      "original": 27,
+      "kind": "Craft"
+    },
+    {
+      "check": "chest:D_SB03:5",
+      "location": "Lake Lantern Cave Tenth Chest",
+      "original": 5,
+      "kind": "Craft"
+    },
+    {
+      "check": "chest:D_SB03:6",
+      "location": "Lake Lantern Cave Third Chest",
+      "original": 4,
+      "kind": "Craft"
+    },
+    {
+      "check": "chest:D_SB03:7",
+      "location": "Lake Lantern Cave Fifth Chest",
+      "original": 4,
+      "kind": "Craft"
+    },
+    {
+      "check": "chest:D_SB03:8",
+      "location": "Lake Lantern Cave Sixth Chest",
+      "original": 6,
+      "kind": "Craft"
+    },
+    {
+      "check": "chest:D_SB03:9",
+      "location": "Lake Lantern Cave Ninth Chest",
+      "original": 14,
+      "kind": "Craft"
+    },
+    {
+      "check": "chest:D_SB04:61",
+      "location": "Eldin Stockcave Lantern Chest",
+      "original": 6,
+      "kind": "Craft"
+    },
+    {
+      "check": "chest:D_SB04:63",
+      "location": "Eldin Stockcave Upper Chest",
+      "original": 4,
+      "kind": "Craft"
+    },
+    {
+      "check": "chest:D_SB05:0",
+      "location": "West Hyrule Field Helmasaur Grotto Chest",
+      "original": 6,
+      "kind": "Craft"
+    },
+    {
+      "check": "chest:D_SB05:10",
+      "location": "Eldin Field Bomskit Grotto Left Chest",
+      "original": 5,
+      "kind": "Craft"
+    },
+    {
+      "check": "chest:D_SB05:6",
+      "location": "Eldin Field Bomskit Grotto Lantern Chest",
+      "original": 5,
+      "kind": "Craft"
+    },
+    {
+      "check": "chest:D_SB05:7",
+      "location": "Ordon Ranch Grotto Lantern Chest",
+      "original": 5,
+      "kind": "Craft"
+    },
+    {
+      "check": "chest:D_SB06:11",
+      "location": "Faron Field Corner Grotto Left Chest",
+      "original": 4,
+      "kind": "Craft"
+    },
+    {
+      "check": "chest:D_SB06:12",
+      "location": "Faron Field Corner Grotto Right Chest",
+      "original": 4,
+      "kind": "Craft"
+    },
+    {
+      "check": "chest:D_SB06:13",
+      "location": "Faron Field Corner Grotto Rear Chest",
+      "original": 3,
+      "kind": "Craft"
+    },
+    {
+      "check": "chest:D_SB06:17",
+      "location": "Eldin Field Stalfos Grotto Right Small Chest",
+      "original": 10,
+      "kind": "Craft"
+    },
+    {
+      "check": "chest:D_SB06:18",
+      "location": "Eldin Field Stalfos Grotto Left Small Chest",
+      "original": 10,
+      "kind": "Craft"
+    },
+    {
+      "check": "chest:D_SB07:14",
+      "location": "Gerudo Desert Rock Grotto Lantern Chest",
+      "original": 6,
+      "kind": "Craft"
+    },
+    {
+      "check": "chest:D_SB08:15",
+      "location": "Snowpeak Freezard Grotto Chest",
+      "original": 6,
+      "kind": "Craft"
+    },
+    {
+      "check": "chest:D_SB08:19",
+      "location": "Lanayru Field Skulltula Grotto Chest",
+      "original": 6,
+      "kind": "Craft"
+    },
+    {
+      "check": "chest:D_SB08:4",
+      "location": "Lake Hylia Bridge Bubble Grotto Chest",
+      "original": 6,
+      "kind": "Craft"
+    },
+    {
+      "check": "chest:D_SB08:8",
+      "location": "Gerudo Desert Skulltula Grotto Chest",
+      "original": 6,
+      "kind": "Craft"
+    },
+    {
+      "check": "chest:D_SB09:1",
+      "location": "Outside South Castle Town Tektite Grotto Chest",
+      "original": 6,
+      "kind": "Craft"
+    },
+    {
+      "check": "chest:D_SB09:16",
+      "location": "Eldin Field Water Bomb Fish Grotto Chest",
+      "original": 5,
+      "kind": "Craft"
+    },
+    {
+      "check": "chest:D_SB09:21",
+      "location": "Lake Hylia Shell Blade Grotto Chest",
+      "original": 6,
+      "kind": "Craft"
+    },
+    {
+      "check": "chest:D_SB09:5",
+      "location": "Lake Hylia Water Toadpoli Grotto Chest",
+      "original": 6,
+      "kind": "Craft"
+    },
+    {
+      "check": "chest:D_SB10:31",
+      "location": "South Faron Cave Chest",
+      "original": 3,
+      "kind": "Flask"
+    },
+    {
+      "check": "chest:F_SP108:27",
+      "location": "Faron Mist North Chest",
+      "original": 3,
+      "kind": "Rupees"
+    },
+    {
+      "check": "chest:F_SP108:28",
+      "location": "Faron Mist Stump Chest",
+      "original": 4,
+      "kind": "Rupees"
+    },
+    {
+      "check": "chest:F_SP108:29",
+      "location": "Faron Mist South Chest",
+      "original": 5,
+      "kind": "Growth"
+    },
+    {
+      "check": "chest:F_SP108:63",
+      "location": "North Faron Woods Deku Baba Chest",
+      "original": 3,
+      "kind": "Rupees"
+    },
+    {
+      "check": "chest:F_SP109:20",
+      "location": "Kakariko Watchtower Alcove Chest",
+      "original": 6,
+      "kind": "Rupees"
+    },
+    {
+      "check": "chest:F_SP111:24",
+      "location": "Kakariko Graveyard Lantern Chest",
+      "original": 5,
+      "kind": "Growth"
+    },
+    {
+      "check": "chest:F_SP113:19",
+      "location": "Zoras Domain Light All Torches Chest",
+      "original": 5,
+      "kind": "Craft"
+    },
+    {
+      "check": "chest:F_SP113:20",
+      "location": "Zoras Domain Extinguish All Torches Chest",
+      "original": 5,
+      "kind": "Craft"
+    },
+    {
+      "check": "chest:F_SP113:26",
+      "location": "Zoras Domain Chest Behind Waterfall",
+      "original": 4,
+      "kind": "Craft"
+    },
+    {
+      "check": "chest:F_SP113:30",
+      "location": "Zoras Domain Chest By Mother and Child Isles",
+      "original": 3,
+      "kind": "Rupees"
+    },
+    {
+      "check": "chest:F_SP114:0",
+      "location": "Snowpeak Cave Ice Lantern Chest",
+      "original": 6,
+      "kind": "Ancient"
+    },
+    {
+      "check": "chest:F_SP115:1",
+      "location": "Outside Lanayru Spring Left Statue Chest",
+      "original": 5,
+      "kind": "Flask"
+    },
+    {
+      "check": "chest:F_SP115:10",
+      "location": "Lanayru Spring Underwater Right Chest",
+      "original": 3,
+      "kind": "Craft"
+    },
+    {
+      "check": "chest:F_SP115:12",
+      "location": "Lanayru Spring Underwater Left Chest",
+      "original": 2,
+      "kind": "Craft"
+    },
+    {
+      "check": "chest:F_SP115:2",
+      "location": "Flight By Fowl Third Platform Chest",
+      "original": 5,
+      "kind": "Craft"
+    },
+    {
+      "check": "chest:F_SP115:25",
+      "location": "Flight By Fowl Top Platform Reward",
+      "original": 6,
+      "kind": "Craft"
+    },
+    {
+      "check": "chest:F_SP115:27",
+      "location": "Lanayru Spring Back Room Right Chest",
+      "original": 2,
+      "kind": "Craft"
+    },
+    {
+      "check": "chest:F_SP115:28",
+      "location": "Lanayru Spring Back Room Left Chest",
+      "original": 10,
+      "kind": "Craft"
+    },
+    {
+      "check": "chest:F_SP115:3",
+      "location": "Lanayru Spring West Double Clawshot Chest",
+      "original": 6,
+      "kind": "Craft"
+    },
+    {
+      "check": "chest:F_SP115:4",
+      "location": "Lanayru Spring East Double Clawshot Chest",
+      "original": 6,
+      "kind": "Craft"
+    },
+    {
+      "check": "chest:F_SP115:5",
+      "location": "Lake Hylia Underwater Chest",
+      "original": 6,
+      "kind": "Craft"
+    },
+    {
+      "check": "chest:F_SP115:6",
+      "location": "Outside Lanayru Spring Right Statue Chest",
+      "original": 6,
+      "kind": "Rupees"
+    },
+    {
+      "check": "chest:F_SP115:7",
+      "location": "Flight By Fowl Fifth Platform Chest",
+      "original": 3,
+      "kind": "Craft"
+    },
+    {
+      "check": "chest:F_SP115:8",
+      "location": "Flight By Fowl Fourth Platform Chest",
+      "original": 4,
+      "kind": "Craft"
+    },
+    {
+      "check": "chest:F_SP116:1",
+      "location": "Doctors Office Balcony Chest",
+      "original": 4,
+      "kind": "Craft"
+    },
+    {
+      "check": "chest:F_SP117:2",
+      "location": "Sacred Grove Spinner Chest",
+      "original": 6,
+      "kind": "Rupees"
+    },
+    {
+      "check": "chest:F_SP117:3",
+      "location": "Lost Woods Lantern Chest",
+      "original": 13,
+      "kind": "Ancient"
+    },
+    {
+      "check": "chest:F_SP118:15",
+      "location": "Outside Arbiters Grounds Lantern Chest",
+      "original": 5,
+      "kind": "Ancient"
+    },
+    {
+      "check": "chest:F_SP118:30",
+      "location": "Bulblin Camp Small Chest in Back of Camp",
+      "original": 5,
+      "kind": "Ancient"
+    },
+    {
+      "check": "chest:F_SP118:31",
+      "location": "Bulblin Camp First Chest Under Tower At Entrance",
+      "original": 15,
+      "kind": "Ancient"
+    },
+    {
+      "check": "chest:F_SP121:10",
+      "location": "Lake Hylia Bridge Vines Chest",
+      "original": 6,
+      "kind": "Craft"
+    },
+    {
+      "check": "chest:F_SP121:15",
+      "location": "Lake Hylia Bridge Owl Statue Chest",
+      "original": 6,
+      "kind": "Craft"
+    },
+    {
+      "check": "chest:F_SP121:4",
+      "location": "Kakariko Gorge Owl Statue Chest",
+      "original": 6,
+      "kind": "Craft"
+    },
+    {
+      "check": "chest:F_SP121:6",
+      "location": "Faron Field Bridge Chest",
+      "original": 6,
+      "kind": "Craft"
+    },
+    {
+      "check": "chest:F_SP121:7",
+      "location": "Lanayru Field Behind Gate Underwater Chest",
+      "original": 6,
+      "kind": "Rupees"
+    },
+    {
+      "check": "chest:F_SP121:9",
+      "location": "Lake Hylia Bridge Cliff Chest",
+      "original": 5,
+      "kind": "Craft"
+    },
+    {
+      "check": "chest:F_SP122:11",
+      "location": "Hyrule Field Amphitheater Owl Statue Chest",
+      "original": 6,
+      "kind": "Craft"
+    },
+    {
+      "check": "chest:F_SP122:12",
+      "location": "Outside South Castle Town Tightrope Chest",
+      "original": 6,
+      "kind": "Craft"
+    },
+    {
+      "check": "chest:F_SP122:13",
+      "location": "Outside South Castle Town Double Clawshot Chasm Chest",
+      "original": 6,
+      "kind": "Craft"
+    },
+    {
+      "check": "chest:F_SP122:14",
+      "location": "Outside South Castle Town Fountain Chest",
+      "original": 6,
+      "kind": "Craft"
+    },
+    {
+      "check": "chest:F_SP124:0",
+      "location": "Gerudo Desert South Chest Behind Wooden Gates",
+      "original": 6,
+      "kind": "Ancient"
+    },
+    {
+      "check": "chest:F_SP124:1",
+      "location": "Gerudo Desert Owl Statue Chest",
+      "original": 6,
+      "kind": "Ancient"
+    },
+    {
+      "check": "chest:F_SP124:10",
+      "location": "Gerudo Desert Campfire West Chest",
+      "original": 14,
+      "kind": "Ancient"
+    },
+    {
+      "check": "chest:F_SP124:11",
+      "location": "Gerudo Desert Peahat Ledge Chest",
+      "original": 4,
+      "kind": "Ancient"
+    },
+    {
+      "check": "chest:F_SP124:13",
+      "location": "Gerudo Desert North Small Chest Before Bulblin Camp",
+      "original": 14,
+      "kind": "Ancient"
+    },
+    {
+      "check": "chest:F_SP124:2",
+      "location": "Gerudo Desert Northeast Chest Behind Gates",
+      "original": 4,
+      "kind": "Ancient"
+    },
+    {
+      "check": "chest:F_SP124:3",
+      "location": "Gerudo Desert Northwest Chest Behind Gates",
+      "original": 4,
+      "kind": "Ancient"
+    },
+    {
+      "check": "chest:F_SP124:5",
+      "location": "Gerudo Desert Lone Small Chest",
+      "original": 14,
+      "kind": "Ancient"
+    },
+    {
+      "check": "chest:F_SP124:6",
+      "location": "Gerudo Desert East Canyon Chest",
+      "original": 4,
+      "kind": "Ancient"
+    },
+    {
+      "check": "chest:F_SP124:7",
+      "location": "Gerudo Desert West Canyon Chest",
+      "original": 5,
+      "kind": "Flask"
+    },
+    {
+      "check": "chest:F_SP124:8",
+      "location": "Gerudo Desert Campfire North Chest",
+      "original": 4,
+      "kind": "Ancient"
+    },
+    {
+      "check": "chest:F_SP124:9",
+      "location": "Gerudo Desert Campfire East Chest",
+      "original": 5,
+      "kind": "Ancient"
+    },
+    {
+      "check": "chest:R_SP01:1",
+      "location": "Links Basement Chest",
+      "original": 237,
+      "kind": "Flask"
+    },
+    {
+      "check": "chest:R_SP109:17",
+      "location": "Kakariko Watchtower Chest",
+      "original": 5,
+      "kind": "Rupees"
+    },
+    {
+      "check": "chest:R_SP109:23",
+      "location": "Kakariko Inn Chest",
+      "original": 4,
+      "kind": "Flask"
+    },
+    {
+      "check": "freestanding:F_SP103:128",
+      "location": "Ordon Bo Cliff Rupee",
+      "original": 3,
+      "kind": "Craft"
+    },
+    {
+      "check": "freestanding:F_SP103:129",
+      "location": "Ordon Rusl House Roof Rupee 2",
+      "original": 3,
+      "kind": "Craft"
+    },
+    {
+      "check": "freestanding:F_SP103:130",
+      "location": "Ordon Rupee Under Bridge",
+      "original": 1,
+      "kind": "Craft"
+    },
+    {
+      "check": "freestanding:F_SP103:132",
+      "location": "Ordon Rusl House Roof Rupee 1",
+      "original": 3,
+      "kind": "Craft"
+    },
+    {
+      "check": "freestanding:F_SP103:133",
+      "location": "Ordon Rupee Under Tall Tree 2",
+      "original": 1,
+      "kind": "Craft"
+    },
+    {
+      "check": "freestanding:F_SP103:134",
+      "location": "Ordon Bo Window Rupee 2",
+      "original": 1,
+      "kind": "Craft"
+    },
+    {
+      "check": "freestanding:F_SP103:135",
+      "location": "Ordon Rupee Under Tall Tree 1",
+      "original": 1,
+      "kind": "Craft"
+    },
+    {
+      "check": "freestanding:F_SP103:136",
+      "location": "Ordon Hidden Rusl House Rupee",
+      "original": 6,
+      "kind": "Craft"
+    },
+    {
+      "check": "freestanding:F_SP103:137",
+      "location": "Ordon Tree Short Branch Rupee",
+      "original": 2,
+      "kind": "Craft"
+    },
+    {
+      "check": "freestanding:F_SP103:138",
+      "location": "Ordon Bo Window Rupee 1",
+      "original": 1,
+      "kind": "Craft"
+    },
+    {
+      "check": "freestanding:F_SP103:139",
+      "location": "Ordon Bo Roof Rupee",
+      "original": 3,
+      "kind": "Craft"
+    },
+    {
+      "check": "freestanding:F_SP103:145",
+      "location": "Ordon Rupee In River 2",
+      "original": 1,
+      "kind": "Craft"
+    },
+    {
+      "check": "freestanding:F_SP103:148",
+      "location": "Ordon Shield House Ledge Grass Rupee",
+      "original": 5,
+      "kind": "Craft"
+    },
+    {
+      "check": "freestanding:F_SP103:149",
+      "location": "Ordon Rupee In River 1",
+      "original": 1,
+      "kind": "Craft"
+    },
+    {
+      "check": "freestanding:F_SP103:150",
+      "location": "Ordon Rupee In Grass By Bo",
+      "original": 1,
+      "kind": "Craft"
+    },
+    {
+      "check": "freestanding:F_SP103:151",
+      "location": "Ordon Tree Long Branch Rupee",
+      "original": 3,
+      "kind": "Craft"
+    },
+    {
+      "check": "freestanding:F_SP108:128",
+      "location": "Faron Woods Coro Boulder Rupee 1",
+      "original": 1,
+      "kind": "Craft"
+    },
+    {
+      "check": "freestanding:F_SP108:129",
+      "location": "Faron Woods Coro Boulder Rupee 2",
+      "original": 1,
+      "kind": "Craft"
+    },
+    {
+      "check": "freestanding:F_SP108:130",
+      "location": "Faron Woods Coro Boulder Rupee 3",
+      "original": 2,
+      "kind": "Craft"
+    },
+    {
+      "check": "freestanding:F_SP108:131",
+      "location": "Faron Woods Coro Boulder Rupee 4",
+      "original": 3,
+      "kind": "Craft"
+    },
+    {
+      "check": "freestanding:F_SP109:133",
+      "location": "Kakariko Village Ant House Ledge Box Rupee",
+      "original": 4,
+      "kind": "Craft"
+    },
+    {
+      "check": "freestanding:F_SP109:135",
+      "location": "Kakariko Village Hot Spring Ledge Box Rupee",
+      "original": 3,
+      "kind": "Craft"
+    },
+    {
+      "check": "freestanding:F_SP109:136",
+      "location": "Kakariko Village Spring Shortcut Box Rupee 1",
+      "original": 2,
+      "kind": "Craft"
+    },
+    {
+      "check": "freestanding:F_SP109:137",
+      "location": "Kakariko Village Spring Shortcut Box Rupee 2",
+      "original": 3,
+      "kind": "Craft"
+    },
+    {
+      "check": "freestanding:F_SP109:138",
+      "location": "Kakariko Village Bell Rupee",
+      "original": 7,
+      "kind": "Craft"
+    },
+    {
+      "check": "freestanding:F_SP109:141",
+      "location": "Eldin Spring Underwater Boulder Rupee",
+      "original": 6,
+      "kind": "Craft"
+    },
+    {
+      "check": "freestanding:F_SP110:128",
+      "location": "Death Mountain Volcano Pipe Ledge Rock Rupee",
+      "original": 3,
+      "kind": "Craft"
+    },
+    {
+      "check": "freestanding:F_SP110:129",
+      "location": "Death Mountain Volcano Ledge Rupee 1",
+      "original": 3,
+      "kind": "Craft"
+    },
+    {
+      "check": "freestanding:F_SP110:130",
+      "location": "Death Mountain Volcano Ledge Rupee 2",
+      "original": 3,
+      "kind": "Craft"
+    },
+    {
+      "check": "freestanding:F_SP110:131",
+      "location": "Death Mountain Volcano Ledge Rupee 3",
+      "original": 3,
+      "kind": "Craft"
+    },
+    {
+      "check": "freestanding:F_SP111:142",
+      "location": "Kakariko Graveyard Underwater Boulder Rupee",
+      "original": 4,
+      "kind": "Craft"
+    },
+    {
+      "check": "freestanding:F_SP113:131",
+      "location": "Zoras Domain Top Ledge Rupee",
+      "original": 3,
+      "kind": "Craft"
+    },
+    {
+      "check": "freestanding:F_SP113:132",
+      "location": "Zoras Domain Shortcut Ledge Rupee",
+      "original": 3,
+      "kind": "Craft"
+    },
+    {
+      "check": "freestanding:F_SP113:133",
+      "location": "Zoras Domain Throne West Underwater Rupee",
+      "original": 3,
+      "kind": "Craft"
+    },
+    {
+      "check": "freestanding:F_SP113:134",
+      "location": "Zoras Domain Throne East Underwater Rupee",
+      "original": 3,
+      "kind": "Craft"
+    },
+    {
+      "check": "freestanding:F_SP113:135",
+      "location": "Zoras Domain Throne Northwest Underwater Rupee",
+      "original": 3,
+      "kind": "Craft"
+    },
+    {
+      "check": "freestanding:F_SP113:136",
+      "location": "Zoras Domain Throne South Underwater Rupee",
+      "original": 3,
+      "kind": "Craft"
+    },
+    {
+      "check": "freestanding:F_SP113:137",
+      "location": "Zoras Domain Throne West Gate Underwater Rupee",
+      "original": 2,
+      "kind": "Craft"
+    },
+    {
+      "check": "freestanding:F_SP113:138",
+      "location": "Zoras Domain Throne East Gate Underwater Rupee",
+      "original": 3,
+      "kind": "Craft"
+    },
+    {
+      "check": "freestanding:F_SP113:139",
+      "location": "Zoras Domain Shortcut Upper Boulder Rupee",
+      "original": 1,
+      "kind": "Craft"
+    },
+    {
+      "check": "freestanding:F_SP113:140",
+      "location": "Zoras Domain Shortcut Lower Boulder Rupee",
+      "original": 2,
+      "kind": "Craft"
+    },
+    {
+      "check": "freestanding:F_SP113:141",
+      "location": "Zoras Domain North Underwater Boulder Rupee",
+      "original": 4,
+      "kind": "Craft"
+    },
+    {
+      "check": "freestanding:F_SP113:142",
+      "location": "Zoras Domain Central Underwater Boulder Rupee",
+      "original": 4,
+      "kind": "Craft"
+    },
+    {
+      "check": "freestanding:F_SP113:149",
+      "location": "Zoras Domain Waterfall Ledge Rupee",
+      "original": 2,
+      "kind": "Craft"
+    },
+    {
+      "check": "freestanding:F_SP113:150",
+      "location": "Zoras Domain Behind Waterfall Rupee",
+      "original": 2,
+      "kind": "Craft"
+    },
+    {
+      "check": "freestanding:F_SP113:151",
+      "location": "Zoras Domain Vine Ledge Rupee",
+      "original": 2,
+      "kind": "Craft"
+    },
+    {
+      "check": "freestanding:F_SP114:128",
+      "location": "Snowboarding Top Left Rupee",
+      "original": 1,
+      "kind": "Ancient"
+    },
+    {
+      "check": "freestanding:F_SP114:129",
+      "location": "Snowboarding Top Right Rupee",
+      "original": 1,
+      "kind": "Ancient"
+    },
+    {
+      "check": "freestanding:F_SP114:130",
+      "location": "Snowboarding Bridge Ledge Upper Rupee",
+      "original": 1,
+      "kind": "Ancient"
+    },
+    {
+      "check": "freestanding:F_SP114:131",
+      "location": "Snowboarding Bridge Ledge Middle Rupee",
+      "original": 1,
+      "kind": "Ancient"
+    },
+    {
+      "check": "freestanding:F_SP114:132",
+      "location": "Snowboarding Bridge Ledge Bottom Rupee",
+      "original": 1,
+      "kind": "Ancient"
+    },
+    {
+      "check": "freestanding:F_SP114:133",
+      "location": "Snowboarding Snowy Tree Top Rupee 1",
+      "original": 2,
+      "kind": "Ancient"
+    },
+    {
+      "check": "freestanding:F_SP114:134",
+      "location": "Snowboarding Snowy Tree Top Rupee 2",
+      "original": 4,
+      "kind": "Ancient"
+    },
+    {
+      "check": "freestanding:F_SP114:135",
+      "location": "Snowboarding Snowy Tree Top Rupee 3",
+      "original": 5,
+      "kind": "Ancient"
+    },
+    {
+      "check": "freestanding:F_SP114:136",
+      "location": "Snowboarding Shortcut Rupee 1",
+      "original": 1,
+      "kind": "Ancient"
+    },
+    {
+      "check": "freestanding:F_SP114:137",
+      "location": "Snowboarding Shortcut Rupee 2",
+      "original": 1,
+      "kind": "Ancient"
+    },
+    {
+      "check": "freestanding:F_SP114:138",
+      "location": "Snowboarding Shortcut Rupee 3",
+      "original": 1,
+      "kind": "Ancient"
+    },
+    {
+      "check": "freestanding:F_SP114:139",
+      "location": "Snowboarding Shortcut Rupee 4",
+      "original": 4,
+      "kind": "Ancient"
+    },
+    {
+      "check": "freestanding:F_SP114:140",
+      "location": "Snowboarding Shortcut Rupee 5",
+      "original": 1,
+      "kind": "Ancient"
+    },
+    {
+      "check": "freestanding:F_SP114:141",
+      "location": "Snowboarding Shortcut Rupee 6",
+      "original": 1,
+      "kind": "Ancient"
+    },
+    {
+      "check": "freestanding:F_SP114:142",
+      "location": "Snowboarding Shortcut Rupee 7",
+      "original": 1,
+      "kind": "Ancient"
+    },
+    {
+      "check": "freestanding:F_SP114:143",
+      "location": "Snowboarding Shortcut Rupee 8",
+      "original": 1,
+      "kind": "Ancient"
+    },
+    {
+      "check": "freestanding:F_SP114:144",
+      "location": "Snowboarding Shortcut Rupee 9",
+      "original": 1,
+      "kind": "Ancient"
+    },
+    {
+      "check": "freestanding:F_SP114:145",
+      "location": "Snowboarding Shortcut Rupee 10",
+      "original": 1,
+      "kind": "Ancient"
+    },
+    {
+      "check": "freestanding:F_SP114:146",
+      "location": "Snowboarding Shortcut Rupee 11",
+      "original": 1,
+      "kind": "Ancient"
+    },
+    {
+      "check": "freestanding:F_SP115:128",
+      "location": "Lake Hylia Right Underwater Pillar Rupee",
+      "original": 3,
+      "kind": "Craft"
+    },
+    {
+      "check": "freestanding:F_SP115:129",
+      "location": "Lake Hylia Left Underwater Pillar Rupee",
+      "original": 3,
+      "kind": "Craft"
+    },
+    {
+      "check": "freestanding:F_SP115:143",
+      "location": "Lanayru Spring Lower Underwater Boulder Rupee",
+      "original": 4,
+      "kind": "Craft"
+    },
+    {
+      "check": "freestanding:F_SP115:144",
+      "location": "Lanayru Spring Upper Underwater Boulder Rupee",
+      "original": 4,
+      "kind": "Craft"
+    },
+    {
+      "check": "freestanding:F_SP115:154",
+      "location": "Lake Hylia Left Underwater Boulder Rupee",
+      "original": 1,
+      "kind": "Craft"
+    },
+    {
+      "check": "freestanding:F_SP115:155",
+      "location": "Lake Hylia Right Underwater Boulder Rupee",
+      "original": 1,
+      "kind": "Craft"
+    },
+    {
+      "check": "freestanding:F_SP121:134",
+      "location": "Lanayru Field South Underwater Boulder Rupee",
+      "original": 3,
+      "kind": "Craft"
+    },
+    {
+      "check": "freestanding:F_SP121:135",
+      "location": "Lanayru Field North Underwater Boulder Rupee",
+      "original": 3,
+      "kind": "Craft"
+    },
+    {
+      "check": "freestanding:F_SP121:136",
+      "location": "Lanayru Field Tree Boulder Rupee",
+      "original": 5,
+      "kind": "Craft"
+    },
+    {
+      "check": "freestanding:F_SP121:137",
+      "location": "Lanayru Field North Spinner Track Boulder Rupee",
+      "original": 3,
+      "kind": "Craft"
+    },
+    {
+      "check": "freestanding:F_SP121:138",
+      "location": "Lanayru Field South Spinner Track Boulder Rupee",
+      "original": 3,
+      "kind": "Craft"
+    },
+    {
+      "check": "freestanding:F_SP121:139",
+      "location": "Lake Hylia Bridge Owl Statue Boulder Rupee",
+      "original": 2,
+      "kind": "Craft"
+    },
+    {
+      "check": "freestanding:F_SP121:140",
+      "location": "Lake Hylia Bridge Faron Boulder Rupee",
+      "original": 3,
+      "kind": "Craft"
+    },
+    {
+      "check": "freestanding:F_SP121:141",
+      "location": "Kakariko Gorge Owl Statue Boulder Rupee",
+      "original": 3,
+      "kind": "Craft"
+    },
+    {
+      "check": "freestanding:F_SP121:142",
+      "location": "Kakariko Gorge Spire Boulder Rupee",
+      "original": 3,
+      "kind": "Craft"
+    },
+    {
+      "check": "freestanding:F_SP121:143",
+      "location": "Bridge of Eldin Boulder Rupee",
+      "original": 4,
+      "kind": "Craft"
+    },
+    {
+      "check": "freestanding:F_SP122:131",
+      "location": "Outside South Castle Town Boulder Rupee",
+      "original": 3,
+      "kind": "Craft"
+    },
+    {
+      "check": "freestanding:F_SP122:132",
+      "location": "West Hyrule Field Northern Boulder Rupee",
+      "original": 3,
+      "kind": "Craft"
+    },
+    {
+      "check": "freestanding:F_SP122:133",
+      "location": "West Hyrule Field Southern Boulder Rupee",
+      "original": 3,
+      "kind": "Craft"
+    },
+    {
+      "check": "freestanding:F_SP126:145",
+      "location": "Upper Zoras River Central Underwater Boulder Rupee",
+      "original": 2,
+      "kind": "Craft"
+    },
+    {
+      "check": "freestanding:F_SP126:146",
+      "location": "Upper Zoras River West Underwater Boulder Rupee",
+      "original": 2,
+      "kind": "Craft"
+    },
+    {
+      "check": "freestanding:F_SP126:147",
+      "location": "Upper Zoras River East Underwater Boulder Rupee",
+      "original": 3,
+      "kind": "Craft"
+    },
+    {
+      "check": "freestanding:F_SP126:148",
+      "location": "Upper Zoras River Ledge Boulder Rupee",
+      "original": 2,
+      "kind": "Craft"
+    }
+  ]
+}

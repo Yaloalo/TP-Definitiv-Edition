@@ -9,6 +9,8 @@ code=r'''
 #include <vector>
 #include "progression/model.hpp"
 #include "economy/merchant_model.hpp"
+#include "economy/guild_model.hpp"
+#include "combat/ward_model.hpp"
 struct ModContext{};enum HookAction{HOOK_CONTINUE,HOOK_SKIP_ORIGINAL};constexpr int MOD_OK=0,PAD_1=0;
 constexpr int COLLECT_HYLIAN_SHIELD=2,SLOT_5=5,dItemNo_HAWK_EYE_e=0x3e,dItemNo_NORMAL_BOMB_e=0x70,dItemNo_WATER_BOMB_e=0x71,dItemNo_POKE_BOMB_e=0x72;
 ModContext* mod_ctx=nullptr;bool active=true,visible=false;bool is_active(){return active;}
@@ -16,7 +18,7 @@ namespace mods{template<class T>T arg(void* p,int i){return *static_cast<T*>(sta
 struct Ui{int is_any_document_visible(ModContext*,bool* result){*result=visible;return MOD_OK;}}ui;auto* svc_ui=&ui;
 struct dMenu_Collect2D_c{int sub=0;int getSubWindowOpenCheck(){return sub;}};
 struct mDoCPd_c{static inline int trig=0;static int getTrigZ(int){return trig&1;}static int getTrigB(int){return trig&2;}
-static int getTrigA(int){return trig&4;}static int getTrigX(int){return trig&8;}};
+static int getTrigA(int){return trig&4;}static int getTrigX(int){return trig&8;}static int getTrigRight(int){return trig&16;}static int getTrigLeft(int){return trig&32;}};
 namespace remaster::progression{Model state;bool valid=true;bool ready(){return valid;}Model& model(){return state;}}
 namespace remaster::economy::merchants{bool reward_owned(const Relic&){return true;}}
 namespace remaster::progression::collections{int pairs(){return 12;}int souls(){return 60;}}
@@ -31,7 +33,7 @@ Port* dComIfGp_getCurrentGrafPort(){return &port;}Font* mDoExt_getSubFont(){retu
 void J2DFillBox(float,float,float,float,JUtility::TColor){}
 bool dComIfGs_isCollectShield(int){return true;}bool dComIfGs_isCollectClothes(int){return true;}
 int dComIfGs_getItem(int,bool){return 0x3e;}int dComIfGs_getBombMax(int){return 60;}
-namespace remaster::progression::pause{bool g_open=false;dMenu_Collect2D_c* g_owner=nullptr;
+namespace remaster::progression::pause{bool g_open=false;int g_page=0;dMenu_Collect2D_c* g_owner=nullptr;
 '''
 code+=''.join(function(source,n) for n in ['reset','available','wait_pre','close_pre','draw_post'])+'}\n'
 code+=r'''
@@ -43,12 +45,18 @@ int main(){using namespace remaster::progression;using namespace pause;state.mig
  mDoCPd_c::trig=8;wait_pre(nullptr,a,nullptr,nullptr);assert(state.staminaPoints==1&&state.unassigned()==0);
  wait_pre(nullptr,a,nullptr,nullptr);assert(state.staminaPoints==1); // cannot overspend
  for(const auto& r:remaster::economy::merchants::kRelics)state.claim(r.check,r.id);
- state.equipmentUpgrades=7;draw_post(nullptr,a,nullptr,nullptr);assert(font.bottom<400&&font.text.size()==21&&port.restored==2);
+ state.equipmentUpgrades=7;draw_post(nullptr,a,nullptr,nullptr);assert(font.bottom<400&&font.text.size()>=13&&port.restored==2);
  bool health=false,stamina=false,flask=false,gear=false;
  for(auto& line:font.text){health|=line.find("Health: 4")!=std::string::npos;stamina|=line.find("Stamina: 120")!=std::string::npos;
  flask|=line.find("Sacred Flask")!=std::string::npos;gear|=line.find("Bomb capacities")!=std::string::npos;}
  assert(health&&stamina&&flask&&gear);
- bool obsolete=false;for(auto&row:font.text)obsolete|=row.find("Surveyor's Lens: equipment already owned")!=std::string::npos;assert(obsolete);
+ // Relics/recipes occupy a bounded second page; honors remain independent.
+ font.text.clear();mDoCPd_c::trig=16;wait_pre(nullptr,a,nullptr,nullptr);draw_post(nullptr,a,nullptr,nullptr);assert(g_page==1&&font.bottom<400);
+ bool obsolete=false;for(auto&row:font.text)obsolete|=row.find("Surveyor's Lens: equipment owned")!=std::string::npos;assert(obsolete);
+ auto hearts=state.healthPoints;mDoCPd_c::trig=4;wait_pre(nullptr,a,nullptr,nullptr);assert(state.healthPoints==hearts);
+ font.text.clear();mDoCPd_c::trig=16;wait_pre(nullptr,a,nullptr,nullptr);state.honors=511;draw_post(nullptr,a,nullptr,nullptr);assert(g_page==2&&font.bottom<400);font.text.clear();wait_pre(nullptr,a,nullptr,nullptr);draw_post(nullptr,a,nullptr,nullptr);assert(g_page==3&&font.bottom<400);
+ bool cave=false;for(auto&row:font.text)cave|=row.find("Cave of Ordeals Crest")!=std::string::npos;assert(cave);
+ mDoCPd_c::trig=16;wait_pre(nullptr,a,nullptr,nullptr);assert(g_page==0);
  for(int gate=0;gate<4;++gate){font.text.clear();active=gate!=0;visible=gate==1;valid=gate!=2;menu.sub=gate==3?1:0;
  assert(wait_pre(nullptr,a,nullptr,nullptr)==HOOK_CONTINUE);draw_post(nullptr,a,nullptr,nullptr);assert(font.text.empty()&&!g_open);}
  active=valid=true;visible=false;menu.sub=0;mDoCPd_c::trig=1;wait_pre(nullptr,a,nullptr,nullptr);

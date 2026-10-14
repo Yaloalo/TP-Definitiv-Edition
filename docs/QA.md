@@ -75,6 +75,11 @@ engine, load game assets or traverse the story.
 
 | `save_load_safety` | Actual blob probes/reads, oversize/error/corruption/no-slot rejection and unwritable invalid progress |
 
+| `treasure_ward_models` | 278 unique assignments, 110-fragment/20-shard budgets, all component recipes, ward tiers, exact TDF1/TDF2 migration and atomic failures |
+| `treasure_callbacks` | Production previews/receipts, protected native items, finite material/thread grants, honors and generated-data integrity |
+| `ward_callbacks` | Actual callbacks plus pinned native damage branch across armor presets, no rupee/stamina drain, recovery clocks and save/scene/tunic/boss/retry isolation |
+| `guild_callbacks` | Native equipment/story/location gates and atomic permanent artifact/component spending |
+
 `tests/required_suites.json` prevents missing or accidentally unregistered suites
 from yielding a passing gate. Skipped tests and timeouts fail. Hook checks also
 reject duplicate named hook records and missing/ambiguous dynamic targets.

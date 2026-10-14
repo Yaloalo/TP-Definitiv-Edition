@@ -2,6 +2,8 @@
 #include "economy/rare.hpp"
 #include "economy/merchants.hpp"
 #include "economy/merchant_model.hpp"
+#include "economy/guild.hpp"
+#include "progression/treasure_model.hpp"
 #include "progression/rewards.hpp"
 #include "progression/collections.hpp"
 #include "core/player.hpp"
@@ -27,8 +29,8 @@ UiDialogHandle g_dialog=0;
 fpc_ProcID g_native=fpcM_ERROR_PROCESS_ID_e;
 using Clock=std::chrono::steady_clock;
 Clock::time_point g_nativeUntil{};
-enum class Action { Purchase,Trade,Present,Claim,Native,Leave };
-struct Choice { Action action;const rare::Offer* offer=nullptr;const merchants::Relic* relic=nullptr; };
+enum class Action { Purchase,Trade,Craft,Present,Claim,Native,Leave };
+struct Choice { Action action;const rare::Offer* offer=nullptr;const merchants::Relic* relic=nullptr;const guild::Recipe* recipe=nullptr; };
 std::vector<Choice> g_choices;
 Kind kind(fopAc_ac_c* actor) {
     if(!actor)return Kind::None;
@@ -77,17 +79,18 @@ const char* title(Kind value) {
 std::string body() {
     const char* text="";
     switch(g_context.kind){
-    case Kind::Malo:text="A dependable shield is worth keeping. Sixty rupees buys the Hylian Shield.<br/>Your Hawkeye comes with the Bow. You won't need to buy it here.";break;
-    case Kind::Barnes:text="Bring me Agitha's Deepwater Craft Relic and I'll enlarge your bomb reserves.<br/>Your bomb bags gain new possibilities as your journey continues.";break;
-    case Kind::Armorer:text="Magic Armor costs 180 rupees. Its protection draws on stamina.<br/>Jovani's Twilight Sigil helps it use that strength more efficiently.";break;
-    case Kind::Agitha:text="Every golden guest deserves a place at my ball! Bring their partners too.<br/>I'll reward the first pair, then three, six and twelve pairs.";break;
+    case Kind::Malo:text="A dependable shield is worth keeping. Sixty rupees buys the Hylian Shield.<br/>Your Hawkeye comes with the Bow. Bring crafting relics and Gilded Thread for better fletching.";break;
+    case Kind::Barnes:text="Bring me Agitha's Deepwater Craft Relic and I'll enlarge your bomb reserves.<br/>Ancient runes and Gilded Thread let me make a harness that restores bombs faster.";break;
+    case Kind::Armorer:text="Magic Armor costs 180 rupees. It carries a rechargeable ward and never spends your rupees.<br/>Jovani's Sigil strengthens its capacity. The Sunward Emblem and Mirror Heart unlock further weaves.";break;
+    case Kind::Agitha:text="Every golden guest deserves a place at my ball! Bring their partners too.<br/>Each guest brings Gilded Thread for equipment. I reward the first pair, then three, six and twelve pairs.";break;
     case Kind::Jovani:text="Each lost soul you return loosens the curse.<br/>Gifts await at five, ten, twenty, forty and sixty souls.<br/>Speak about the curse at twenty and sixty to continue my story.";break;
     case Kind::Coro:text="Keep your lantern close. Its oil returns as you travel safely, and a rest stone restores your supplies.<br/>You won't need to buy fuel from me.";break;
-    case Kind::Sera:text="Thank you for bringing my little friend home! Your Slingshot is my gift.<br/>May it help you find your way safely.";break;
+    case Kind::Sera:text="Thank you for bringing my little friend home! Your Slingshot is my gift.<br/>Bring craft relics and Gilded Thread after your first great trial, and I'll stitch a traveling charm for you.";break;
     case Kind::Goron:text="Good equipment lasts, brother. Malo can fit you with a Hylian Shield.<br/>Bring Agitha's crafting relic to Barnes for larger bomb reserves. Your supplies return as you travel safely.";break;
     default:break;
     }
     std::string status=fmt::format("<br/><br/>Hylian rupees: {}",progression::model().rareRupees);
+    if(merchants::enabled())status+=fmt::format("<br/>Craft relics: {}. Ancient runes: {}. Gilded Thread: {}.",progression::model().relics[0],progression::model().relics[1],progression::model().relics[2]);
     if(g_context.kind==Kind::Agitha)status+=fmt::format("<br/>Pairs welcomed: {}/12. New guests carried: {}.",progression::collections::pairs(),progression::collections::unpresented());
     if(g_context.kind==Kind::Jovani)status+=fmt::format("<br/>Poe souls returned: {}/60.",progression::collections::souls());
     return std::string(text)+status;
@@ -95,7 +98,7 @@ std::string body() {
 bool disabled(ModContext*,void* data) {
     if(!g_dialog||!valid())return true;
     const auto& c=*static_cast<Choice*>(data);
-    switch(c.action){case Action::Purchase:return !rare::can_purchase(*c.offer);case Action::Trade:return !merchants::can_trade(*c.relic);
+    switch(c.action){case Action::Purchase:return !rare::can_purchase(*c.offer);case Action::Trade:return !merchants::can_trade(*c.relic);case Action::Craft:return !guild::can_craft(*c.recipe);
     case Action::Present:return !progression::collections::unpresented();case Action::Claim:return !progression::collections::rewards_available(g_context.kind==Kind::Agitha);
     default:return false;}
 }
@@ -104,6 +107,7 @@ void pressed(ModContext*,UiDialogHandle,void* data) {
     if(disabled(nullptr,data))return;
     const auto c=*static_cast<Choice*>(data);
     switch(c.action){case Action::Purchase:rare::purchase(*c.offer);break;case Action::Trade:merchants::trade(*c.relic);break;
+    case Action::Craft:guild::craft(*c.recipe);break;
     case Action::Present:progression::collections::present_bugs();break;case Action::Claim:progression::collections::claim_rewards(g_context.kind==Kind::Agitha);break;
     case Action::Native:g_native=g_context.id;g_nativeUntil=Clock::now()+std::chrono::seconds(15);closed(nullptr,0,nullptr);return;
     case Action::Leave:closed(nullptr,0,nullptr);return;}
@@ -120,6 +124,8 @@ bool open(fopAc_ac_c* actor) {
     const auto add=[&](Choice choice,const char* label){g_choices.push_back(choice);labels.push_back(label);};
     for(const auto& offer:rare::kOffers)if(rare::enabled()&&g_context.stage==offer.stage&&g_context.room==offer.room)add({Action::Purchase,&offer},offer.label);
     for(const auto& relic:merchants::kRelics)if(merchants::enabled()&&g_context.stage==relic.stage&&g_context.room==relic.room&&merchants::owns_relic(progression::model(),relic))add({Action::Trade,nullptr,&relic},relic.label);
+    for(const auto& recipe:guild::kRecipes)if(merchants::enabled()&&g_context.stage==recipe.stage&&g_context.room==recipe.room)
+        add({Action::Craft,nullptr,nullptr,&recipe},recipe.label);
     if(progression::collections::enabled()&&g_context.kind==Kind::Agitha)add({Action::Present},"Welcome the bugs I've found");
     if(progression::collections::enabled()&&(g_context.kind==Kind::Agitha||g_context.kind==Kind::Jovani))add({Action::Claim},"Receive my collection gifts");
     add({Action::Native},g_context.kind==Kind::Jovani?"Discuss the curse":"Talk about other matters");

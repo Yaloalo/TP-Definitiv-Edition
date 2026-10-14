@@ -7,7 +7,7 @@ if (NOT DEFINED CMAKE_BUILD_TYPE AND NOT DEFINED ENV{CMAKE_BUILD_TYPE})
     set(CMAKE_BUILD_TYPE "RelWithDebInfo" CACHE STRING "Build type")
 endif ()
 
-project(tp_remaster VERSION 0.10.1 LANGUAGES CXX)
+project(tp_remaster VERSION 0.11.0 LANGUAGES CXX)
 
 # Must match the Dusklight release the mod runs on: game structs and symbols are version-specific.
 if (NOT DUSKLIGHT_VERSION)
@@ -33,6 +33,7 @@ add_mod(tp_remaster
             src/progression/pause.cpp
             src/progression/spring.cpp
             src/progression/collections.cpp
+            src/progression/treasures.cpp
             src/healing/flask.cpp
             src/healing/rest_stones.cpp
             src/healing/wolf.cpp
@@ -42,7 +43,9 @@ add_mod(tp_remaster
             src/economy/currency.cpp
             src/economy/rare.cpp
             src/economy/conversations.cpp
+            src/economy/guild.cpp
             src/combat/damage.cpp
+            src/combat/ward.cpp
             src/combat/stamina.cpp
             src/combat/dodge.cpp
             src/combat/manual_shield.cpp
@@ -125,6 +128,13 @@ if (BUILD_TESTING AND NOT CMAKE_CROSSCOMPILING AND NOT MSVC)
         COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/conversation_callbacks_test.py")
     add_test(NAME save_load_safety
         COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/save_load_callbacks_test.py")
+    add_executable(treasure_ward_models_test tests/treasure_ward_models.cpp)
+    target_include_directories(treasure_ward_models_test PRIVATE src)
+    target_compile_options(treasure_ward_models_test PRIVATE -UNDEBUG)
+    add_test(NAME treasure_ward_models COMMAND treasure_ward_models_test)
+    add_test(NAME treasure_callbacks COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/treasure_callbacks_test.py")
+    add_test(NAME ward_callbacks COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/ward_callbacks_test.py")
+    add_test(NAME guild_callbacks COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/guild_callbacks_test.py")
     # Keep assertions enabled in RelWithDebInfo/Release test binaries.
     target_compile_options(enemy_timing_test PRIVATE -UNDEBUG)
 
@@ -143,13 +153,13 @@ if (BUILD_TESTING AND NOT CMAKE_CROSSCOMPILING AND NOT MSVC)
         endif ()
         add_custom_target(qa ALL
             COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tools/qa.py" ${_qa_arguments}
-            DEPENDS tp_remaster_package enemy_timing_test progression_test resources_models_test movement_hud_models_test
+            DEPENDS tp_remaster_package enemy_timing_test progression_test resources_models_test movement_hud_models_test treasure_ward_models_test
             COMMENT "Running Definitive Edition automated QA gate"
             USES_TERMINAL VERBATIM)
     else ()
         add_custom_target(qa ALL
             COMMAND "${CMAKE_CTEST_COMMAND}" --test-dir "${CMAKE_CURRENT_BINARY_DIR}" --output-on-failure --timeout 120 -C "$<CONFIG>"
-            DEPENDS tp_remaster_package enemy_timing_test progression_test resources_models_test movement_hud_models_test
+            DEPENDS tp_remaster_package enemy_timing_test progression_test resources_models_test movement_hud_models_test treasure_ward_models_test
             COMMENT "Running regression fixtures (host ABI audit currently supports Linux ELF only)"
             USES_TERMINAL VERBATIM)
     endif ()

@@ -116,6 +116,9 @@ VarSpec g_specs[] = {
 
     BOOL_VAR("Resource regeneration", ammoRecharge, "Regenerate owned ammunition and supplies"),
     BOOL_VAR(nullptr, removeConsumableDrops, "Remove arrows, seeds and bomb supply drops"),
+    BOOL_VAR("Magic Armor", magicWard, "Rechargeable ward protection (no currency drain)"),
+    SLIDER_VAR(nullptr, wardRecoveryDelayMs, "Safe time before ward recovery", 1000),
+    SLIDER_VAR(nullptr, wardRecoveryIntervalMs, "Time per ward charge", 1000),
     BOOL_VAR("Merchants", merchantRewards, "Earn equipment from quests and unique relics"),
     SLIDER_VAR("Arrows", arrowRechargeDelayMs, "Delay after taking damage", 0),
     SLIDER_VAR(nullptr, arrowRechargeIntervalMs, "Time per refill", 100),

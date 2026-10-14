@@ -5,7 +5,7 @@ source=(ROOT/'src/economy/rare.cpp').read_text()
 items=(ROOT/'dusklight/include/d/d_item_data.h').read_text()
 ids={n:int(v,16) for v,n in re.findall(r'/\*\s*(0x[0-9A-Fa-f]+)\s*\*/\s*(dItemNo_\w+)',items)}
 selected=''.join(function(source,n) for n in ['enabled','ensure','owned','can_purchase','purchase','resolve','give','reset'])
-constants='\n'.join(f'constexpr int {n}={ids[n]};' for n in set(re.findall(r'dItemNo_\w+',selected))|{'dItemNo_RED_BOTTLE_e','dItemNo_KAKERA_HEART_e'})
+constants='\n'.join(f'constexpr int {n}={ids[n]};' for n in set(re.findall(r'dItemNo_\w+',selected))|{'dItemNo_RED_BOTTLE_e','dItemNo_KAKERA_HEART_e','dItemNo_ZORAS_JEWEL_e'})
 code=r'''
 #include <cassert>
 #include <cstring>
@@ -31,6 +31,7 @@ world_checks=re.search(r'constexpr std::array<std::string_view, \d+> kFlaskCheck
 code+=r'''
 namespace remaster::resources::ammo{bool removes_pickup(int){return false;}}
 namespace remaster::economy::merchants{bool resolve(const ItemCheckInfo*,ItemCheckResolution*){return false;}}
+namespace remaster::progression::treasures {bool resolve(const ItemCheckInfo*,ItemCheckResolution*){return false;}bool custom_item(uint8_t){return false;}}
 namespace remaster::progression::collections{bool resolve(const ItemCheckInfo*,ItemCheckResolution*){return false;}}
 namespace remaster::progression{constexpr uint8_t kFlaskShard=0x13,kStaminaFragment=0x14;
 '''+world_checks+function(reward_source,'rupee')+function(reward_source,'resolve')+'}\n'

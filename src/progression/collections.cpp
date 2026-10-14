@@ -1,5 +1,7 @@
 #include "progression/collections.hpp"
 #include "progression/collection_model.hpp"
+#include "progression/treasures.hpp"
+#include "progression/treasure_model.hpp"
 #include "progression/growth.hpp"
 #include "progression/rewards.hpp"
 #include "economy/rare.hpp"
@@ -27,9 +29,7 @@ void give(ModContext*,const ItemGiveInfo* info,void*) {
     g_pending.erase(info->check_name);
     if (!ensure()) return;
     const std::string_view name(info->check_name);
-    if (name.starts_with("bug:") && info->item==economy::rare::kBlessing) {
-        if (model().claim(info->check_name,0x14)) { growth::apply_health();persist(); }
-    }
+
     const char* canonical=info->check_name;
     if (name=="jovani_reward_1") canonical="collection:poes:20";
     if (name=="jovani_reward_2") canonical="collection:poes:60";
@@ -48,12 +48,13 @@ bool enabled() { return is_active() && tuning::get().removeCurrency && tuning::g
 bool ensure() {
     if (!enabled() || !growth::ensure()) return false;
     if (economy::rare::enabled() && !economy::rare::ensure()) return false;
+    if(!treasures::ensure())return false;
     if (!model().claimed.contains("migration:collection-gifts-v1")) {
         auto candidate=model();
         if (!candidate.claim("migration:collection-gifts-v1",0xff)) return false;
         for(int i=0;i<24;++i) if(delivered(i)) {
             const auto name=bug_name(i);
-            if (!candidate.claimed.contains(name) && !candidate.claim(name.c_str(),0x14)) return false;
+            if (!candidate.claimed.contains(name) && !treasures::thread(candidate,name.c_str())) return false;
         }
         model()=std::move(candidate);growth::apply_health();persist();
     }
@@ -67,7 +68,7 @@ bool present_bugs() {
     bool changed=false;
     for(int i=0;i<24;++i) if(caught(i)&&!delivered(i)) {
         const auto name=bug_name(i);
-        if (!model().claimed.contains(name) && !model().claim(name.c_str(),0x14)) continue;
+        if (!model().claimed.contains(name) && !treasures::thread(model(),name.c_str())) continue;
         daNpcF_onEvtBit(0x191+i);changed=true;
     }
     if(changed){growth::apply_health();persist();}
@@ -96,7 +97,7 @@ bool resolve(const ItemCheckInfo* info,ItemCheckResolution* out) {
         int id=0;const auto text=name.substr(4);const auto parse=std::from_chars(text.data(),text.data()+text.size(),id);
         if(parse.ec!=std::errc{} || parse.ptr!=text.data()+text.size() || id<dItemNo_M_BEETLE_e || id>dItemNo_F_MAYFLY_e)return false;
         const bool valid=ready()&&!model().claimed.contains(std::string(name))&&model().claimed.size()<512;
-        *out={uint8_t(valid?economy::rare::kBlessing:economy::rare::kStoryAcknowledgment),uint8_t(valid?dItemNo_KAKERA_HEART_e:dItemNo_ZORAS_JEWEL_e),true};return true;
+        *out={uint8_t(valid?treasures::kGildedThread:economy::rare::kStoryAcknowledgment),uint8_t(dItemNo_ZORAS_JEWEL_e),true};return true;
     }
     const Milestone* reward=milestone(name);
     if(name=="jovani_reward_1")reward=&kPoes[2];

@@ -31,7 +31,7 @@ int main() {
     Model slots[3]; slots[0]=m; slots[1].refill(3,8); slots[1].spend(3,8);
     assert(slots[0].charges==7 && slots[1].charges==2 && slots[2].flaskShards==0);
     // Migrate the actual old byte layout; do not infer version from file length.
-    auto old=encode(m);old.resize(old.size()-24);old[0]=0x54;old[1]=0x44;old[2]=0x46;old[3]=0x31;
+    auto old=encode(m);old.resize(old.size()-48);old[0]=0x54;old[1]=0x44;old[2]=0x46;old[3]=0x31;
     Model legacy;assert(decode(old,legacy)&&!legacy.growthReady&&legacy.stamina_bonus()==6);
     legacy.migrate_growth(37);assert(legacy.healthPoints==4&&legacy.staminaPoints==1&&legacy.growthFragments==27);
     assert(legacy.stamina_bonus()>=6&&legacy.native_max_life()==37&&legacy.charges==7&&legacy.flaskShards==20);

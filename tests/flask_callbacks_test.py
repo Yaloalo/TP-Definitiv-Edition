@@ -65,11 +65,13 @@ u8 bottles[4]={0xff,0xff,0xff,0xff}; int bottleWrites=0;
 u8 dComIfGs_getItem(int i,bool){return bottles[i-11];}
 namespace remaster::resources::ammo {int hits=0;void damage_received(){++hits;}void death(){}bool enabled(){return false;}bool removes_pickup(int i){return false;}}
 namespace remaster::healing::snowpeak {bool special=false;bool allows_spawn(){return special;}bool allows_actor(daItem_c*){return special;}bool allows_grant(){return special;}}
+namespace remaster::combat::ward {void death(){}}
 namespace remaster::healing::wolf {int interrupts=0;void interrupt(daAlink_c*){++interrupts;}}
 namespace remaster::healing::stones {void damage_received(){}}
 struct ItemCheckInfo;struct ItemCheckResolution;
 namespace remaster::economy::merchants {bool enabled(){return false;}bool custom_item(uint8_t){return false;}bool resolve(const ItemCheckInfo*,ItemCheckResolution*){return false;}}
 namespace remaster::economy::rare {bool custom_item(uint8_t){return false;}bool resolve(const ItemCheckInfo*,ItemCheckResolution*){return false;}}
+namespace remaster::progression::treasures {bool resolve(const ItemCheckInfo*,ItemCheckResolution*){return false;}bool custom_item(uint8_t){return false;}}
 namespace remaster::progression::collections {bool resolve(const ItemCheckInfo*,ItemCheckResolution*){return false;}}
 namespace remaster::healing {
 void damage_interrupted(daAlink_c*);
@@ -140,7 +142,7 @@ int main(){
  for(int i=0;i<4;i++) assert(progression::resolve(nullptr,&info,&reward,nullptr) && reward.item==0x13 && reward.display_item==0x61);
  assert(progress().charges==progressBefore.charges && progress().claimed==progressBefore.claimed); // previews have no side effects
  info.name="chest:D_MN05:7"; info.vanilla_item=3;
- assert(progression::resolve(nullptr,&info,&reward,nullptr) && reward.item==0x14);
+ assert(progression::resolve(nullptr,&info,&reward,nullptr) && reward.item==0x4e);
  info.name="freestanding:F_SP108:255"; assert(!progression::resolve(nullptr,&info,&reward,nullptr));
  info.name="shop:R_SP01:1:3"; assert(!progression::resolve(nullptr,&info,&reward,nullptr));
  info.name="chest:D_MN05:0"; info.vanilla_item=0x20; assert(!progression::resolve(nullptr,&info,&reward,nullptr));

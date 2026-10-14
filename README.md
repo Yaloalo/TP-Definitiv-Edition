@@ -50,6 +50,8 @@ the release binary. See `docs/INTEGRATION.md` for coverage and tests.
 | Renewable supplies | arrows, seeds, three bomb types, lantern oil and bee bait; separate no-hit-delay and refill-interval sliders; disposable ammunition drops removed |
 | Growth and equipment | five fragments = one heart or +20 stamina; Z on the equipment pause screen shows growth/flask/gear; free redistribution at Ordon Spring after Forest Temple |
 | Rare economy and collection gifts | no loose coins/hearts/fairies/ammo; 20 finite rupee caches for Shield/Magic Armor; Hawkeye with Bow; Agitha/Jovani grant permanent growth, relics, flask capacity and pause-menu emblems |
+| Magic Armor ward | three renewable charges; Sigil → Sunward → Mirror upgrades; no currency/stamina drain; safe travel, rest and retry restore charges |
+| Deliberate exploration rewards | 278 assigned finds, finite Craft Relics/Ancient Runes/Gilded Thread and artisan recipes; controlled 22-blessing budget, completion honors and legacy-save preservation |
 | Merchant conversations | face a supported NPC and press A (or L+Y) for permanent purchases/gifts; original quest dialogue remains available through Other matters |
 
 **Difficulty curve** (`src/core/difficulty.cpp`):
@@ -65,6 +67,7 @@ the release binary. See `docs/INTEGRATION.md` for coverage and tests.
 - tired animation when exhausted
 - parry and posture
 
+See [`docs/PROGRESSION_AND_WARD.md`](docs/PROGRESSION_AND_WARD.md) for the current collectible trades, growth budget, four-page equipment menu and rechargeable Magic Armor.
 See [`docs/ECONOMY_AND_GROWTH.md`](docs/ECONOMY_AND_GROWTH.md) for shared growth, rare currency, collection rewards and native NPC conversations.
 See [`docs/HEALING_AND_REWARDS.md`](docs/HEALING_AND_REWARDS.md) for flask balance, checkpoint/reward placement, save behavior and current restrictions.
 See [`docs/MOVEMENT_AND_HUD.md`](docs/MOVEMENT_AND_HUD.md) for turning, crawl controls, HUD fade, damage feedback and pending in-game checks.

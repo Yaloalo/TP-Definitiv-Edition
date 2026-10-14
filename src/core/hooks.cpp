@@ -1,5 +1,7 @@
 #include "core/hooks.hpp"
 namespace remaster::hooks {
+DEFINE_HOOK(&dComIfGp_setItemLifeCount, LifeCountMetadata);
+void* LifeCount::resolved_target() { return LifeCountMetadata::resolved_target(); }
 DEFINE_HOOK_SYMBOL("Z2CreatureEnemy::startCreatureSound",
     Z2SoundHandlePool*(Z2CreatureEnemy*, JAISoundID, u32, s8), EnemySoundMetadata);
 void* EnemySound::resolved_target() { return EnemySoundMetadata::resolved_target(); }

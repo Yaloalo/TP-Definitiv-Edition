@@ -1,5 +1,6 @@
 #pragma once
 #include <algorithm>
+#include <array>
 #include <cstdint>
 #include <set>
 #include <string>
@@ -14,6 +15,10 @@ struct Model {
     bool growthReady = false;
     uint32_t growthFragments = 0, healthPoints = 0, staminaPoints = 0;
     uint32_t rareRupees = 0, equipmentUpgrades = 0;
+    // Craft relics, ancient runes and Gilded Thread are finite upgrade components.
+    std::array<uint32_t,3> relics{};
+    uint32_t honors=0, wardCharges=3;
+    bool wardReady=false;
     uint32_t growth_points() const { return growthFragments / 5; }
     uint32_t unassigned() const { return growth_points() - std::min(growth_points(), healthPoints + staminaPoints); }
     void migrate_growth(int nativeMaxLife) {
@@ -67,10 +72,12 @@ struct Model {
 inline std::vector<uint8_t> encode(const Model& m) {
     std::vector<uint8_t> out;
     auto put = [&](uint32_t v) { for (int i = 0; i < 4; ++i) out.push_back((v >> (i * 8)) & 255); };
-    put(0x32464454); // TDF2; decoder also accepts the previous TDF1 format.
+    put(0x33464454); // TDF3; decoder accepts the prior TDF1/TDF2 layouts.
     for (auto v : {m.flaskShards, m.staminaFragments, m.bosses, m.charges, m.bottleSlot, uint32_t(m.claimed.size())}) put(v);
     for (const auto& name : m.claimed) { put(name.size()); out.insert(out.end(), name.begin(), name.end()); }
     for (auto v : {uint32_t(m.growthReady),m.growthFragments,m.healthPoints,m.staminaPoints,m.rareRupees,m.equipmentUpgrades}) put(v);
+    for(auto v:m.relics)put(v);
+    put(m.honors);put(m.wardCharges);put(uint32_t(m.wardReady));
     return out;
 }
 inline bool decode(const std::vector<uint8_t>& in, Model& out) {
@@ -79,7 +86,7 @@ inline bool decode(const std::vector<uint8_t>& in, Model& out) {
     auto get = [&]() { uint32_t v = 0; if (at + 4 > in.size()) { valid = false; return v; }
         for (int i = 0; i < 4; ++i) v |= uint32_t(in[at++]) << (i * 8); return v; };
     const auto magic = get();
-    if (magic != 0x31464454 && magic != 0x32464454) return false;
+    if (magic != 0x31464454 && magic != 0x32464454 && magic != 0x33464454) return false;
     Model m;
     m.flaskShards = get(); m.staminaFragments = get(); m.bosses = get(); m.charges = get(); m.bottleSlot = get();
     uint32_t n = get();
@@ -91,12 +98,18 @@ inline bool decode(const std::vector<uint8_t>& in, Model& out) {
         std::string name(reinterpret_cast<const char*>(in.data() + at), len); at += len;
         if (name.find('\0') != std::string::npos || !m.claimed.insert(name).second) return false;
     }
-    if (magic == 0x32464454) {
+    if (magic == 0x32464454 || magic == 0x33464454) {
         const auto flag = get(); m.growthReady = flag == 1;
         m.growthFragments=get(); m.healthPoints=get(); m.staminaPoints=get(); m.rareRupees=get(); m.equipmentUpgrades=get();
         if (!valid || flag>1 || m.growthFragments>110 || m.healthPoints>17 || m.staminaPoints>5 ||
-            m.healthPoints+m.staminaPoints>m.growth_points() || m.rareRupees>10000 || m.equipmentUpgrades>15 ||
+            m.healthPoints+m.staminaPoints>m.growth_points() || m.rareRupees>10000 || m.equipmentUpgrades>(magic==0x32464454?15u:255u) ||
             (!m.growthReady && (m.growthFragments || m.healthPoints || m.staminaPoints))) return false;
+    }
+    if(magic==0x33464454) {
+        for(auto& v:m.relics)v=get();
+        m.honors=get();m.wardCharges=get();const auto flag=get();m.wardReady=flag==1;
+        if(!valid || flag>1 || m.wardCharges>5 || m.honors>511 ||
+            std::any_of(m.relics.begin(),m.relics.end(),[](auto v){return v>512;}))return false;
     }
     if (at != in.size()) return false;
     out = std::move(m); return true;

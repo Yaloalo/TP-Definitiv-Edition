@@ -24,6 +24,7 @@ code=r'''
 #include <chrono>
 #include "economy/rare_model.hpp"
 #include "economy/merchant_model.hpp"
+#include "economy/guild_model.hpp"
 struct ModContext{};ModContext* mod_ctx=nullptr;using fpc_ProcID=int;using UiDialogHandle=int;constexpr int fpcM_ERROR_PROCESS_ID_e=-1,MOD_OK=0,MOD_ERROR=1,PAD_1=0,PAD_BUTTON_A=1,PAD_BUTTON_Y=2,fopAc_ENEMY_e=2,dItemNo_KANTERA_e=0x48;
 enum HookAction{HOOK_CONTINUE,HOOK_SKIP_ORIGINAL};
 struct Vec{float x=0;float abs(Vec other){return std::abs(x-other.x);}};
@@ -43,6 +44,7 @@ namespace remaster::player{bool input_allowed(){return allowed;}bool gameplay_ru
 namespace remaster::progression{Model state;bool ready(){return readySave;}auto& model(){return state;}}
 namespace remaster::progression::collections{bool enabled(){return active;}bool ensure(){return readySave;}int pairs(){return 3;}int souls(){return 20;}int unpresented(){return 2;}bool rewards_available(bool){return true;}void present_bugs(){++presented;}void claim_rewards(bool){++claimed;}}
 namespace remaster::economy::rare{bool enabled(){return active;}bool ensure(){return readySave;}bool can_purchase(const Offer&){return progression::state.rareRupees>=60;}void purchase(const Offer&){++purchases;}}
+namespace remaster::economy::guild{bool can_craft(const Recipe&){return false;}void craft(const Recipe&){}}
 namespace remaster::economy::merchants{bool enabled(){return active;}bool can_trade(const Relic&){return true;}void trade(const Relic&){++trades;}}
 struct UiDialogAction{const char*label=nullptr;void(*on_pressed)(ModContext*,UiDialogHandle,void*)=nullptr;void*user_data=nullptr;bool keep_open=false;bool(*is_disabled)(ModContext*,void*)=nullptr;};
 #define UI_DIALOG_ACTION_INIT {}
@@ -54,14 +56,14 @@ struct Ui{std::vector<UiDialogAction>actions;std::string text;int dialog_push(Mo
 int main(){using namespace remaster;using namespace economy::conversations;
  fopAc_ac_c malo{2,fpcNm_NPC_MARO_e,3};malo.current.pos.x=100;actors={&malo};link.room=3;auto*p=&link;void*args[]={&p};
  assert(nearby()==&malo);uiFail=true;interact_pre(nullptr,args,nullptr,nullptr);assert(pad.mPressedButtonFlags==3&&link.mItemTrigger==7&&!g_dialog);
- uiFail=false;interact_pre(nullptr,args,nullptr,nullptr);assert(g_dialog&&pad.mPressedButtonFlags==0&&link.mItemTrigger==4&&ui.actions.size()==3);
+ uiFail=false;interact_pre(nullptr,args,nullptr,nullptr);assert(g_dialog&&pad.mPressedButtonFlags==0&&link.mItemTrigger==4&&ui.actions.size()==5);
  assert(ui.actions[0].is_disabled(nullptr,ui.actions[0].user_data));progression::state.rareRupees=60;assert(!ui.actions[0].is_disabled(nullptr,ui.actions[0].user_data));
  // Moving away, changing slot/room/profile or an enemy invalidates even saved callbacks.
  auto buy=ui.actions[0];malo.current.pos.x=281;buy.on_pressed(nullptr,1,buy.user_data);assert(purchases==0);malo.current.pos.x=100;
  ++slot;assert(!valid());--slot;malo.profile=fpcNm_NPC_BANS_e;assert(!valid());malo.profile=fpcNm_NPC_MARO_e;
  stage="R_SP160";assert(!valid());stage="R_SP109";link.room=1;assert(!valid());link.room=3;
  buy.on_pressed(nullptr,1,buy.user_data);assert(purchases==1);
- auto native=ui.actions[1];native.on_pressed(nullptr,1,native.user_data);assert(!g_dialog&&g_native==2);
+ auto native=ui.actions[3];native.on_pressed(nullptr,1,native.user_data);assert(!g_dialog&&g_native==2);
  pad.mPressedButtonFlags=1;link.mItemTrigger=7;interact_pre(nullptr,args,nullptr,nullptr);assert(!g_dialog&&pad.mPressedButtonFlags==1&&link.mItemTrigger==7&&g_native==-1); // native A unaltered
  // Opening requires a supported nearby NPC, facing, safe human idle and no threat.
  fopAc_ac_c enemy{3,0,3,1,fopAc_ENEMY_e};enemy.current.pos.x=2500;actors.push_back(&enemy);assert(!nearby());enemy.health=0;assert(nearby());

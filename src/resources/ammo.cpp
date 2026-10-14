@@ -1,4 +1,5 @@
 #include "resources/ammo.hpp"
+#include "progression/treasures.hpp"
 #include "resources/recharge_model.hpp"
 #include "core/player.hpp"
 #include "core/hooks.hpp"
@@ -100,7 +101,7 @@ void tick(daAlink_c* link) {
     const u8 bow = dComIfGs_getItem(SLOT_4, false);
     if (bow == dItemNo_BOW_e || bow == dItemNo_LIGHT_ARROW_e) {
         const int max = dComIfGs_getArrowMax();
-        gain = g_clock[0].tick(count(dComIfGs_getArrowNum(), dComIfGp_getItemArrowNumCount(), max), max, ticks_for_ms(v.arrowRechargeDelayMs), ticks_for_ms(v.arrowRechargeIntervalMs));
+        gain = g_clock[0].tick(count(dComIfGs_getArrowNum(), dComIfGp_getItemArrowNumCount(), max), max, ticks_for_ms(v.arrowRechargeDelayMs), ticks_for_ms(progression::treasures::recharge_interval(v.arrowRechargeIntervalMs,true)));
         if (gain) dComIfGp_setItemArrowNumCount(gain);
     } else g_clock[0].hit();
     if (dComIfGs_getItem(SLOT_23, false) == dItemNo_PACHINKO_e) {
@@ -117,7 +118,7 @@ void tick(daAlink_c* link) {
         if (type == dItemNo_WATER_BOMB_e) { delay = v.waterBombRechargeDelayMs; interval = v.waterBombRechargeIntervalMs; }
         if (type == dItemNo_POKE_BOMB_e) { delay = v.bomblingRechargeDelayMs; interval = v.bomblingRechargeIntervalMs; }
         const int max = dComIfGs_getBombMax(type);
-        gain = g_clock[2 + i].tick(count(dComIfGs_getBombNum(i), dComIfGp_getItemBombNumCount(i), max), max, ticks_for_ms(delay), ticks_for_ms(interval));
+        gain = g_clock[2 + i].tick(count(dComIfGs_getBombNum(i), dComIfGp_getItemBombNumCount(i), max), max, ticks_for_ms(delay), ticks_for_ms(progression::treasures::recharge_interval(interval,false)));
         if (gain) dComIfGp_setItemBombNumCount(i, gain);
     }
     if (dComIfGs_getItem(SLOT_1, false) == dItemNo_KANTERA_e) {

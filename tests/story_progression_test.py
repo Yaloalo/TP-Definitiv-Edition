@@ -25,6 +25,7 @@ namespace remaster::resources::ammo{bool removes_pickup(int n){return active&&re
 struct ItemCheckInfo{const char* name;uint8_t vanilla_item;};struct ItemCheckResolution{uint8_t item,display;bool animation;};
 namespace remaster::economy::merchants{bool resolve(const ItemCheckInfo*,ItemCheckResolution*){return false;}bool custom_item(uint8_t){return false;}}
 namespace remaster::economy::rare{bool resolve(const ItemCheckInfo*,ItemCheckResolution*){return false;}bool custom_item(uint8_t){return false;}}
+namespace remaster::progression::treasures {bool resolve(const ItemCheckInfo*,ItemCheckResolution*){return false;}bool custom_item(uint8_t){return false;}}
 namespace remaster::progression::collections{bool resolve(const ItemCheckInfo*,ItemCheckResolution*){return false;}}
 namespace remaster::healing::snowpeak{bool allows_grant(){return false;}}
 '''

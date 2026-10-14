@@ -1,4 +1,5 @@
 #include "healing/flask.hpp"
+#include "combat/ward.hpp"
 #include "healing/wolf.hpp"
 #include "healing/rest_stones.hpp"
 #include "hud/idle_fade.hpp"
@@ -33,7 +34,7 @@ namespace {
 DEFINE_HOOK(&daAlink_c::procBottleDrinkInit, DrinkInit);
 DEFINE_HOOK(&daAlink_c::procBottleDrink, DrinkProc);
 DEFINE_HOOK(&daAlink_c::commonBottleDrink, CommonDrink);
-DEFINE_HOOK(&dComIfGp_setItemLifeCount, LifeCount);
+using LifeCount=hooks::LifeCount;
 DEFINE_HOOK(&daAlink_c::procCoDeadInit, DeathInit);
 DEFINE_HOOK(static_cast<void(*)()>(&dComIfGs_onStageBossEnemy), BossVictory);
 DEFINE_HOOK(static_cast<void(*)(int)>(&dComIfGs_onStageBossEnemy), IndexedBossVictory);
@@ -115,13 +116,15 @@ HookAction life_pre(ModContext*, void* args, void*, void*) {
     g_healed = true; return HOOK_CONTINUE;
 }
 void death_post(ModContext*, void*, void* result, void*) {
-    if (is_active() && *static_cast<int*>(result)) resources::ammo::death();
+    if (is_active() && *static_cast<int*>(result)) {resources::ammo::death();combat::ward::death();}
     if (enabled() && *static_cast<int*>(result)) { g_retry = true; g_retrySlot = g_saveSlot; g_drinking = nullptr; }
 }
 void boss_victory_post(ModContext*, void*, void*, void*) {
-    if (!enabled()) return;
+    if (!is_active()) return;
     const char* stage = dComIfGp_getStartStageName();
     if (!stage || std::strncmp(stage, "D_MN", 4) != 0) return;
+    combat::ward::boss_victory(stage);
+    if(!enabled())return;
     const auto check = std::string("victory:") + std::string(stage).substr(0, 6);
     if (progress().claim(check.c_str(), 0xff)) refill(true);
 }
@@ -252,6 +255,7 @@ void normalize_bottles() {
 }
 void refill(bool heal) {
     resources::ammo::refill();
+    combat::ward::refill();
     if (!enabled()) return;
     progress().refill(tuning::get().flaskStartingCharges, tuning::get().flaskMaximumCharges);
     if (heal) {

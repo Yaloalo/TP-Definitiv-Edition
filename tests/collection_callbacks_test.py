@@ -13,6 +13,7 @@ code=r'''
 #include <format>
 #include <array>
 #include "progression/collection_model.hpp"
+#include "progression/treasure_model.hpp"
 bool is_active();struct ModContext{};ModContext* mod_ctx=nullptr;constexpr int MOD_OK=0,MOD_ERROR=1,ITEM_GIVE_RESOLVE=2,ITEM_GIVE_SILENT=1;
 struct ItemCheckInfo{const char* name;};struct ItemCheckResolution{uint8_t item,display;bool animation;};struct ItemGiveInfo{const char* check_name;uint8_t item;};
 struct UiToastDesc{const char* title_rml=nullptr;const char* body_rml=nullptr;};
@@ -27,6 +28,7 @@ struct Items{std::vector<std::pair<std::string,int>> queue;int give_item(ModCont
 namespace fmt{template<class...T>std::string format(std::string_view f,T...args){return std::vformat(f,std::make_format_args(args...));}}
 namespace remaster::tuning{struct Values{bool removeCurrency=true,merchantRewards=true;int flaskStartingCharges=3,flaskMaximumCharges=8;}cfg;auto& get(){return cfg;}}
 namespace remaster::progression{Model state;bool ready(){return saveReady;}Model& model(){return state;}void persist(){++persisted;}}
+namespace remaster::progression::treasures{bool ensure(){return active&&saveReady&&migrate(remaster::progression::state);}}
 namespace remaster::progression::growth{bool ensure(){if(!active||!saveReady)return false;remaster::progression::state.migrate_growth(15);return true;}void apply_health(){}}
 namespace remaster::economy::rare{bool enabled(){return active;}bool ensure(){if(!active||!saveReady)return false;remaster::progression::state.migrate_growth(15);return true;}}
 '''+constants+r'''
@@ -41,19 +43,19 @@ int main(){using namespace remaster;using namespace progression::collections;
  nativeFlags.clear();ownedItems={dItemNo_M_BEETLE_e,dItemNo_M_BEETLE_e+1};assert(unpresented()==2&&pairs()==0);
  ItemCheckInfo info{"collection:bugs:1"};ItemCheckResolution out{};auto before=progression::encode(progression::state);
  assert(resolve(&info,&out)&&out.item==255&&progression::encode(progression::state)==before); // preview is pure
- assert(present_bugs()&&pairs()==1&&unpresented()==0&&progression::state.growthFragments==2&&items.queue.size()==1);
+ assert(present_bugs()&&pairs()==1&&unpresented()==0&&progression::state.growthFragments==0&&progression::state.relics[2]==2&&items.queue.size()==1);
  assert(!present_bugs()&&items.queue.size()==1);ItemGiveInfo gift{kBugs[0].check,kBugs[0].item};give(nullptr,&gift,nullptr);give(nullptr,&gift,nullptr);
- assert(progression::state.growthFragments==7&&!rewards_available(true));
+ assert(progression::state.growthFragments==5&&!rewards_available(true));
  fail=true;poeCount=60;assert(!claim_rewards(false)&&g_pending.empty());fail=false;
  assert(claim_rewards(false)&&!claim_rewards(false)&&g_pending.size()==5);
  // The normal progression observer handles the one-fragment reward, merchants commit relic provenance.
  for(auto& [name,id]:items.queue){if(id==0x14)progression::state.claim(name.c_str(),id);if(id==0x38||id==0x39)progression::state.claim(name.c_str(),id);gift={name.c_str(),uint8_t(id)};give(nullptr,&gift,nullptr);}
- assert(progression::state.growthFragments==13&&progression::state.flaskShards==4&&progression::state.equipmentUpgrades==4);
+ assert(progression::state.growthFragments==11&&progression::state.flaskShards==4&&progression::state.equipmentUpgrades==4);
  assert(progression::state.claimed.contains("collection:poes:20")&&!rewards_available(false));
  for(int i=2;i<24;++i){ownedItems.insert(dItemNo_M_BEETLE_e+i);}assert(present_bugs()&&pairs()==12);
  for(auto& [name,id]:items.queue){if(id==0x38)progression::state.claim(name.c_str(),id);gift={name.c_str(),uint8_t(id)};give(nullptr,&gift,nullptr);}
  assert(progression::state.flaskShards==8&&progression::state.capacity(3,8)==5&&progression::state.equipmentUpgrades==6);
- assert(progression::state.growthFragments==35); // 24 individual bugs + 5 pair bonus + 6 Poe growth
+ assert(progression::state.growthFragments==11&&progression::state.relics[2]==24); // Bug components are separate; pair/Poe blessings total 11 growth fragments
  for(int i=0;i<12;++i){auto n="world-shard:"+std::to_string(i);progression::state.claim(n.c_str(),0x13);}assert(progression::state.capacity(3,8)==8);
  auto complete=progression::encode(progression::state);assert(!present_bugs()&&!claim_rewards(true)&&!claim_rewards(false)&&progression::encode(progression::state)==complete);
  progression::Model loaded;assert(progression::decode(complete,loaded)&&loaded.equipmentUpgrades==6);
@@ -62,9 +64,9 @@ int main(){using namespace remaster;using namespace progression::collections;
  progression::state={};nativeFlags.clear();poeCount=19;assert(resolve(&info,&out)&&out.item==economy::rare::kStoryAcknowledgment);poeCount=20;assert(resolve(&info,&out)&&out.item==0x39);
  saveReady=false;assert(resolve(&info,&out)&&out.item==economy::rare::kStoryAcknowledgment);saveReady=true;
  info={"jovani_reward_2"};assert(resolve(&info,&out)&&out.item==economy::rare::kStoryAcknowledgment);poeCount=60;assert(resolve(&info,&out)&&out.item==0x3b);
- info={"bug:192junk"};assert(!resolve(&info,&out));info={"bug:191"};assert(!resolve(&info,&out));info={"bug:192"};assert(resolve(&info,&out)&&out.item==0x3b);
+ info={"bug:192junk"};assert(!resolve(&info,&out));info={"bug:191"};assert(!resolve(&info,&out));info={"bug:192"};assert(resolve(&info,&out)&&out.item==progression::treasures::kGildedThread);
  // Legacy hand-ins migrate once; full ledger failure does not partially mutate native hand-ins.
- progression::state={};nativeFlags={0x191,0x192};assert(ensure()&&progression::state.growthFragments==2);assert(ensure()&&progression::state.growthFragments==2);
+ progression::state={};nativeFlags={0x191,0x192};assert(ensure()&&progression::state.growthFragments==0&&progression::state.relics[2]==2);assert(ensure()&&progression::state.relics[2]==2);
  progression::state={};progression::state.migrate_growth(15);for(int i=0;i<512;++i){auto n="full:"+std::to_string(i);progression::state.claim(n.c_str(),255);}before=progression::encode(progression::state);
  assert(!ensure()&&!present_bugs()&&!claim_rewards(false)&&progression::encode(progression::state)==before);assert(resolve(&info,&out));
  active=false;assert(!resolve(&info,&out));assert(!rewards_available(true));

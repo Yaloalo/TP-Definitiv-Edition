@@ -6,8 +6,10 @@
 #include "d/d_meter_button.h"
 #include "JSystem/J2DGraph/J2DScreen.h"
 #include "d/d_menu_collect.h"
+#include "d/d_com_inf_game.h"
 
 namespace remaster::hooks {
+struct LifeCount : mods::Hook<&dComIfGp_setItemLifeCount> { static void* resolved_target(); };
 struct EnemySound : mods::NamedHook<"Z2CreatureEnemy::startCreatureSound",
     Z2SoundHandlePool*(Z2CreatureEnemy*, JAISoundID, u32, s8)> {
     static void* resolved_target();

@@ -20,5 +20,9 @@
   "rare_economy",
   "collection_rewards",
   "npc_conversations",
-  "save_load_safety"
+  "save_load_safety",
+  "treasure_ward_models",
+  "treasure_callbacks",
+  "ward_callbacks",
+  "guild_callbacks"
 ]

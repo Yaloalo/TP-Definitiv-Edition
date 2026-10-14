@@ -25,7 +25,7 @@ def digest(path):
 
 def source_digest(root=ROOT):
     files = []
-    for directory in ('src', 'res', 'tests', 'tools', 'docs', 'cmake', '.github'):
+    for directory in ('src', 'res', 'tests', 'tools', 'docs', 'data', 'cmake', '.github'):
         files.extend(p for p in (root / directory).rglob('*') if p.is_file() and '__pycache__' not in p.parts)
     files.extend(p for p in root.iterdir() if p.is_file() and p.suffix != '.pyc')
     value = hashlib.sha256()

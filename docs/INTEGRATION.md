@@ -47,6 +47,10 @@ purchases and Agitha/Jovani gifts. They are owned C++ modules using native
 save/item/actor APIs, not external mod presets. See [the economy and growth
 milestones](ECONOMY_AND_GROWTH.md) for implementation and pending playtests.
 
+Version 0.11 adds explicit collectible placements, finite component trades,
+completion honors and independent rechargeable Magic Armor. The TDF3 save decoder
+preserves older benefits. See [progression and ward](PROGRESSION_AND_WARD.md).
+
 ## Module boundaries
 
 - `src/mod.cpp` owns lifecycle, service imports, mode registration and installer order.
@@ -83,7 +87,7 @@ python3 tools/check_hook_symbols.py build/tp_remaster.so /path/to/dusklight \
 The first symbol check covers linker imports. The second checks compiled named
 hook metadata against the host's embedded manifest and rejects duplicates. It
 requires `pyelftools` and `libzstd` and currently supports 64-bit little-endian ELF.
-The current gate requires twenty-two suites and checks game imports, 26 named hook targets and 11 dynamic mouse/RmlUi targets against Linux x86_64 Dusklight v2.0.3. The default native build runs these checks plus a packaged-library/resource audit; current evidence and pending story routes are recorded in `build/qa/report.json`. See [QA.md](QA.md) for the detailed matrix and platform limits.
+The current gate requires twenty-six suites and checks game imports, 26 named hook targets and 11 dynamic mouse/RmlUi targets against Linux x86_64 Dusklight v2.0.3. The default native build runs these checks plus a packaged-library/resource audit; current evidence and pending story routes are recorded in `build/qa/report.json`. See [QA.md](QA.md) for the detailed matrix and platform limits.
 
 Tests execute production manual-shield callbacks with game-free fixtures,
 reproduce the enemy Wolf knockdown/death timer race using the pinned game code,

@@ -34,6 +34,7 @@ struct ModContext{};enum HookAction{HOOK_CONTINUE,HOOK_SKIP_ORIGINAL};bool activ
 bool is_active(){return active;}
 namespace mods {template<class T>T arg(void* p,int i){return *static_cast<T*>(static_cast<void**>(p)[i]);}
 template<class T>T& arg_ref(void* p,int i){return *static_cast<T*>(static_cast<void**>(p)[i]);}}
+namespace remaster::progression::treasures {int64_t recharge_interval(int64_t ms,bool){return ms;}}
 namespace remaster::player {bool input_allowed(){return allowed;}bool gameplay_running(){return allowed;}}
 bool dComIfGp_event_runCheck(){return event;}
 '''

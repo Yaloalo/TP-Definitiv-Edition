@@ -10,6 +10,7 @@
 #include "d/d_com_inf_game.h"
 #include "m_Do/m_Do_controller_pad.h"
 #include "services.hpp"
+#include "progression/treasures.hpp"
 
 namespace remaster::movement::sprint {
 namespace {
@@ -197,7 +198,7 @@ ModResult install() {
 
 void tick(daAlink_c* link) {
     const tuning::Values& values = tuning::get();
-    const float drain = static_cast<float>(values.sprintCostPerSecond) * kTickSeconds;
+    const float drain = static_cast<float>(values.sprintCostPerSecond) * kTickSeconds * progression::treasures::sprint_cost_scale();
 
     if (g_running) {
         const bool stop = !enabled() || mDoCPd_c::getHoldA(PAD_1) == 0 || link->checkEventRun() ||

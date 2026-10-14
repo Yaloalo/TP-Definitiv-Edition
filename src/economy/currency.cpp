@@ -53,8 +53,8 @@ HookAction donation(ModContext*, void* args, void*, void*) {
 HookAction fee_pre(ModContext*, void*, void*, void*) { if (enabled()) ++g_feeScope; return HOOK_CONTINUE; }
 void fee_post(ModContext*, void*, void*, void*) { if (g_feeScope) --g_feeScope; }
 HookAction armor(ModContext*, void*, void* result, void*) {
-    if (!enabled()) return HOOK_CONTINUE;
-    // Armor protection is handled by our damage/stamina module. Empty wallets cannot immobilize Link.
+    if (!is_active()) return HOOK_CONTINUE;
+    // Armor protection is handled by our rechargeable ward module. Empty wallets cannot immobilize Link.
     *static_cast<BOOL*>(result) = FALSE; return HOOK_SKIP_ORIGINAL;
 }
 HookAction meter_pre(ModContext*, void* args, void*, void*) {

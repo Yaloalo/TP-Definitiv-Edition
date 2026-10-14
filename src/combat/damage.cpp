@@ -2,8 +2,11 @@
 
 #include <algorithm>
 #include <cmath>
+#include <vector>
+#include "core/hooks.hpp"
 
 #include "combat/dodge.hpp"
+#include "combat/ward.hpp"
 #include "combat/stamina.hpp"
 #include "healing/flask.hpp"
 #include "resources/ammo.hpp"
@@ -33,6 +36,15 @@ struct TimerSnapshot {
     s16 timer = 0;
 };
 TimerSnapshot g_snapshot;
+struct DamageScope { daAlink_c* link=nullptr;int expected=0;bool correctArmor=false; };
+std::vector<DamageScope> g_scopes;
+void damage_end(ModContext*,void*,void*,void*) {if(!g_scopes.empty())g_scopes.pop_back();}
+HookAction armor_life_pre(ModContext*,void* args,void*,void*) {
+    if(!is_active()||g_scopes.empty()||!g_scopes.back().correctArmor)return HOOK_CONTINUE;
+    auto& life=mods::arg_ref<f32>(args,0);
+    if(life<0)life=-float(g_scopes.back().expected);
+    return HOOK_CONTINUE;
+}
 // Link instance currently recovering from a knockdown; keeps its full timer until it runs out.
 daAlink_c* g_knockdownOwner = nullptr;
 
@@ -64,6 +76,8 @@ HookAction magnification_pre(ModContext*, void* args, void* result, void*) {
 }
 
 HookAction on_set_damage_pre(ModContext*, void* args, void*, void*) {
+    auto* actor=mods::arg<daAlink_c*>(args,0);
+    g_scopes.push_back({actor,0,false});
     if (!is_active()) {
         return HOOK_CONTINUE;
     }
@@ -78,13 +92,17 @@ HookAction on_set_damage_pre(ModContext*, void* args, void*, void*) {
     auto* link = mods::arg<daAlink_c*>(args, 0);
     healing::damage_interrupted(link);
     resources::ammo::damage_received();
-    const auto stamina = combat::stamina::state();
-    const bool armor = values.removeCurrency && link && link->checkMagicArmorWearAbility() &&
-        values.staminaEnabled && stamina.current > 0 && !stamina.exhausted;
-    // Round up so a scaled hit never drops to zero damage.
-    amount = std::max(1, static_cast<int>(std::ceil(static_cast<float>(amount) * scale * (armor ? 0.5f : 1.0f))));
-
-    if (armor) combat::stamina::drain(progression::ready() && (progression::model().equipmentUpgrades&1)?15.0f:20.0f, "Magic Armor protection");
+    ward::damage_received();
+    const float protection=ward::absorb(link);
+    // Protection never reduces a hit to zero and costs one finite ward charge.
+    amount = std::max(1, static_cast<int>(std::ceil(static_cast<float>(amount) * scale * protection)));
+    if(link && link->checkMagicArmorWearAbility()) {
+        // Retain native reactions/flags, but own final armor damage even if a
+        // launcher/other mod selected the native double-defense preset.
+        const auto zora=mods::arg<BOOL>(args,2);const int kind=mods::arg<int>(args,4);
+        g_scopes.back().expected=std::max(1,int(std::ceil(amount*link->damageMagnification(zora,kind))));
+        g_scopes.back().correctArmor=true;
+    }
 
     if (values.debugLog) {
         mods::log::info("damage {} -> {} (x{:.2f}, tier '{}')", original, amount, scale, difficulty::tier_name());
@@ -127,6 +145,8 @@ void on_damage_action_post(ModContext*, void* args, void*, void*) {
 ModResult install() {
     ModResult result = mods::hook::add_pre<DamageMagnification>(magnification_pre);
     if (result == MOD_OK) result = mods::hook::add_pre<LinkSetDamagePoint>(on_set_damage_pre);
+    if(result==MOD_OK)result=mods::hook::add_post<LinkSetDamagePoint>(damage_end);
+    if(result==MOD_OK)result=mods::hook::add_pre<hooks::LifeCount>(armor_life_pre);
     if (result == MOD_OK) {
         result = mods::hook::add_pre<LinkCheckDamageAction>(on_damage_action_pre);
     }
