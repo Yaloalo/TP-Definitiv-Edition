@@ -1,6 +1,6 @@
 # Gameplay integration
 
-Updated 2026-10-14. This project is personal and stays local/private.
+Updated 2026-10-14. This is the owner's personal project; source commits are pushed to the configured repository, while game files and generated builds remain local.
 
 The overhaul is one source project and one `.dusk`, with separate modules and
 controls. We combine our own stamina, damage, difficulty and save-mode systems
@@ -25,7 +25,7 @@ gameplay; it does not mean all the implementation was written from scratch.
 | Modern controller UI | TP Classic Modern Controller UI donor; `src/presentation/controller_ui.*` | Integrated, including PlayStation/Xbox/Switch artwork and its editor |
 | Twilight Compass | `src/presentation/compass*` | Integrated; fixed reserved config name; mirror orientation has an explicit toggle |
 | Zora Swim + Dark Morpheel | Closed-source gameplay package | Kept standalone, by owner decision |
-| TPTracker | Randomizer tracker | Excluded by the recorded later decision in `../../FEATURE_SOURCES.md` |
+| TPTracker | Randomizer tracker | Excluded by owner decision; donor integration does not require the tracker |
 | Flurry Rush | Owner decision, 2026-10-14 | Excluded; no Flurry Rush hooks or controls |
 | Enemy/boss HP bars and damage numbers | Owner decision | Excluded |
 

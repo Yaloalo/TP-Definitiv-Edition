@@ -10,8 +10,8 @@ more fluid game:
 
 **Docs:**
 
-- Scope: [`../DESIGN_VISION.md`](../DESIGN_VISION.md)
-- Feasibility and roadmap: [`../REMASTER_PLAN.md`](../REMASTER_PLAN.md)
+- Scope: [`docs/DESIGN_VISION.md`](docs/DESIGN_VISION.md)
+- Remaining work and next milestone: [`docs/ROADMAP.md`](docs/ROADMAP.md)
 - Integrated modules, source ownership and validation: [`docs/INTEGRATION.md`](docs/INTEGRATION.md)
 
 Everything runs inside its own **game mode** ("Definitive Overhaul" on the title screen) with a separate save file.
@@ -37,6 +37,7 @@ the release binary. See `docs/INTEGRATION.md` for coverage and tests.
 | Sprint | hold A after a roll (human) or during the wolf dash; drains 20 stamina/s; B while sprinting = jump slash. Ported from Roll-and-Sprint and Dawnlight |
 | Traversal stamina | climbing and hanging drain 6/s while moving; fast swimming drains 15/s; running dry only exhausts (no falling) |
 | Turning and crawling | 200% human/Wolf turn-step speed, optional quick pivots and 175% crawl speed; independently configurable |
+| Epona handling | independently adjustable steering, acceleration and braking; native jump/script/aim behavior preserved |
 | HUD and damage feedback | safe idle HUD fade after 5 s; immediate activity reveal; brief 25% red edge tint on actual health loss |
 | Balance controls | every value is adjustable in the Mods window |
 | Manual shield | hold R without targeting; R+B bashes after learning Shield Attack; uses the shared stamina gate |
@@ -201,7 +202,11 @@ docs/MODPACK.md        curated graphics mods and texture packs
 
 ## Credits
 
-Code sources (see `../REMASTER_PLAN.md` §3 for the full list): Dawnlight, A Link Between Twilight, the Dusklight
-Randomizer and further community mods in `../reference-mods/`.
+Code sources: Dawnlight, A Link Between Twilight, the Dusklight Randomizer,
+Roll-and-Sprint, Snappy Turns, lazytweaks, Unrestricted Items, Twilight Compass
+and TP Classic Modern Controller UI. See `docs/INTEGRATION.md` and the source
+headers for implementation ownership. Reference checkouts stay local.
 
-Ported files name their source in a header comment. The project is private and not distributed.
+Ported files name their source in a header comment. Project commits are pushed
+to the owner's repository; game discs, executables, saves and local build
+artifacts are excluded.

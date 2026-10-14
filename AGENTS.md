@@ -5,6 +5,18 @@ full build. Keep gameplay changes in this mod's modules and F1 controls. Do not
 reintroduce dependence on launcher/native gameplay presets. Zora Swim/Dark
 Morpheel is the approved standalone gameplay exception. Flurry Rush is excluded.
 
+The owner also authorizes proper commits and pushes to
+`git@github.com:Yaloalo/TP-Definitiv-Edition.git` after every major change.
+Complete implementation, inspect the diff and run the full QA gate before each
+milestone commit. Use focused commits with a concrete behavior-based subject
+and record relevant validation and remaining runtime checks in the body.
+Push the completed commits to the tracked branch and verify the remote head.
+Do not force-push or rewrite published history. Keep game executables, disc
+images, saves, downloaded dependencies and generated builds out of Git.
+If a push fails, preserve the commits, resolve routine authentication/network
+issues within the authorized scope and report any remaining blocker honestly.
+Do not invent separate historical feature commits for work that predates Git.
+
 Use `cmake --build build -j 2` for the default build, which runs the QA target.
 Run that full gate after each major implementation stage, before moving on to
 the next stage, and after the final changes. Inspect `build/qa/report.json` and

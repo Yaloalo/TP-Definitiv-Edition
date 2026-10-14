@@ -1,8 +1,7 @@
 # Incremental development and playable builds
 
-`../../DESIGN_VISION.md` is the design baseline. Feature implementation and
-coverage live in `INTEGRATION.md`; feasibility and sequencing remain in
-`../../REMASTER_PLAN.md`.
+`DESIGN_VISION.md` is the design baseline. Feature implementation and coverage
+live in `INTEGRATION.md`; remaining work and sequencing are in `ROADMAP.md`.
 
 ## Build states
 
@@ -33,6 +32,7 @@ for setup, evidence, detailed coverage and pending runtime story routes.
 - Implement one mechanic or compatibility fix at a time in its module.
 - Keep its balance numbers/configuration independent of other modules.
 - Run targeted tests while iterating, then the full default build/QA gate after each major stage and the final changes.
+- Inspect the diff, commit each major change with its validation, push to the owner's repository, and verify the remote branch. Do not rewrite pushed history.
 - Playtest in the Ordon → Faron Woods → Forest Temple slice first.
 - Preserve the accepted package under `build/playtested/` with a descriptive
   name and record the host version and settings that were tested.
