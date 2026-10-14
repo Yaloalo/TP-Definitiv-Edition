@@ -20,6 +20,7 @@ std::set<std::string> g_pending;
 std::array<MessageId, 4> g_messages{};
 UiElementHandle g_status = 0;
 bool owns_reward(const Relic& r) {
+    if (r.id==0x39) return progression::model().equipmentUpgrades & 1;
     if (r.reward == dItemNo_HYLIA_SHIELD_e) return dComIfGs_isCollectShield(COLLECT_HYLIAN_SHIELD);
     if (r.reward == dItemNo_HAWK_EYE_e) return dComIfGs_getItem(SLOT_5, false) == dItemNo_HAWK_EYE_e;
     if (r.reward == dItemNo_ARMOR_e) return dComIfGs_isCollectClothes(2);
@@ -29,21 +30,29 @@ bool near_merchant(const Relic& r) {
     auto* link = daAlink_getAlinkActorClass();
     return link && std::strcmp(dComIfGp_getStartStageName(), r.stage) == 0 && fopAcM_GetRoomNo(link) == r.room;
 }
+bool trade_requirements(const Relic& r) {
+    if (r.id==0x39) return dComIfGs_isCollectClothes(2);
+    if (r.id==0x38) {
+        for(int i=0;i<3;++i) {
+            const auto item=dComIfGs_getItem(SLOT_15+i,false);
+            if(resources::bomb_type(item)||item==dItemNo_BOMB_BAG_LV1_e)return true;
+        }
+        return false;
+    }
+    return true;
+}
 bool trade_available(const Relic& r) {
     auto* link = daAlink_getAlinkActorClass();
+    if (!trade_requirements(r)) return false;
     return enabled() && progression::ready() && link && !dComIfGp_event_runCheck() && link->mNormalSpeed == 0 &&
         can_redeem(progression::model(), r, dComIfGp_getStartStageName(), fopAcM_GetRoomNo(link), owns_reward(r), g_pending.contains(r.trade));
 }
 bool queue(const char* name, uint8_t item) {
-    if (g_pending.contains(name) || progression::model().claimed.contains(name)) return false;
-    if (svc_item->give_item(mod_ctx, name, item, 0) != MOD_OK) return false;
+    if (progression::model().claimed.size()>=512 || g_pending.contains(name) || progression::model().claimed.contains(name)) return false;
+    const auto flags=std::string_view(name).starts_with("trade:")?ITEM_GIVE_RESOLVE|ITEM_GIVE_SILENT:0;
+    if (svc_item->give_item(mod_ctx, name, item, flags) != MOD_OK) return false;
     g_pending.insert(name); return true;
 }
-void trade_pressed(ModContext*, void* data) {
-    auto& relic = *static_cast<const Relic*>(data);
-    if (trade_available(relic)) queue(relic.trade, relic.reward);
-}
-bool trade_disabled(ModContext*, void* data) { return !trade_available(*static_cast<const Relic*>(data)); }
 HookAction shop_flag_pre(ModContext*, void* args, void* result, void*) {
     if (!enabled()) return HOOK_CONTINUE;
     const int index = mods::arg<int>(args, 1);
@@ -68,8 +77,15 @@ ModResult register_relic_message(size_t i) {
 }
 bool enabled() { return is_active() && tuning::get().removeCurrency && tuning::get().merchantRewards; }
 bool custom_item(uint8_t item) { return relic_for_item(item) != nullptr; }
+bool can_trade(const Relic& r) { return trade_available(r); }
+bool trade(const Relic& r) { return trade_available(r) && queue(r.trade,r.reward); }
 bool resolve(const ItemCheckInfo* info, ItemCheckResolution* out) {
     if (!enabled() || !info || !info->name) return false;
+    for(const auto& relic:kRelics) if(std::string_view(info->name)==relic.trade) {
+        const bool allowed=progression::ready()&&progression::model().claimed.size()<512&&
+            owns_relic(progression::model(),relic)&&!redeemed(progression::model(),relic)&&!owns_reward(relic)&&trade_requirements(relic);
+        *out={uint8_t(allowed?relic.reward:dItemNo_NONE_e),uint8_t(allowed?relic.reward:dItemNo_NONE_e),true};return true;
+    }
     if (const auto* relic = relic_for_check(info->name)) {
         *out = {relic->id, relic->display, true}; return true;
     }
@@ -86,19 +102,23 @@ void on_give(const ItemGiveInfo* info) {
     if (info->item == dItemNo_BOW_e && dComIfGs_getItem(SLOT_5, false) != dItemNo_HAWK_EYE_e)
         queue("quest:bow_hawkeye", dItemNo_HAWK_EYE_e);
     if (const auto* relic = relic_for_item(info->item)) {
-        if (progression::model().claim(info->check_name, relic->id)) progression::persist();
+        const char* name=info->item==0x39 && info->check_name && std::strcmp(info->check_name,"jovani_reward_1")==0?relic->check:info->check_name;
+        if (progression::model().claim(name, relic->id)) progression::persist();
     }
     if (info->check_name && (std::strncmp(info->check_name, "trade:", 6) == 0 || std::strncmp(info->check_name, "quest:", 6) == 0)) {
+        g_pending.erase(info->check_name);
+        if(info->item==dItemNo_NONE_e || !progression::model().claim(info->check_name,0xff))return;
         // The host's item functions are intentionally empty for several equipment IDs; set native permanent ownership too.
         if (info->item == dItemNo_HYLIA_SHIELD_e) dComIfGs_setCollectShield(COLLECT_HYLIAN_SHIELD);
         if (info->item == dItemNo_ARMOR_e) dComIfGs_setCollectClothes(2);
+        if (std::strcmp(info->check_name,"trade:sigil")==0) progression::model().equipmentUpgrades|=1;
         if (info->item == dItemNo_BOMB_BAG_LV2_e) {
             dComIfGs_setBombMax(dItemNo_NORMAL_BOMB_e, std::max<int>(60, dComIfGs_getBombMax(dItemNo_NORMAL_BOMB_e)));
             dComIfGs_setBombMax(dItemNo_WATER_BOMB_e, std::max<int>(30, dComIfGs_getBombMax(dItemNo_WATER_BOMB_e)));
             dComIfGs_setBombMax(dItemNo_POKE_BOMB_e, std::max<int>(20, dComIfGs_getBombMax(dItemNo_POKE_BOMB_e)));
         }
         if (info->item == dItemNo_PACHINKO_e) dComIfGs_onEventBit(0x4902); // native Sera acquisition milestone
-        progression::model().claim(info->check_name, 0xff); progression::persist();
+        progression::persist();
         g_pending.erase(info->check_name);
     }
     if (info->check_name && std::strcmp(info->check_name, "sera_reward") == 0) {
@@ -126,7 +146,7 @@ void tick() {
         if (bag && dComIfGs_isCollectCrystal(2) && !bombling && !dComIfGs_isItemFirstBit(dItemNo_POKE_BOMB_e)) queue("quest:lakebed_bomblings", dItemNo_POKE_BOMB_e);
     }
     if (g_status) {
-        std::string text = "Essential gear comes from quests: help Sera's cat for the Slingshot; defeat Fyrus for a bomb bag; Zora Armor unlocks water bombs; Lakebed victory unlocks Bomblings.\nVisit the merchant, then use the matching relic below. Each trade is permanent and can be completed once.\n";
+        std::string text = "Help Sera for the Slingshot; Fyrus unlocks a bomb bag; Zora Armor unlocks water bombs; Lakebed unlocks Bomblings. Hawkeye arrives with the Bow.\nSpeak to Malo, Barnes, Agitha or Jovani for permanent purchases and relic gifts.\n";
         for (const auto& relic : kRelics) text += fmt::format("{}: {}\n", relic.name, redeemed(progression::model(), relic) ? "upgrade complete" : owns_relic(progression::model(), relic) ? "ready to trade" : "find through exploration");
         svc_ui->elem_set_text(mod_ctx, g_status, text.c_str());
     }
@@ -134,11 +154,6 @@ void tick() {
 ModResult build_controls(UiElementHandle pane) {
     auto r = svc_ui->pane_add_section(mod_ctx, pane, "Quest rewards and relic upgrades");
     if (r == MOD_OK) r = svc_ui->pane_add_text(mod_ctx, pane, "Select Definitive Overhaul to view your quest and relic rewards.", &g_status);
-    for (const auto& relic : kRelics) {
-        UiControlDesc control = UI_CONTROL_DESC_INIT;
-        control.label = relic.label; control.on_pressed = trade_pressed; control.is_disabled = trade_disabled; control.user_data = const_cast<Relic*>(&relic);
-        if (r == MOD_OK) r = svc_ui->pane_add_control(mod_ctx, pane, &control, nullptr);
-    }
     return r;
 }
 ModResult install() {

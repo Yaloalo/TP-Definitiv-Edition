@@ -22,11 +22,16 @@ inline bool migrate_economy(progression::Model& model) {
     if (model.claimed.contains("migration:rare-economy-v1")) return true;
     auto candidate=model;
     // Snapshot old relic provenance before these locations become rupee caches.
+    if (candidate.claimed.contains("chest:F_SP109:20") && !candidate.claimed.contains("legacy:forge") &&
+        !candidate.claim("legacy:forge",0xff)) return false;
+    if (candidate.claimed.contains("chest:R_SP109:17") && !candidate.claimed.contains("legacy:lens") &&
+        !candidate.claim("legacy:lens",0xff)) return false;
     if (candidate.claimed.contains("chest:F_SP115:6") && !candidate.claimed.contains("collection:bugs:3") &&
         !candidate.claim("collection:bugs:3",0xff)) return false;
     if (candidate.claimed.contains("chest:F_SP117:2") && !candidate.claimed.contains("collection:poes:20") &&
         !candidate.claim("collection:poes:20",0xff)) return false;
     if (!candidate.claim("migration:rare-economy-v1",0xff)) return false;
+    if (candidate.claimed.contains("trade:sigil")) candidate.equipmentUpgrades|=1;
     for (const auto& name:kCaches) if (model.claimed.contains(std::string(name)))
         candidate.rareRupees=std::min<uint32_t>(10000,candidate.rareRupees+kCacheValue);
     model=std::move(candidate); return true;

@@ -1,7 +1,23 @@
 [
-  "enemy_timing", "enemy_death_recovery", "manual_shield", "launch_folder",
-  "progression_save_model", "flask_callbacks", "currency_and_pacing",
-  "resources_and_relic_models", "wolf_resources_and_rewards",
-  "rest_stones_and_emergency_recovery", "movement_hud_models",
-  "movement_hud_callbacks", "epona_handling", "story_progression", "qa_tooling", "shared_growth", "pause_progression", "spring_redistribution", "rare_economy"
+  "enemy_timing",
+  "enemy_death_recovery",
+  "manual_shield",
+  "launch_folder",
+  "progression_save_model",
+  "flask_callbacks",
+  "currency_and_pacing",
+  "resources_and_relic_models",
+  "wolf_resources_and_rewards",
+  "rest_stones_and_emergency_recovery",
+  "movement_hud_models",
+  "movement_hud_callbacks",
+  "epona_handling",
+  "story_progression",
+  "qa_tooling",
+  "shared_growth",
+  "pause_progression",
+  "spring_redistribution",
+  "rare_economy",
+  "collection_rewards",
+  "npc_conversations"
 ]

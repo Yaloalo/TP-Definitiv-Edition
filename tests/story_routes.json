@@ -1,16 +1,72 @@
 [
-  {"route": "Ordon introduction", "checks": "Herd goats, rescue cradle, return cat, acquire Slingshot, complete sword tutorial, cross into Faron", "status": "in-game-pending"},
-  {"route": "Twilight and Tears of Light", "checks": "Escape prison, meet Midna, obtain senses, collect every region's required tears, restore light, preserve vessel flags", "status": "in-game-pending"},
-  {"route": "Forest Temple", "checks": "Rescue monkeys, retain keys and boss key, defeat Diababa, obtain crystal, unlock warp, reload save", "status": "in-game-pending"},
-  {"route": "Kakariko and Goron Mines", "checks": "Sumo and Iron Boots gates, King Bulblin bridge, defeat Fyrus, obtain crystal, quest bomb bag delivered exactly once", "status": "in-game-pending"},
-  {"route": "Zora and Lakebed", "checks": "Thaw domain, escort Telma, obtain Zora Armor, unlock water bombs, Clawshot and keys, Morpheel with standalone Zora Swim, crystal and Bomblings", "status": "in-game-pending"},
-  {"route": "Master Sword", "checks": "Midna's desperate hour, Sacred Grove puzzles, sword acquisition, M_077 unlock, quick transform only after unlock, human/wolf save reload", "status": "in-game-pending"},
-  {"route": "Arbiter's Grounds", "checks": "Desert access, Poe gates, Spinner, Stallord, first mirror fragment, warp", "status": "in-game-pending"},
-  {"route": "Snowpeak", "checks": "Reekfish scent bottle interactions, soup quest gates, Ball and Chain, Blizzeta, fragment, Yeta/Yeto heart shower and warp", "status": "in-game-pending"},
-  {"route": "Temple of Time", "checks": "Sacred Grove revisit, Dominion Rod, statue puzzles, Armogohma, fragment, rod restoration quest", "status": "in-game-pending"},
-  {"route": "City in the Sky", "checks": "Sky-book and cannon repair gates without currency, Double Clawshot, Argorok, fragment, mirror assembly", "status": "in-game-pending"},
-  {"route": "Palace of Twilight", "checks": "Sol escort and sword light, Zant phases, final crystal, Castle barrier", "status": "in-game-pending"},
-  {"route": "Hyrule Castle and finale", "checks": "Keys, Puppet Zelda, beast, mounted Zelda pursuit, Ganondorf duel, ending and post-completion save", "status": "in-game-pending"},
-  {"route": "Optional progression", "checks": "Malo bridge/shop donations, unique relic redemption, all flask shards, Heart Pieces, Cave of Ordeals, horse races, minigames and checkpoint reachability", "status": "in-game-pending"},
-  {"route": "Isolation and compatibility", "checks": "New and old overhaul saves, death/retry, all slots, mode switching to vanilla, F1 toggles, graphics/Zora mods, keyboard/controller and 30/60/high FPS", "status": "in-game-pending"}
+  {
+    "route": "Ordon introduction",
+    "checks": "Herd goats, rescue cradle, return cat, acquire Slingshot, complete sword tutorial, cross into Faron",
+    "status": "in-game-pending"
+  },
+  {
+    "route": "Twilight and Tears of Light",
+    "checks": "Escape prison, meet Midna, obtain senses, collect every region's required tears, restore light, preserve vessel flags",
+    "status": "in-game-pending"
+  },
+  {
+    "route": "Forest Temple",
+    "checks": "Rescue monkeys, retain keys and boss key, defeat Diababa, obtain crystal, unlock warp, reload save, native equipment growth allocation and Ordon Spring redistribution",
+    "status": "in-game-pending"
+  },
+  {
+    "route": "Kakariko and Goron Mines",
+    "checks": "Sumo and Iron Boots gates, King Bulblin bridge, defeat Fyrus, obtain crystal, quest bomb bag delivered exactly once",
+    "status": "in-game-pending"
+  },
+  {
+    "route": "Zora and Lakebed",
+    "checks": "Thaw domain, escort Telma, obtain Zora Armor, unlock water bombs, Clawshot and keys, Morpheel with standalone Zora Swim, crystal and Bomblings",
+    "status": "in-game-pending"
+  },
+  {
+    "route": "Master Sword",
+    "checks": "Midna's desperate hour, Sacred Grove puzzles, sword acquisition, M_077 unlock, quick transform only after unlock, human/wolf save reload",
+    "status": "in-game-pending"
+  },
+  {
+    "route": "Arbiter's Grounds",
+    "checks": "Desert access, Poe gates, Spinner, Stallord, first mirror fragment, warp",
+    "status": "in-game-pending"
+  },
+  {
+    "route": "Snowpeak",
+    "checks": "Reekfish scent bottle interactions, soup quest gates, Ball and Chain, Blizzeta, fragment, Yeta/Yeto heart shower and warp",
+    "status": "in-game-pending"
+  },
+  {
+    "route": "Temple of Time",
+    "checks": "Sacred Grove revisit, Dominion Rod, statue puzzles, Armogohma, fragment, rod restoration quest",
+    "status": "in-game-pending"
+  },
+  {
+    "route": "City in the Sky",
+    "checks": "Sky-book and cannon repair gates without currency, Double Clawshot, Argorok, fragment, mirror assembly",
+    "status": "in-game-pending"
+  },
+  {
+    "route": "Palace of Twilight",
+    "checks": "Sol escort and sword light, Zant phases, final crystal, Castle barrier",
+    "status": "in-game-pending"
+  },
+  {
+    "route": "Hyrule Castle and finale",
+    "checks": "Keys, Puppet Zelda, beast, mounted Zelda pursuit, Ganondorf duel, ending and post-completion save",
+    "status": "in-game-pending"
+  },
+  {
+    "route": "Optional progression",
+    "checks": "Malo bridge/shop donations, unique relic redemption, all flask shards, Heart Pieces, Cave of Ordeals, horse races, minigames and checkpoint reachability, rare cache budget, Shield/Armor dialogue purchases, Hawkeye with Bow, Agitha 1/3/6/12 pairs, Jovani 5/10/20/40/60 souls, original curse scenes and no repeat income",
+    "status": "in-game-pending"
+  },
+  {
+    "route": "Isolation and compatibility",
+    "checks": "New and old overhaul saves, death/retry, all slots, mode switching to vanilla, F1 toggles, graphics/Zora mods, keyboard/controller and 30/60/high FPS",
+    "status": "in-game-pending"
+  }
 ]

@@ -1,6 +1,7 @@
 #include "progression/pause.hpp"
 #include "progression/rewards.hpp"
 #include "progression/growth.hpp"
+#include "progression/collections.hpp"
 #include "economy/merchant_model.hpp"
 #include "core/tuning.hpp"
 #include "core/hooks.hpp"
@@ -47,23 +48,26 @@ void draw_post(ModContext*,void* args,void*,void*) {
         J2DFillBox(24,24,560,376,JUtility::TColor(20,22,26,245));
         font->setGX(); font->setCharColor(JUtility::TColor(236,220,173,255));
         float y=49;
-        const auto line=[&](const std::string& text) { font->drawString_scale(38,y,12,15,text.c_str(),true); y+=19; };
+        const auto line=[&](const std::string& text) { font->drawString_scale(38,y,12,15,text.c_str(),true); y+=17; };
         line("GROWTH & EQUIPMENT");
         line(fmt::format("Health: {} hearts (+{})   Stamina: {} (+{})",3+m.healthPoints,m.healthPoints,cfg.staminaMax+m.stamina_bonus(),m.stamina_bonus()));
         line(fmt::format("Growth: {}/5 fragments   Unassigned blessings: {}",m.growthFragments%5,m.unassigned()));
         line("A: add one heart   X: add 20 stamina   B / Z: return");
-        line("Redistribute blessings at a Light Spirit spring after Forest Temple.");
+        line("Redistribute blessings at Ordon Spring after Forest Temple.");
         line(fmt::format("Sacred Flask: {}/{} charges, {} hearts per charge",m.charges,m.capacity(cfg.flaskStartingCharges,cfg.flaskMaximumCharges),m.potency(cfg.flaskHealingHearts)));
-        line(fmt::format("Flask shards: {}/4   Capacity upgrades: {}",m.flaskShards%4,m.flaskShards/4));
+        line(fmt::format("Flask shards: {}/4   Capacity upgrades: {}",m.flaskShards%4,m.capacity(cfg.flaskStartingCharges,cfg.flaskMaximumCharges)-std::min(cfg.flaskStartingCharges,cfg.flaskMaximumCharges)));
         line(fmt::format("Hylian Shield: {}   Hawkeye: {}",dComIfGs_isCollectShield(COLLECT_HYLIAN_SHIELD)?"owned":"not acquired",dComIfGs_getItem(SLOT_5,false)==dItemNo_HAWK_EYE_e?"owned":"obtain Bow"));
         line(fmt::format("Bomb capacities: {} / {} / {}",dComIfGs_getBombMax(dItemNo_NORMAL_BOMB_e),dComIfGs_getBombMax(dItemNo_WATER_BOMB_e),dComIfGs_getBombMax(dItemNo_POKE_BOMB_e)));
         line(fmt::format("Magic Armor: {}",dComIfGs_isCollectClothes(2)?"owned; protection uses stamina":"not acquired"));
         line(fmt::format("Rare rupees: {}",m.rareRupees));
+        line(fmt::format("Agitha: {}/12 pairs   Jovani: {}/60 souls",collections::pairs(),collections::souls()));
         for (const auto& relic:economy::merchants::kRelics)
             if (economy::merchants::owns_relic(m,relic)) line(fmt::format("{}: {}",relic.name,economy::merchants::redeemed(m,relic)?"upgrade complete":"ready to exchange"));
         if (m.equipmentUpgrades & 1) line("Twilight Sigil: improved Magic Armor efficiency");
         if (m.equipmentUpgrades & 2) line("Agitha's Golden Crest: honored guest");
-        if (m.equipmentUpgrades & 4) line("Jovani's Spirit Crest: curse lifted");
+        if (m.equipmentUpgrades & 4) line("Jovani's Spirit Crest: earned");
+        if(m.equipmentUpgrades&2){J2DFillBox(526,32,20,20,JUtility::TColor(188,149,38,255));font->drawString_scale(531,48,12,15,"G",true);}
+        if(m.equipmentUpgrades&4){J2DFillBox(552,32,20,20,JUtility::TColor(130,170,185,255));font->drawString_scale(557,48,12,15,"S",true);}
     } else {
         J2DFillBox(28,24,552,33,JUtility::TColor(20,22,26,205));
         font->setGX(); font->setCharColor(JUtility::TColor(236,220,173,255));

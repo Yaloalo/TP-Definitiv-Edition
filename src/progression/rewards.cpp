@@ -5,6 +5,7 @@
 #include "resources/ammo.hpp"
 #include "economy/merchants.hpp"
 #include "economy/rare.hpp"
+#include "progression/collections.hpp"
 #include "services.hpp"
 #include "d/d_item.h"
 #include "d/actor/d_a_alink.h"
@@ -21,19 +22,18 @@ DEFINE_HOOK_SYMBOL("getItemFunc", void(u8), GetItem);
 DEFINE_HOOK_SYMBOL("dusk::mods::item_check_message", u32(u16, u32), CheckMessage);
 DEFINE_HOOK(&daAlink_c::checkEndMessage, ItemMessage);
 MessageId g_shardMessage = 0, g_staminaMessage = 0;
-// Hand-picked currency checks: five sets of four shards, spread through the adventure.
-// Check coordinates come from the community location catalogue; no randomizer dependency.
-constexpr std::array<std::string_view, 20> kFlaskChecks = {
-    "chest:R_SP01:1", "chest:D_SB10:31", "chest:F_SP108:29", "chest:D_MN05:37",
-    "chest:R_SP109:23", "chest:F_SP111:24", "chest:D_MN04:21", "chest:F_SP121:6",
-    "chest:F_SP115:1", "chest:F_SP113:26", "chest:D_MN01:11", "chest:D_SB03:5",
-    "chest:F_SP124:7", "chest:D_MN10:25", "chest:F_SP114:0", "chest:D_MN11:20",
-    "chest:D_MN06:48", "chest:D_MN06:44", "chest:D_MN07:25", "chest:D_MN08:25",
+// Twelve world shards plus eight collection shards preserve five capacity upgrades.
+// Check coordinates come from the community location catalogue.
+constexpr std::array<std::string_view, 12> kFlaskChecks = {
+    "chest:R_SP01:1", "chest:D_SB10:31", "chest:D_MN05:37", "chest:R_SP109:23",
+    "chest:D_MN04:21", "chest:F_SP115:1", "chest:D_MN01:11", "chest:F_SP124:7",
+    "chest:D_MN10:25", "chest:D_MN11:20", "chest:D_MN07:25", "chest:D_MN08:25",
 };
 bool rupee(uint8_t i) { return (i >= 1 && i <= 7) || i == dItemNo_LINKS_SAVINGS_e; }
 bool resolve(ModContext*, const ItemCheckInfo* info, ItemCheckResolution* out, void*) {
     if (!is_active() || !info || !info->name) return false;
     if (economy::rare::resolve(info,out)) return true;
+    if (collections::resolve(info,out)) return true;
     if (economy::merchants::resolve(info, out)) return true;
     const std::string_view name(info->name);
     // Shop stock must preserve equipment/quest checks, and can never award farmable shards.

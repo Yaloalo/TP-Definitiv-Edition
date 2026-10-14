@@ -11,6 +11,7 @@
 #include "core/tuning.hpp"
 #include "d/actor/d_a_alink.h"
 #include "services.hpp"
+#include "progression/rewards.hpp"
 
 namespace remaster::combat::damage {
 namespace {
@@ -83,7 +84,7 @@ HookAction on_set_damage_pre(ModContext*, void* args, void*, void*) {
     // Round up so a scaled hit never drops to zero damage.
     amount = std::max(1, static_cast<int>(std::ceil(static_cast<float>(amount) * scale * (armor ? 0.5f : 1.0f))));
 
-    if (armor) combat::stamina::drain(20.0f, "Magic Armor protection");
+    if (armor) combat::stamina::drain(progression::ready() && (progression::model().equipmentUpgrades&1)?15.0f:20.0f, "Magic Armor protection");
 
     if (values.debugLog) {
         mods::log::info("damage {} -> {} (x{:.2f}, tier '{}')", original, amount, scale, difficulty::tier_name());

@@ -1,6 +1,6 @@
 # Remaining gameplay roadmap
 
-Updated 2026-10-14, baseline 0.6.0. This compares the owner's
+Updated 2026-10-14, baseline 0.10.0. This compares the owner's
 [design vision](DESIGN_VISION.md) with the actual
 [implemented modules](INTEGRATION.md). Everything below is pending or only
 partially implemented. Existing settings/helpers are a starting point, not a
@@ -43,8 +43,8 @@ in later commits. A universal stagger response needs per-enemy work.
 | 5 | Enemy behavior beyond donor hard mode | Variable/delayed combos, healing punishment, flanking and coordination without inflated HP |
 | 6 | Combat item roles | Ball and Chain armor/posture breaking; Boomerang interrupts; Clawshot grappling; Bow weak points; tactical rechargeable bombs |
 | 7 | Spinner and Dominion Rod usefulness | Off-rail movement/combat and statue interactions; new rails/puzzles require additional level/asset work |
-| 8 | Complete permanent reward table | Unique item functionality, healing/stamina/armor upgrades and side-quest rewards; current replacement fragments/relics cover part of the vision |
-| 9 | Finish the currency-free world | Rework price text, merchant interactions and individual quest/minigame funding flows coherently; current compatibility callbacks are a foundation |
+| 8 | Complete permanent reward table | Unique item functionality, healing/stamina/armor upgrades and side-quest rewards; shared growth and collection milestones exist; generic replacement fragments still need a curated pacing table |
+| 9 | Finish the rare-economy world | Rework price text, merchant interactions and individual quest/minigame funding flows coherently; rare-currency purchases and main collection/merchant conversations are implemented; native fallback dialogue and secondary services remain |
 | 10 | Shorten Ordon and repetitive Wolf pacing | Shorter mandatory chores/tutorials with character/story scenes preserved; milestone-specific event/flag patches |
 | 11 | Reduce actual Tears of Light requirements | Existing collection is faster; fewer required tears needs regional completion/state changes and route testing |
 | 12 | Armor identities and permanent upgrades | Expand Hero/Zora/Magic roles; stamina-based Magic Armor is already implemented |

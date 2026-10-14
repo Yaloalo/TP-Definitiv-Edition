@@ -66,6 +66,13 @@ engine, load game assets or traverse the story.
 | `story_progression` | All 256 item IDs through the reward resolver; preservation of keys/equipment/permanent health/native dungeon rewards; all 256 combinations of crystal/mirror bits; persistence; transformation unlock and ten safety gates |
 | `qa_tooling` | Rejection of wrong versions, duplicate/unsafe entries, missing/stale resources, failed/partial reports and changed source/package/host |
 
+| `shared_growth` | Native heart functions/flags, fragment accounting, caps, old-save migration and allocation safety |
+| `pause_progression` | Native equipment-sheet input gates, progression display and bounded layout |
+| `spring_redistribution` | Ordonna unlock, safe physical interaction, conserved blessings and no respec healing |
+| `rare_economy` | Finite cache budget, delivery-only spending, repeated grants and atomic migration |
+| `collection_rewards` | All 4,096 pair masks, native indexed bug flags, milestone budgets, duplicate/native gifts, failed queues and full/corrupt saves |
+| `npc_conversations` | Actor/scene/proximity/threat routing, modal lifecycle, failure-safe input and native story passthrough |
+
 `tests/required_suites.json` prevents missing or accidentally unregistered suites
 from yielding a passing gate. Skipped tests and timeouts fail. Hook checks also
 reject duplicate named hook records and missing/ambiguous dynamic targets.

@@ -275,9 +275,9 @@ void tick(daAlink_c* link) {
         g_retry = false; refill(true);
     }
     if (g_info) {
-        const auto text = fmt::format("Sacred Flask: {}/{} charges, {} hearts each. Flask shards {}/4; stamina fragments {}/4.\nStand beside a Sacred Rest Stone and hold L + R. Rest takes 3 seconds by default. Death and boss victories refill.{}",
+        const auto text = fmt::format("Sacred Flask: {}/{} charges, {} hearts each. Flask shards {}/4; growth fragments {}/5.\nStand beside a Sacred Rest Stone and hold L + R. Rest takes 3 seconds by default. Death and boss victories refill.{}",
             progress().charges, capacity(), progress().potency(tuning::get().flaskHealingHearts), progress().flaskShards % 4,
-            progress().staminaFragments % 4, progress().bottleSlot == 255 ? " Empty a bottle to make room for the flask." : " Human: assign flask to X/Y. Wolf: R + X to recover.");
+            progress().growthFragments % 5, progress().bottleSlot == 255 ? " Empty a bottle to make room for the flask." : " Human: assign flask to X/Y. Wolf: R + X to recover.");
         svc_ui->elem_set_text(mod_ctx, g_info, text.c_str());
     }
 }

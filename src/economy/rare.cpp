@@ -60,6 +60,9 @@ bool ensure() {
         if (!migrate_economy(progression::model())) return false;
         progression::persist();
     }
+    // A previously redeemed sigil remains a permanent benefit across intermediate saves.
+    auto& m=progression::model();
+    if(m.claimed.contains("trade:sigil")&&!(m.equipmentUpgrades&1)){m.equipmentUpgrades|=1;progression::persist();}
     return true;
 }
 bool custom_item(uint8_t item) { return item==kRupeeCache || item==kBlessing || item==kFlaskBlessing; }

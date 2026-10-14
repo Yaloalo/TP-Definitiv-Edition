@@ -5,7 +5,7 @@ from fixture import ROOT, function, run
 items = (ROOT / 'dusklight/include/d/d_item_data.h').read_text()
 ids = dict((name, int(number, 16)) for number, name in re.findall(r'/\*\s*(0x[0-9A-Fa-f]+)\s*\*/\s*(dItemNo_\w+)', items))
 rewards = (ROOT / 'src/progression/rewards.cpp').read_text()
-checks = re.search(r'constexpr std::array<std::string_view, 20> kFlaskChecks = \{.*?\};', rewards, re.S).group()
+checks = re.search(r'constexpr std::array<std::string_view, 12> kFlaskChecks = \{.*?\};', rewards, re.S).group()
 common = r'''
 #include <cassert>
 #include <cstring>
@@ -25,6 +25,7 @@ namespace remaster::resources::ammo{bool removes_pickup(int n){return active&&re
 struct ItemCheckInfo{const char* name;uint8_t vanilla_item;};struct ItemCheckResolution{uint8_t item,display;bool animation;};
 namespace remaster::economy::merchants{bool resolve(const ItemCheckInfo*,ItemCheckResolution*){return false;}bool custom_item(uint8_t){return false;}}
 namespace remaster::economy::rare{bool resolve(const ItemCheckInfo*,ItemCheckResolution*){return false;}bool custom_item(uint8_t){return false;}}
+namespace remaster::progression::collections{bool resolve(const ItemCheckInfo*,ItemCheckResolution*){return false;}}
 namespace remaster::healing::snowpeak{bool allows_grant(){return false;}}
 '''
 constants = '\n'.join(f'constexpr int {name}={value};' for name, value in ids.items())

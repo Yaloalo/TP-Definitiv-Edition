@@ -48,7 +48,9 @@ the release binary. See `docs/INTEGRATION.md` for coverage and tests.
 | Owned pacing and camera | dialogue, transitions, save waits, tears collection, climbing, quick transform, mouse camera/aim and reticle use our controls; no launcher preset |
 | Sacred Flask | three starting charges, three hearts per charge; vulnerable human drinking or Wolf R+X recovery; 32 configured visible rest-stone sites (hold L+R), death/boss refills and exploration shards; strict one-charge emergency recovery enabled by default |
 | Renewable supplies | arrows, seeds, three bomb types, lantern oil and bee bait; separate no-hit-delay and refill-interval sliders; disposable ammunition drops removed |
-| Permanent rewards / no currency | ordinary heart/coin/fairy drops removed; Snowpeak ending heart shower preserved; checks become flask/stamina upgrades; quest equipment and four unique relic trades replace shopping; stamina-based Magic Armor |
+| Growth and equipment | five fragments = one heart or +20 stamina; Z on the equipment pause screen shows growth/flask/gear; free redistribution at Ordon Spring after Forest Temple |
+| Rare economy and collection gifts | no loose coins/hearts/fairies/ammo; 20 finite rupee caches for Shield/Magic Armor; Hawkeye with Bow; Agitha/Jovani grant permanent growth, relics, flask capacity and pause-menu emblems |
+| Merchant conversations | face a supported NPC and press A (or L+Y) for permanent purchases/gifts; original quest dialogue remains available through Other matters |
 
 **Difficulty curve** (`src/core/difficulty.cpp`):
 
@@ -63,6 +65,7 @@ the release binary. See `docs/INTEGRATION.md` for coverage and tests.
 - tired animation when exhausted
 - parry and posture
 
+See [`docs/ECONOMY_AND_GROWTH.md`](docs/ECONOMY_AND_GROWTH.md) for shared growth, rare currency, collection rewards and native NPC conversations.
 See [`docs/HEALING_AND_REWARDS.md`](docs/HEALING_AND_REWARDS.md) for flask balance, checkpoint/reward placement, save behavior and current restrictions.
 See [`docs/MOVEMENT_AND_HUD.md`](docs/MOVEMENT_AND_HUD.md) for turning, crawl controls, HUD fade, damage feedback and pending in-game checks.
 

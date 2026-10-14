@@ -30,10 +30,12 @@
 #include "progression/growth.hpp"
 #include "progression/pause.hpp"
 #include "progression/spring.hpp"
+#include "progression/collections.hpp"
 #include "healing/flask.hpp"
 #include "healing/rest_stones.hpp"
 #include "economy/currency.hpp"
 #include "economy/rare.hpp"
+#include "economy/conversations.hpp"
 #include "economy/merchants.hpp"
 #include "resources/ammo.hpp"
 #include "healing/wolf.hpp"
@@ -103,6 +105,8 @@ constexpr Installer kInstallers[] = {
     {progression::pause::install, "equipment-menu growth and upgrades"},
     {progression::spring::install, "Ordonna growth redistribution"},
     {economy::rare::install, "rare Hylian currency"},
+    {progression::collections::install, "bug and Poe milestone gifts"},
+    {economy::conversations::install, "character equipment conversations"},
     {resources::ammo::install, "renewable ammunition"},
     {economy::merchants::install, "quest and relic merchants"},
     {healing::wolf::install, "wolf recovery"},
@@ -219,6 +223,8 @@ MOD_EXPORT ModResult mod_initialize(ModError* error) {
 MOD_EXPORT ModResult mod_update(ModError*) {
     remaster::progression::spring::tick();
     remaster::economy::rare::tick();
+    remaster::progression::collections::tick();
+    remaster::economy::conversations::tick();
     return MOD_OK;
 }
 

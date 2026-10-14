@@ -19,7 +19,7 @@ callbacks=''.join(function(src,x) for x in selected)
 ids={name: int(v,16) for v,name in re.findall(r'/\* (0x[0-9A-Fa-f]+) \*/ (dItemNo_\w+)',(root/'dusklight/include/d/d_item_data.h').read_text())}
 rewards=(root/'src/progression/rewards.cpp').read_text()
 reward_callbacks=''.join(function(rewards,n) for n in ['rupee','resolve','item_pre'])
-checks=rewards[rewards.index('constexpr std::array<std::string_view, 20> kFlaskChecks'):rewards.index('};',rewards.index('constexpr std::array<std::string_view, 20> kFlaskChecks'))+2]
+checks=rewards[rewards.index('constexpr std::array<std::string_view, 12> kFlaskChecks'):rewards.index('};',rewards.index('constexpr std::array<std::string_view, 12> kFlaskChecks'))+2]
 used=set(re.findall(r'dItemNo_\w+', callbacks+reward_callbacks)) | {"dItemNo_WATER_BOTTLE_e"}
 enums='\n'.join(f'constexpr int {name}={ids[name]};' for name in sorted(used))
 fixture=r'''
@@ -70,6 +70,7 @@ namespace remaster::healing::stones {void damage_received(){}}
 struct ItemCheckInfo;struct ItemCheckResolution;
 namespace remaster::economy::merchants {bool enabled(){return false;}bool custom_item(uint8_t){return false;}bool resolve(const ItemCheckInfo*,ItemCheckResolution*){return false;}}
 namespace remaster::economy::rare {bool custom_item(uint8_t){return false;}bool resolve(const ItemCheckInfo*,ItemCheckResolution*){return false;}}
+namespace remaster::progression::collections {bool resolve(const ItemCheckInfo*,ItemCheckResolution*){return false;}}
 namespace remaster::healing {
 void damage_interrupted(daAlink_c*);
 daAlink_c* g_drinking=nullptr; bool g_healed=false,g_retry=false; unsigned g_bottleDepth=0; uint32_t g_saveSlot=0,g_retrySlot=255;

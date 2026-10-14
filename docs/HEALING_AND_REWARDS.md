@@ -1,11 +1,11 @@
 # Sacred Flask, checkpoints and permanent rewards
 
-Implemented in the Definitive Overhaul game mode, version 0.4.0. This is a build/test verified candidate; the new gameplay and stone placements still need in-game validation against Dusklight v2.0.3.
+Implemented in the Definitive Overhaul game mode, version 0.10.0. This is a build/test verified candidate; the new gameplay and stone placements still need in-game validation against Dusklight v2.0.3.
 
 ## Balance
 
 - Start with three shared charges. Each charge heals three hearts (12 native quarter-heart units).
-- Four Flask Shards add one charge, up to eight with default settings. Twenty specific former rupee chests supply the five capacity upgrades.
+- Four Flask Shards add one charge, up to eight with default settings. Twelve world chests and eight collection shards supply the five capacity upgrades.
 - Every two cleared dungeons add one heart to each charge's healing, up to seven hearts after eight dungeons.
 - A charge is spent when drinking starts. Healing arrives at the native animation's drinking point. Damage interrupts the action; an interrupted windup loses its charge.
 - Drinking uses the original bottle model/animation without starting the compulsory event or event camera. It grants no invulnerability and enemies continue acting.
@@ -57,7 +57,7 @@ This is a slow safeguard against becoming stranded with no healing. Full recover
 
 ## Containers and healing items
 
-The first unused/empty bottle slot, searching from slot 14 backwards, becomes the flask. Existing water, oil, soup and quest contents are never overwritten to claim a slot. If all four bottles contain quest fluids, empty one to make room. The mod normalizes ordinary potions, milk, fairy and healing Chu jelly bottles to empty utility bottles; soup/hot-spring quest actions retain their native behavior, with positive bottle healing suppressed. Ordinary hearts and healing fairy spawns/grants are removed. Heart Pieces and Heart Containers still grant permanent health upgrades.
+The first unused/empty bottle slot, searching from slot 14 backwards, becomes the flask. Existing water, oil, soup and quest contents are never overwritten to claim a slot. If all four bottles contain quest fluids, empty one to make room. The mod normalizes ordinary potions, milk, fairy and healing Chu jelly bottles to empty utility bottles; soup/hot-spring quest actions retain their native behavior, with positive bottle healing suppressed. Ordinary hearts and healing fairy spawns/grants are removed. Heart Pieces and Heart Containers grant shared health/stamina growth.
 
 **Snowpeak exception:** Yeta and Yeto's post-boss ending retains its original heart bursts and their normal healing. Only hearts emitted by the exact ending/embrace cut steps are exempt; ordinary Snowpeak enemy and container hearts remain suppressed. Actor IDs retain the exception until collection, including after the cut returns. Disabling the flask does not remove this exception.
 
@@ -65,7 +65,7 @@ Three utility bottle slots remain available. A fourth utility bottle reward curr
 
 ## Renewable ammunition and supplies
 
-Disposable arrows, seeds and all three bomb-type packs are removed. Named, permanent checks containing ammunition become permanent stamina rewards; loose repeatable drops cannot award upgrades. Equipment, bomb-bag/type unlocks, keys, heart upgrades and puzzle actors are preserved.
+Disposable arrows, seeds and all three bomb-type packs are removed. Named, permanent checks containing ammunition become permanent Growth Fragments; loose repeatable drops cannot award upgrades. Equipment, bomb-bag/type unlocks, keys, heart upgrades and puzzle actors are preserved.
 
 Every owned resource has two real sliders in **F1 → Mods → TP Definitive Overhaul**: delay since taking damage and interval between refills. Values use 0.1-second steps; delays can be 0–60 seconds and intervals 0.1–60 seconds. Defaults:
 
@@ -87,37 +87,38 @@ Native capacities and permanent capacity upgrades are respected, including alrea
 
 Currency removal is independently configurable and defaults on. Disposable coin drops are rejected at the spawn/field-actor entry points. Persistent coin checks resolve to permanent rewards before their native collection flags are consumed. Coin grants/balance changes are suppressed and the rupee HUD is hidden without hiding small keys.
 
-There is no buying equipment or supplies in the default economy. Native purchase selection is disabled; essential gear is earned through quests and unique exploration relics unlock specific permanent upgrades. Relics are finite named artifacts, not an interchangeable balance.
+Rare Hylian rupees are a separate finite save balance: twenty curated chests
+provide 300 total. Malo's Shield costs 60, Castle Town Magic Armor costs 180.
+No ordinary native wallet income or charges affect this balance. Hawkeye is a
+free Bow gift. Slingshot follows Sera's cat, the first bag follows Fyrus, water
+bombs follow Zora Armor and Bomblings follow Lakebed victory.
 
-| Essential equipment | Requirement |
-|---|---|
-| Slingshot | Help Sera's cat and receive her gift |
-| First bomb bag | Defeat Fyrus |
-| Water bombs | Own a bomb bag and acquire Zora Armor |
-| Bomblings | Own a bomb bag and clear Lakebed Temple |
+Agitha's bug pairs and Jovani's souls give shared growth, flask upgrades and
+specific relics. Barnes trades the Craft Relic for bigger bomb reserves; Malo
+Mart trades the Sigil for better armor efficiency. Native merchant conversations
+are available through A near a supported NPC; original story dialogue remains
+available. See [the current economy/growth design](ECONOMY_AND_GROWTH.md) for
+thresholds, controls, finite budgets, legacy artifacts and limits.
 
-Quest rewards are queued once and recorded only after the host confirms delivery. Saving/loading before delivery keeps them eligible. Existing equipment is respected.
+Minigame and story funding gates retain native callbacks without payment.
+Donation input supplies full funding with one confirmation. Hena's fee checks
+receive scoped virtual affordability, never real saved currency. These bridges
+preserve quests; full dialogue/quest redesign is still pending.
 
-| Unique relic | Exploration check | Permanent reward | Merchant |
-|---|---|---|---|
-| Goron Forge Relic | Kakariko watchtower alcove (`chest:F_SP109:20`) | Hylian Shield | Kakariko Malo Mart |
-| Surveyor's Lens | Watchtower chest (`chest:R_SP109:17`) | Hawkeye | Kakariko Malo Mart |
-| Deepwater Craft Relic | Statue outside Lanayru Spring (`chest:F_SP115:6`) | Larger bomb capacities: 60 / 30 / 20 | Barnes |
-| Twilight Sigil | Sacred Grove Spinner chest (`chest:F_SP117:2`) | Magic Armor | Castle Town Malo Mart |
+Magic Armor halves damage when stamina is available and non-exhausted, draining
+20 stamina per hit, or 15 with the redeemed Sigil. Exhausted/disabled stamina
+provides no reduction. It has no currency drain or empty-wallet weight penalty.
 
-**Trade interface in this candidate:** visit the matching shop room, stand still outside an event, then open F1 → Mods and press its relic upgrade button. Each trade requires its corresponding collected relic and can be completed once. Ownership and redemption persist per save slot. Native merchant dialogue has not yet been rewritten to present these trades; it can still mention prices. Relics currently reuse native acquisition models/icons and English messages in all supported language variants.
-
-Minigame and story funding gates retain their native quest flow without a payment requirement. Donation input supplies full funding with one confirmation; original callbacks handle completion flags. Hena's direct fee checks receive a scoped virtual affordability value, never real saved currency. These are compatibility bridges, not a full rewrite of donation quest design or dialogue.
-
-Magic Armor no longer uses currency or becomes heavy from an empty wallet. With available, non-exhausted stamina it halves incoming damage and costs 20 stamina per hit. With exhausted/disabled stamina it provides no damage reduction. Native host armor settings should stay at their default during validation to avoid unrelated native modifiers.
-
-The twenty Flask Shard placements are in `src/progression/rewards.cpp`; the four relic placements in `src/economy/merchant_model.hpp` are disjoint. Other persistent rupee/ammunition chests/checks grant Stamina Fragments: four give +2 maximum stamina, up to +100. Unattributed/repeatable drops and shop previews never grant upgrades. Named rewards grant progress once per save slot, so repeated minigame rewards cannot be farmed.
+Five Growth Fragments form a blessing allocated as one heart or twenty stamina.
+Other named coin/ammunition checks become fragments, capped at twenty-two
+blessings. Unattributed/repeated grants cannot farm upgrades. Flask shards stay
+separate and conserve the default eight-charge capacity budget.
 
 ## Persistence and verification
 
-The SaveService stores a versioned byte blob per Definitive Overhaul save slot. It holds spent charges, bottle assignment, shards, fragments, cleared-dungeon milestones and the claimed-check ledger, including quest rewards, acquired relics and redeemed upgrades. The blob format remains compatible with 0.2.0. The mod updates the blob on each resource/progression change; the host writes it alongside successful game saves. Loading a saved game restores its saved charges. Only a genuine death sets the retry refill flag, scoped to the same slot. Ammunition quantities use native saves; elapsed recharge clocks are reset on load. Invalid progress blobs are rejected and left untouched.
+The SaveService stores a versioned byte blob per Definitive Overhaul save slot. It holds spent charges, bottle assignment, shards, fragments, cleared-dungeon milestones and the claimed-check ledger, including quest rewards, acquired relics and redeemed upgrades. The decoder accepts the previous TDF1 format and the current TDF2 version. The mod updates the blob on each resource/progression change; the host writes it alongside successful game saves. Loading a saved game restores its saved charges. Only a genuine death sets the retry refill flag, scoped to the same slot. Ammunition quantities use native saves; elapsed recharge clocks are reset on load. Invalid progress blobs are rejected and left untouched.
 
-Ten automated tests execute production healing/drop, Wolf recovery, Snowpeak, ammunition, slider/config, merchant reward, rest/recovery and currency/pacing callbacks with fixtures, plus the pinned native save-wait function. New checks cover deliberate rest channels, damage/movement/menu interruption, one-charge-only overworld recovery, scene isolation, physical proximity/height/line of sight, floor/water/wall validation, stable spawn anchors and deferred actor deletion/foreign-ID protection. Import, named-hook and dynamic-target checks validate compatibility with the pinned host, not runtime patching or gameplay.
+The automated suites execute production healing/drop, Wolf recovery, Snowpeak, ammunition, slider/config, merchant reward, rest/recovery and currency/pacing callbacks with fixtures, plus the pinned native save-wait function. New checks cover deliberate rest channels, damage/movement/menu interruption, one-charge-only overworld recovery, scene isolation, physical proximity/height/line of sight, floor/water/wall validation, stable spawn anchors and deferred actor deletion/foreign-ID protection. Import, named-hook and dynamic-target checks validate compatibility with the pinned host, not runtime patching or gameplay.
 
 In-game validation remains: visit all stone sites, check visibility/scale/access and ground placement; rest as human and Wolf, interrupt the channel, move out of range, try behind a wall and with nearby enemies; confirm no refill simply from entering a room; empty the flask and check the 90+30-second fallback, interruptions and dungeon exclusion. Also test human/Wolf healing under attack, supplies, death/retry, save/load/slot changes, shards/relics/quest rewards, slider persistence, water-bomb type retention, Snowpeak ending hearts, utility bottles, story funding gates, Magic Armor and vanilla mode. Confirm HUD positioning across heart rows and ultrawide settings.
 

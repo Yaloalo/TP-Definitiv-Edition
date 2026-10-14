@@ -195,9 +195,9 @@ run(common+constants+'\n'+ammo_fixture+ammo_code+ammo_main)
 rewards=(root/'src/progression/rewards.cpp').read_text()
 flask=rewards[rewards.index('kFlaskChecks ='):rewards.index('};',rewards.index('kFlaskChecks ='))]
 flask_checks=set(re.findall(r'"(chest:[^"]+)"',flask))
-relic_checks=set(re.findall(r'"(chest:[^"]+)"',(root/'src/economy/merchant_model.hpp').read_text()))
-assert len(flask_checks)==20 and len(relic_checks)==4 and not flask_checks.intersection(relic_checks)
-print('Twenty flask shard placements and four unique relics do not overlap')
+relic_checks=set(re.findall(r'"((?:collection|legacy):[^"]+)"',(root/'src/economy/merchant_model.hpp').read_text()))
+assert len(flask_checks)==12 and len(relic_checks)==4 and not flask_checks.intersection(relic_checks)
+print('Twelve world flask shards and four canonical relic sources remain unique')
 
 # Exercise the actual RmlUi/config binding, including failed writes and external resets.
 slider=(root/'src/core/tuning.cpp').read_text()
@@ -237,13 +237,13 @@ run(common+slider_fixture+function(slider,'slider_after')+slider_main)
 
 # Queueing/previewing a reward must not spend its relic or persist a quest before delivery.
 merchant=(root/'src/economy/merchants.cpp').read_text()
-merchant_names=['owns_reward','trade_available','queue','enabled','custom_item','resolve','message','on_give','reset','tick']
+merchant_names=['owns_reward','trade_requirements','trade_available','queue','enabled','custom_item','resolve','message','on_give','reset','tick']
 merchant_code=''.join(function(merchant,n) for n in merchant_names)
 needed=set(re.findall(r'dItemNo_\w+',merchant_code))
 constants='\n'.join(f'constexpr int {n}={ids[n]};' for n in needed)
 merchant_fixture=r'''
 #include "economy/merchant_model.hpp"
-enum {MOD_OK,MOD_ERROR};constexpr int COLLECT_HYLIAN_SHIELD=2,SLOT_5=5,SLOT_15=15,SLOT_23=23;
+enum {MOD_OK,MOD_ERROR};constexpr int ITEM_GIVE_RESOLVE=2,ITEM_GIVE_SILENT=1;constexpr int COLLECT_HYLIAN_SHIELD=2,SLOT_5=5,SLOT_15=15,SLOT_23=23;
 ModContext* mod_ctx=nullptr;int gives=0,persists=0;bool giveFails=false;std::string queued;
 struct Items{int give_item(ModContext*,const char* name,uint8_t,int){++gives;queued=name;return giveFails?MOD_ERROR:MOD_OK;}} itemService;
 auto* svc_item=&itemService;
@@ -281,12 +281,19 @@ int main(){using namespace remaster;using namespace economy::merchants;
  ItemGiveInfo upgrade{kRelics[0].trade,kRelics[0].reward};on_give(&upgrade);
  assert(shield.contains(2)&&redeemed(progression::state,kRelics[0])&&g_pending.empty()&&!trade_available(kRelics[0]));
  progression::Model loaded;assert(progression::decode(progression::encode(progression::state),loaded)&&redeemed(loaded,kRelics[0]));
- ItemGiveInfo bag{kRelics[2].trade,kRelics[2].reward};on_give(&bag);assert(bombMax[0]==60&&bombMax[1]==30&&bombMax[2]==20);
- ItemGiveInfo armor{kRelics[3].trade,kRelics[3].reward};on_give(&armor);assert(clothes.contains(2));
+ // Upgrade dispatch requires a bag and the actual collected relic.
+ stage="R_SP109";room=1;check={kRelics[2].trade,kRelics[2].reward};assert(resolve(&check,&out)&&out.item==255);
+ progression::state.claim(kRelics[2].check,kRelics[2].id);assert(!trade_available(kRelics[2]));inventory[SLOT_15]=0x70;assert(trade_available(kRelics[2]));
+ assert(resolve(&check,&out)&&out.item==kRelics[2].reward);ItemGiveInfo bag{kRelics[2].trade,kRelics[2].reward};on_give(&bag);assert(bombMax[0]==60&&bombMax[1]==30&&bombMax[2]==20);
+ assert(resolve(&check,&out)&&out.item==255);
+ stage="R_SP160";room=0;progression::state.claim(kRelics[3].check,kRelics[3].id);assert(!trade_available(kRelics[3]));clothes.insert(2);assert(trade_available(kRelics[3]));
+ ItemGiveInfo armor{kRelics[3].trade,kRelics[3].reward};on_give(&armor);assert(clothes.contains(2)&&(progression::state.equipmentUpgrades&1));
+ progression::state.equipmentUpgrades=0;on_give(&armor);assert(!(progression::state.equipmentUpgrades&1)); // duplicate observer cannot grant again
+ stage="R_SP109";room=3;
  // ID 0x37's vanilla message overlaps Heart Piece text. Only our actual get-item remaps it.
  link.mProcVar2.field_0x300c=0x37;assert(message(&link,0x9c)==10001);link.mProcVar2.field_0x300c=8;assert(message(&link,0x9c)==0x9c);
  link.mProcID=0;link.mProcVar2.field_0x300c=0x37;assert(message(&link,0x9c)==0x9c);
- progression::state={};reset();eventBits.clear();clothes.clear();allowed=true;tick();assert(g_pending.empty());
+ progression::state={};reset();eventBits.clear();clothes.clear();std::fill(std::begin(inventory),std::end(inventory),255);allowed=true;tick();assert(g_pending.empty());
  ItemGiveInfo bow{"bow_chest",dItemNo_BOW_e};on_give(&bow);assert(g_pending.contains("quest:bow_hawkeye"));
  assert(!progression::state.claimed.contains("quest:bow_hawkeye"));
  reset();firstBits.insert(dItemNo_BOW_e);tick();assert(g_pending.contains("quest:bow_hawkeye"));

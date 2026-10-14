@@ -46,8 +46,6 @@ consumed only if the conversation opens successfully. Buttons recheck stage,
 slot and safety. Loading, changing modes/locations or becoming unsafe closes
 the conversation. The pause menu remains the place to assign new blessings.
 
-## Subsequent approved milestones
-
 ## Rare Hylian rupees (0.9.0)
 
 Twenty named currency chests contain fifteen rupees each: **300 rupees** total.
@@ -69,12 +67,54 @@ Migration uses a transactional copy; a full ledger cannot repeatedly credit
 money. The merchant conversation milestone supplies the player-facing purchase
 choices. The purchase functions are not ordinary native shop stock.
 
-- Rare rupees from curated one-time treasures/quests, without drops, farming,
-  wallet limits, death loss or required story purchases.
-- Merchant dialogue choices for permanent purchases and specific relic hand-ins.
-- Agitha bug-pair milestones and Jovani Poe milestones granting shared growth,
-  crafting/Twilight relics, flask upgrades and completion emblems.
-- Redistribute existing shard/relic rewards rather than adding unlimited power.
+## Collections and conversations (0.10.0)
 
-Each milestone requires production regression tests, the complete build gate,
-a focused commit and a push. Full story routes remain pending until played.
+Agitha gives one Growth Fragment for each golden bug welcomed. Her paired
+milestones are one pair: five fragments; three pairs: Deepwater Craft Relic;
+six pairs: four Flask Shards; twelve pairs: a Golden Crest displayed as a gold
+G emblem on the equipment sheet. The native indexed hand-in flags remain the
+source of truth. Already presented bugs receive their fragment once on migration.
+
+Jovani gives one fragment at five souls, five at ten, a Twilight Sigil at twenty,
+four Flask Shards at forty and a Spirit Crest at sixty (a blue S equipment emblem).
+These are menu honors, not new costumes. His original curse/cat/story scenes
+remain available through **Discuss the curse**. Native twenty/sixty-soul grants
+share the milestone ledger, preventing duplicate gifts and repeatable currency.
+
+Barnes exchanges the Craft Relic for bomb capacities **60 / 30 / 20**, after
+Link owns a bag. Castle Town Malo Mart exchanges the Sigil for Magic Armor
+using **15 rather than 20 stamina per absorbed hit**, after the armor is owned.
+The fifty-percent damage reduction stays unchanged. Former Forge/Lens artifacts
+remain redeemable for compatible older saves; new saves obtain Shield with rare
+rupees and Hawkeye with Bow. The original ledger does not encode chest item
+identity: unredeemed Forge/Lens provenance from an intermediate 0.9.0 save
+cannot be distinguished from its new rupee caches; those two artifacts are
+only reconstructed when migrating a pre-0.9 economy. Already redeemed armor
+benefits survive intermediate saves.
+
+There are **twelve world shards plus eight collection shards**: twenty total,
+five upgrades, eight default flask charges. Old earned shards are retained,
+with capacity still capped. Other named coin/ammunition checks still award
+Growth Fragments, up to twenty-two blessings total; a fully curated growth
+pacing table remains future work. The collection grants themselves total
+thirty-five fragments, seven blessings.
+
+Stand safely facing the relevant nearby NPC and press **A** (or **L+Y**) to
+open this mod's dialogue. Malo, Barnes, Castle Town Malo Mart, Agitha and Jovani
+present permanent choices. Coro explains renewable fuel after the native Lantern
+gift; Sera's new dialogue starts after the native cat/milk reward; Castle Town's
+Goron craftsman explains the new gear/relic rules. Prices and progression are
+shown here and in the actual equipment pause menu, with no F1 purchase buttons.
+
+**Talk about other matters / Discuss the curse** closes the mod dialogue;
+press A again within fifteen seconds for the native conversation. This preserves
+native quest/cutscene processing. Scene, slot, NPC identity, distance and threat
+are rechecked by dialog actions. Failure to open a dialog leaves native input
+intact. Original fallback dialogues can still mention obsolete shop prices;
+rewriting every message/minigame/donation is outside this milestone.
+
+The full automated gate covers collection gift budgets, all 4,096 pair
+combinations, indexed native flags, duplicates, failed queues, pure previews,
+corrupt/full ledgers and save changes, alongside actor-context/input/dialog
+regressions. Appearance, controller navigation, NPC placement and complete
+story routes still need in-game validation.

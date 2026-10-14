@@ -4,6 +4,9 @@
 #include "mods/svc/item.h"
 class daAlink_c;
 namespace remaster::economy::merchants {
+struct Relic;
+bool can_trade(const Relic&);
+bool trade(const Relic&);
 ModResult install();
 ModResult build_controls(UiElementHandle);
 void tick();

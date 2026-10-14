@@ -35,11 +35,17 @@ rebuilds are separate work: expanded cutscene
 skipping, human warping, Midna cancellation, sheathed spin and Epona controls/
 camera. Former launcher preset behavior is now owned by our movement, pacing and input modules. `tools/play.sh` passes no built-in gameplay cvars.
 
-Version 0.2.0 added owned movement/pacing/camera controls, the Sacred Flask, permanent flask/stamina rewards and currency removal. Version 0.3.0 adds shared-charge Wolf recovery, the original Snowpeak ending heart shower exception, adjustable ammunition/supply regeneration, ammunition drop removal, quest equipment rewards and four non-farmable relic trades. Shopping is disabled in the default economy. These modules are our code using native engine/SDK interfaces; they require no other gameplay mod settings. Details and limitations are in [HEALING_AND_REWARDS.md](HEALING_AND_REWARDS.md). These are verified candidates awaiting in-game checks.
+Version 0.2.0 added owned movement/pacing/camera controls, the Sacred Flask, permanent flask/stamina rewards and currency removal. Version 0.3.0 adds shared-charge Wolf recovery, the original Snowpeak ending heart shower exception, adjustable ammunition/supply regeneration, ammunition drop removal, quest equipment rewards and four non-farmable relic trades. Native shelf purchases are disabled; rare permanent purchases and dialogue choices arrived in 0.9–0.10. These modules are our code using native engine/SDK interfaces; they require no other gameplay mod settings. Details and limitations are in [HEALING_AND_REWARDS.md](HEALING_AND_REWARDS.md). These are verified candidates awaiting in-game checks.
 
 Version 0.4.0 replaces room-entry rest with 32 configured Sacred Rest Stone sites and a deliberate L+R channel. The existing howling stone model is reused by our custom ActorService profile without native howling/events. Strict emergency recovery grants one charge when empty in safe overworld conditions, enabled by default by owner request. Bottle behavior remains unchanged; save blob format stays compatible. Actual model placement and interaction still need gameplay checks.
 
 Version 0.5.0 adds human/Wolf turning and quick pivots, faster crawl speed, idle HUD fading and subtle damage feedback. Version 0.6.0 adds scoped Epona steering/acceleration/braking controls and a required default-build QA gate. Controls/defaults, source provenance, scope and pending playtests are in [MOVEMENT_AND_HUD.md](MOVEMENT_AND_HUD.md); the automated/story coverage matrix is in [QA.md](QA.md).
+
+Versions 0.7–0.10 add shared heart/stamina blessings, native equipment-menu
+progress, free Ordonna redistribution, finite rupee caches, NPC permanent
+purchases and Agitha/Jovani gifts. They are owned C++ modules using native
+save/item/actor APIs, not external mod presets. See [the economy and growth
+milestones](ECONOMY_AND_GROWTH.md) for implementation and pending playtests.
 
 ## Module boundaries
 
@@ -77,7 +83,7 @@ python3 tools/check_hook_symbols.py build/tp_remaster.so /path/to/dusklight \
 The first symbol check covers linker imports. The second checks compiled named
 hook metadata against the host's embedded manifest and rejects duplicates. It
 requires `pyelftools` and `libzstd` and currently supports 64-bit little-endian ELF.
-The 0.6.0 candidate passes fifteen suites and resolves 571 game imports, 26 named hook targets and 11 dynamic mouse/RmlUi targets against Linux x86_64 Dusklight v2.0.3. The default native build runs these checks plus a packaged-library/resource audit; current evidence and pending story routes are recorded in `build/qa/report.json`. See [QA.md](QA.md) for the detailed matrix and platform limits.
+The current gate requires twenty-one suites and checks game imports, 26 named hook targets and 11 dynamic mouse/RmlUi targets against Linux x86_64 Dusklight v2.0.3. The default native build runs these checks plus a packaged-library/resource audit; current evidence and pending story routes are recorded in `build/qa/report.json`. See [QA.md](QA.md) for the detailed matrix and platform limits.
 
 Tests execute production manual-shield callbacks with game-free fixtures,
 reproduce the enemy Wolf knockdown/death timer race using the pinned game code,
