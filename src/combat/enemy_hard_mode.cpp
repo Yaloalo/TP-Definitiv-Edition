@@ -2,6 +2,8 @@
 // Source commit: 9bb214d47617c9bc295d22facf36c35d17661e5a.
 // Adapted to the Definitive Overhaul game mode, shared hooks and tuning.
 #include "enemy_hard_mode.hpp"
+#include "core/hooks.hpp"
+#include "combat/stance.hpp"
 
 #include "core/tuning.hpp"
 #include "core/player.hpp"
@@ -51,7 +53,7 @@ namespace remaster::combat::enemies {
 namespace {
 
 DEFINE_HOOK(&cc_at_check, NormalFinisherHitHook);
-DEFINE_HOOK(&daE_OC_c::damage_check, BokoblinDamageCheckHook);
+using BokoblinDamageCheckHook = hooks::BokoblinDamage;
 
 constexpr float kTurnScale = 1.25f;
 constexpr int kBokoblinDamageAction = 5;
@@ -144,6 +146,7 @@ void arm_normal_finisher_knockdown(fopAc_ac_c* enemy, dCcD_GObjInf* collider) {
 
 HookAction before_normal_finisher_hit(ModContext*, void* args, void*, void*) {
     auto* enemy = mods::arg<fopAc_ac_c*>(args, 0);
+    if (stance::owns_bokoblin(enemy)) return HOOK_CONTINUE;
     auto* attack = mods::arg<dCcU_AtInfo*>(args, 1);
     auto* step = current_enemy_slow_step();
     if (step == nullptr || step->actor != enemy || step->profile == nullptr ||
@@ -162,6 +165,7 @@ HookAction before_normal_finisher_hit(ModContext*, void* args, void*, void*) {
 
 void after_bokoblin_damage_check(ModContext*, void* args, void*, void*) {
     auto* actor = mods::arg<daE_OC_c*>(args, 0);
+    if (stance::owns_bokoblin(actor)) return;
     auto* step = current_enemy_slow_step();
     if (step == nullptr || step->actor != actor || step->profile == nullptr ||
         step->profile->name != fpcNm_E_OC_e)
@@ -205,6 +209,7 @@ void shorten_attack_interval(EnemySlowStep& step) {
     case fpcNm_E_OC_e:
         {
             auto& actor = *static_cast<daE_OC_c*>(step.actor);
+            if (stance::owns_bokoblin(&actor)) break;
             shorten_timer(actor.field_0x6c0);
             shorten_timer(actor.field_0x6c2);
             shorten_timer(actor.field_0x6c4);
@@ -520,6 +525,7 @@ void finish_enemy_hard_mode(EnemySlowStep& step) {
     // completed its fall and entered the grounded knockdown state.
     if (step.profile->name == fpcNm_E_OC_e) {
         auto& actor = *static_cast<daE_OC_c*>(step.actor);
+        if (stance::owns_bokoblin(&actor)) return; // retain the native punish window
         if (step.action == kBokoblinBigDamageAction && step.subaction == 4 &&
             actor.mActionMode == kBokoblinBigDamageAction && actor.mOcState == 5 &&
             actor.health > 0)

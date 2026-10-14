@@ -77,6 +77,8 @@ struct Values {
     // --- Combat depth ---
     bool manualShield = true;
     bool combatTechniques = true;
+    bool hiddenStance = true;
+    int64_t bokoblinStance = 55, parryWindowTicks = 6;
     int64_t heavyControllerButton = 9; // SDL3: Xbox LB=9, RB=10, L3=7, R3=8
     int64_t costHeavy = 28, costGuardCounter = 25, costBlock = 18, costGreatSpin = 40;
     bool enemyHardMode = true;

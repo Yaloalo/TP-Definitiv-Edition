@@ -3,7 +3,8 @@
 Updated 2026-10-14. The owner approved a Souls/Elden Ring-inspired direction:
 stamina-based combat, hidden enemy stance, committed heavy actions, meaningful
 Hidden Skills and a shared enemy decision architecture. This document records
-that direction; it does not claim the systems below are implemented.
+that direction; it does not claim every system below is implemented. Current
+prototype coverage is recorded in [COMBAT_IMPLEMENTATION.md](COMBAT_IMPLEMENTATION.md).
 
 The owner approved D1 A, D2 A, D3 B, D4 A, D5 A and D6 B. Implementation is
 authorized, including a dedicated heavy move and a distinct guard counter.

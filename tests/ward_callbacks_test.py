@@ -42,6 +42,7 @@ bool enabled();void reset();
 }
 namespace remaster::healing{void damage_interrupted(daAlink_c*){}}
 namespace remaster::resources::ammo{void damage_received(){}}
+namespace remaster::combat::techniques{void damage_received(){}}
 namespace remaster::combat::damage{
 struct DamageScope{daAlink_c*link=nullptr;int expected=0;bool correctArmor=false;};std::vector<DamageScope>g_scopes;
 '''+''.join(function((ROOT/'src/combat/damage.cpp').read_text(),n) for n in ['damage_end','armor_life_pre','on_set_damage_pre'])+r'''

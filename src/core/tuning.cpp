@@ -95,6 +95,9 @@ VarSpec g_specs[] = {
 
     BOOL_VAR("Combat depth", manualShield, "Manual shield (hold R; R + B to bash)"),
     BOOL_VAR(nullptr, combatTechniques, "Heavy attacks, guard counters and learned Great Spin"),
+    BOOL_VAR(nullptr, hiddenStance, "Hidden stance and timed parries (Bokoblins)"),
+    INT_VAR(nullptr, bokoblinStance, "Sturdy Bokoblin stance (ordinary: 60%)", 25, 150, 5, nullptr),
+    INT_VAR(nullptr, parryWindowTicks, "Shield Attack parry window", 2, 10, 1, " ticks (1/30 s)"),
     INT_VAR(nullptr, heavyControllerButton, "Heavy button: 7=L3, 8=R3, 9=LB, 10=RB (must be unassigned)", 7, 10, 1, nullptr),
     INT_VAR(nullptr, costHeavy, "Cost: heavy sword attack", 1, 100, 1, nullptr),
     INT_VAR(nullptr, costGuardCounter, "Cost: guard counter", 1, 100, 1, nullptr),

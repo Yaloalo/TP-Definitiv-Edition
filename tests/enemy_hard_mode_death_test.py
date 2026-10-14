@@ -56,6 +56,7 @@ fixture=r'''
 constexpr int fpcNm_E_RD_e=1,fpcNm_E_DN_e=2,fpcNm_E_MF_e=3,fpcNm_E_OC_e=4;
 constexpr int kLizardDamageAction=21;
 struct fopAc_ac_c {int health=40;};
+namespace stance {bool owns_bokoblin(fopAc_ac_c*){return false;}}
 struct e_rd_class {fopAc_ac_c enemy;short timer[4]{},attack_timer=0,bow_shake_timer=0;void* bow_anm=nullptr;};
 struct e_dn_class {fopAc_ac_c actor;short timer[4]{},unk_timer_1=0;};
 struct e_mf_class {fopAc_ac_c actor;short field_0x6c0[4]{};};

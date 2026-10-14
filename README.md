@@ -12,6 +12,7 @@ more fluid game:
 
 - Scope: [`docs/DESIGN_VISION.md`](docs/DESIGN_VISION.md)
 - Approved combat direction and approved choices: [`docs/COMBAT_AND_ENEMY_AI.md`](docs/COMBAT_AND_ENEMY_AI.md)
+- Combat prototype coverage: [`docs/COMBAT_IMPLEMENTATION.md`](docs/COMBAT_IMPLEMENTATION.md)
 - Remaining work and next milestone: [`docs/ROADMAP.md`](docs/ROADMAP.md)
 - Integrated modules, source ownership and validation: [`docs/INTEGRATION.md`](docs/INTEGRATION.md)
 

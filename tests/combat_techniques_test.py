@@ -14,25 +14,30 @@ fixture=r'''
 #include <algorithm>
 #include <string>
 #include <cstdint>
+#include <type_traits>
 #include "combat/technique_model.hpp"
 using BOOL=int; constexpr bool TRUE=true;
 struct ModContext{}; enum HookAction{HOOK_CONTINUE,HOOK_SKIP_ORIGINAL};
-constexpr int dItemNo_IRONBALL_e=66;
-struct daPy_py_c {static constexpr int FLG3_TRANING_CUT_LARGE_TURN=1;static bool checkShieldGet(){return true;}};
+constexpr int Z2SE_HIT_SHIELD_ATTACK=123,dItemNo_IRONBALL_e=66;using fpc_ProcID=int;constexpr int fpcM_ERROR_PROCESS_ID_e=-1;
+std::string stageName="A";int stageRoom=0;const char* dComIfGp_getStartStageName(){return stageName.c_str();}int dComIfGp_getStartStageRoomNo(){return stageRoom;}
+struct daPy_py_c {static constexpr int FLG3_TRANING_CUT_LARGE_TURN=1,CUT_TYPE_GUARD_ATTACK=22;static bool checkShieldGet(){return true;}};
 struct dSv_event_flag_c {static constexpr int F_0344=1;};
 bool active=true, inputAllowed=true, learned=true, battle=true;int life=12;
 bool dComIfGs_isEventBit(int){return learned;} int dComIfGs_getLife(){return life;}
 struct daAlink_c;
+struct dCcD_GObjInf {void* GetTgHitAc(){return nullptr;}};
+bool parryAccepted=false;
+namespace remaster::combat::stance {bool parry(void*,daAlink_c*){return parryAccepted;}void reset(){}void tick(){}}
 namespace remaster::combat::techniques {enum class Attack {Ordinary,Heavy,GuardCounter};int64_t finish_cost(int64_t);}
 float staminaAmount=100;bool exhausted=false;int charges=0;
 struct daAlink_c {
- enum {PROC_WAIT,PROC_MOVE,PROC_ATN_ACTOR_WAIT,PROC_ATN_ACTOR_MOVE,PROC_GUARD_SLIP,PROC_CUT_FINISH,PROC_OTHER};
- int mProcID=PROC_WAIT,mEquipItem=0x103,field_0x2fd5=3,started=-1,breaks=0,clears=0;
+ enum {PROC_WAIT,PROC_MOVE,PROC_ATN_ACTOR_WAIT,PROC_ATN_ACTOR_MOVE,PROC_GUARD_SLIP,PROC_CUT_FINISH,PROC_OTHER,PROC_GUARD_ATTACK};
+ int id=1;int mProcID=PROC_WAIT,mEquipItem=0x103,field_0x2fd5=3,started=-1,breaks=0,clears=0;
  float field_0x3484=5,field_0x347c=20;
  bool wolf=false,event=false,ride=false,grab=false,equip=false,throwing=false,blockedMode=false,training=false,initSucceeds=true;
  struct Ground{bool ground=true;bool ChkGroundHit(){return ground;}} mLinkAcch;
  struct Frame{float rate=1;void setRate(float v){rate=v;}float getRate(){return rate;}}mUnderFrameCtrl[1],mUpperFrameCtrl[1];
- bool checkWolf(){return wolf;}bool checkEventRun(){return event;}bool checkRideOn(){return ride;}
+ void seStartOnlyReverb(int sound){assert(sound==Z2SE_HIT_SHIELD_ATTACK);}int getCutType(){return 0;}bool checkWolf(){return wolf;}bool checkEventRun(){return event;}bool checkRideOn(){return ride;}
  bool checkGrabAnime(){return grab;}bool checkEquipAnime(){return equip;}bool checkUpperReadyThrowAnime(){return throwing;}
  bool checkModeFlg(int){return blockedMode;}bool checkNoResetFlg3(int){return training;}
  static bool checkNotBattleStage(){return !battle;}
@@ -41,18 +46,21 @@ struct daAlink_c {
  int procCutFinishInit(int kind){if(!initSucceeds)return 0;started=kind;mProcID=PROC_CUT_FINISH;
   staminaAmount=std::max(0.f,staminaAmount-float(remaster::combat::techniques::finish_cost(12)));++charges;return 1;}
 };
+int fopAcM_GetID(daAlink_c* l){return l->id;}
 daAlink_c* nativeLink=nullptr;daAlink_c* daAlink_getAlinkActorClass(){return nativeLink;}
-namespace mods {template<class T>T arg(void* a,int){return *static_cast<T*>(a);}}
+dCcD_GObjInf guardCollider;
+namespace mods {template<class T>T arg(void* a,int){if constexpr(std::is_same_v<T,dCcD_GObjInf*>)return &guardCollider;else return *static_cast<T*>(a);}}
 namespace remaster {
+ namespace input::combat_controller {struct Sample{uint32_t device=1;bool heavy=false,focused=true,available=true;}v;Sample sample(){return v;}}
  bool is_active(){return active;}
  namespace player {bool input_allowed(){return inputAllowed;}}
- namespace tuning {struct Values{bool combatTechniques=true;int64_t costHeavy=28,costGuardCounter=25,costBlock=18;}v;const auto& get(){return v;}}
+ namespace tuning {struct Values{bool combatTechniques=true;int64_t heavyControllerButton=9,parryWindowTicks=6,costHeavy=28,costGuardCounter=25,costBlock=18;}v;const auto& get(){return v;}}
  namespace combat::stamina {struct State{float current;bool exhausted;};State state(){return{staminaAmount,::exhausted};}
  void drain(float n,const char*){staminaAmount=std::max(0.f,staminaAmount-n);exhausted=staminaAmount<=0;}}
  namespace combat::techniques {
- InputState g_input;Attack g_start=Attack::Ordinary,g_attack=Attack::Ordinary;uint64_t g_serial=0;daAlink_c* g_owner=nullptr;
+ void reset();int64_t g_binding=-1;fpc_ProcID g_id=-1;std::string g_stage;int g_room=-1;int g_parryAge=1000;bool g_parried=false;InputState g_input;Attack g_start=Attack::Ordinary,g_attack=Attack::Ordinary;uint64_t g_serial=0;daAlink_c* g_owner=nullptr;
 '''
-functions=''.join(extract(n) for n in ['enabled','ready','finish_cost','try_action','cut_action_pre','great_spin_pre','ordinary_shield','block_received','guard_pre','guard_post','small_guard_post','cut_type_post','current_attack','attack_serial'])
+functions=''.join(extract(n) for n in ['enabled','ready','finish_cost','try_action','cut_action_pre','great_spin_pre','ordinary_shield','block_received','guard_pre','guard_post','small_guard_post','cut_type_post','current_attack','attack_serial','damage_received','sample_before','reset'])
 checks=r'''
 }}
 int main(){
@@ -90,11 +98,30 @@ int main(){
  link.mProcID=daAlink_c::PROC_GUARD_SLIP;guard_post(nullptr,&args,&result,nullptr);
  assert(staminaAmount==82&&g_input.counter==30);result=0;guard_post(nullptr,&args,&result,nullptr);assert(staminaAmount==82);
  staminaAmount=10;small_guard_post(nullptr,&args,nullptr,nullptr);assert(link.breaks==1&&staminaAmount==0&&!g_input.counter);
+ // Only a timely accepted incoming contact skips recoil and extra block cost.
+ link.mProcID=daAlink_c::PROC_GUARD_ATTACK;g_parryAge=0;g_parried=false;parryAccepted=true;
+ result=0;assert(guard_pre(nullptr,&args,&result,nullptr)==HOOK_SKIP_ORIGINAL&&result==1&&g_parried);
+ assert(guard_pre(nullptr,&args,&result,nullptr)==HOOK_CONTINUE);
+ g_parried=false;g_parryAge=6;assert(guard_pre(nullptr,&args,&result,nullptr)==HOOK_CONTINUE);
+ g_parryAge=0;parryAccepted=false;assert(guard_pre(nullptr,&args,&result,nullptr)==HOOK_CONTINUE);
+ g_input.pending=6;g_input.counter=30;g_parryAge=1;
+ damage_received();assert(!g_input.pending&&!g_input.counter&&g_parryAge==1000);
  // Learned Great Spin works below full health; unlearned skills and vanilla remain untouched.
  learned=true;life=4;result=0;assert(great_spin_pre(nullptr,&args,&result,nullptr)==HOOK_SKIP_ORIGINAL&&result==1);
  learned=false;assert(great_spin_pre(nullptr,&args,&result,nullptr)==HOOK_SKIP_ORIGINAL&&!result);
  link.training=true;assert(great_spin_pre(nullptr,&args,&result,nullptr)==HOOK_SKIP_ORIGINAL&&result);
  active=false;assert(great_spin_pre(nullptr,&args,&result,nullptr)==HOOK_CONTINUE);
+ // Execute callback handles live actor, scene and binding transitions, not just the edge model.
+ active=true;link=daAlink_c{};reset();using remaster::input::combat_controller::v;
+ sample_before(nullptr,&args,nullptr,nullptr);sample_before(nullptr,&args,nullptr,nullptr);
+ v.heavy=true;sample_before(nullptr,&args,nullptr,nullptr);assert(g_input.pending==6);
+ stageName="B";sample_before(nullptr,&args,nullptr,nullptr);assert(!g_input.pending);
+ v.heavy=false;sample_before(nullptr,&args,nullptr,nullptr);v.heavy=true;sample_before(nullptr,&args,nullptr,nullptr);assert(g_input.pending);
+ ++remaster::tuning::v.heavyControllerButton;sample_before(nullptr,&args,nullptr,nullptr);assert(!g_input.pending);
+ v.heavy=false;sample_before(nullptr,&args,nullptr,nullptr);v.heavy=true;sample_before(nullptr,&args,nullptr,nullptr);assert(g_input.pending);
+ v.available=false;sample_before(nullptr,&args,nullptr,nullptr);v.available=true;sample_before(nullptr,&args,nullptr,nullptr);assert(!g_input.pending);
+ v.heavy=false;sample_before(nullptr,&args,nullptr,nullptr);v.heavy=true;sample_before(nullptr,&args,nullptr,nullptr);
+ ++link.id;sample_before(nullptr,&args,nullptr,nullptr);assert(!g_input.pending);
 }
 '''
 run(fixture+functions+checks)
@@ -106,7 +133,9 @@ run(r'''
 #include <cstdint>
 struct PADButtonMapping{uint32_t nativeButton;int padButton;};struct PADAxisMapping{int axis,nativeButton,padAxis;};
 namespace tuning {struct Values{int heavyControllerButton=9;}v;auto& get(){return v;}}
-struct Sample{uint32_t device=0;bool heavy=false,focused=false;};
+namespace dusk{enum class ActionBinds;}
+int actionButton=-1;int g_actionButton(dusk::ActionBinds,uint32_t){return actionButton;}
+struct Sample{uint32_t device=0;bool heavy=false,focused=false,available=false;};
 int id=17;bool focus=true,held=true;PADButtonMapping mapping{99,1};PADAxisMapping axis{0,-1,0};
 void* g_window(){return reinterpret_cast<void*>(1);}uint64_t g_flags(void*){return focus?0x200:0;}
 int g_instance(uint32_t slot){assert(slot==0);return id;}
@@ -116,6 +145,7 @@ PADButtonMapping* g_buttons(uint32_t,uint32_t* n){*n=1;return &mapping;}
 PADAxisMapping* g_axes(uint32_t,uint32_t* n){*n=1;return &axis;}
 '''+source[start:end]+r'''
 int main(){auto s=sample();assert(s.heavy&&s.device==17&&s.focused);
+ actionButton=9;assert(!sample().heavy&&!sample().available);actionButton=-1;
  mapping.nativeButton=9;assert(!sample().heavy);mapping.nativeButton=99;
  axis.nativeButton=9;assert(!sample().heavy);axis.nativeButton=-1;
  focus=false;assert(!sample().focused);id=-1;assert(sample().device==0&&!sample().heavy);}

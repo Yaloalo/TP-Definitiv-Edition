@@ -11,7 +11,7 @@
   },
   {
     "route": "Forest Temple",
-    "checks": "Rescue monkeys, retain keys and boss key, defeat Diababa, obtain crystal, unlock warp, reload save, native equipment growth allocation and Ordon Spring redistribution",
+    "checks": "Rescue monkeys, retain keys and boss key, defeat Diababa, obtain crystal, unlock warp, reload save, native equipment growth allocation and Ordon Spring redistribution, ordinary and sturdy Bokoblin stance, LB heavy and post-block counter, six-tick Shield Attack parry, native knockdown/Ending Blow and death switches without HP changes",
     "status": "in-game-pending"
   },
   {
@@ -61,12 +61,12 @@
   },
   {
     "route": "Optional progression",
-    "checks": "Malo bridge/shop donations, unique relic redemption, all flask shards, Heart Pieces, Cave of Ordeals, horse races, minigames and checkpoint reachability, rare cache budget, Shield/Armor dialogue purchases, Hawkeye with Bow, Agitha 1/3/6/12 pairs, Jovani 5/10/20/40/60 souls, original curse scenes and no repeat income, all 278 explicit collectible checks and eight artisan recipes, preserved TDF1/TDF2 benefits, Sigil/Sunward/Mirror ward upgrades, native prizes plus honors",
+    "checks": "Malo bridge/shop donations, unique relic redemption, all flask shards, Heart Pieces, Cave of Ordeals, horse races, minigames and checkpoint reachability, rare cache budget, Shield/Armor dialogue purchases, Hawkeye with Bow, Agitha 1/3/6/12 pairs, Jovani 5/10/20/40/60 souls, original curse scenes and no repeat income, all 278 explicit collectible checks and eight artisan recipes, preserved TDF1/TDF2 benefits, Sigil/Sunward/Mirror ward upgrades, native prizes plus honors, all seven learned skills on appropriate saves, Great Spin below full health, unchanged learning flags and shared blessings",
     "status": "in-game-pending"
   },
   {
     "route": "Isolation and compatibility",
-    "checks": "New and old overhaul saves, death/retry, all slots, mode switching to vanilla, F1 toggles, graphics/Zora mods, keyboard/controller and 30/60/high FPS, ward recovery/save/tunic isolation and native armor preset independence",
+    "checks": "New and old overhaul saves, death/retry, all slots, mode switching to vanilla, F1 toggles, graphics/Zora mods, keyboard/controller and 30/60/high FPS, ward recovery/save/tunic isolation and native armor preset independence, LB/L3/R3/RB mappings and host action conflicts, heavy input after focus/menu/binding changes, attack/counter interruption, stance toggle independence, save/load and actor reuse",
     "status": "in-game-pending"
   }
 ]

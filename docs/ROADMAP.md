@@ -1,21 +1,23 @@
 # Remaining gameplay roadmap
 
-Updated 2026-10-14. The committed reward/ward baseline is 0.11.0;
-the 0.12.0 economy/dialogue follow-up remains in progress. This compares the owner's
+Updated 2026-10-14. Economy/dialogue 0.12.0 and Link techniques 0.13.0
+are committed; the first Bokoblin stance prototype is 0.14.0. This compares the owner's
 [design vision](DESIGN_VISION.md) with the actual
 [implemented modules](INTEGRATION.md). Status is stated per item below.
 Existing settings/helpers are a starting point, not a
 claim that the larger redesign is complete. Graphics remain a separate track.
 
-## Next combat milestone: stamina, hidden stance and integrated skills
+## Current combat prototype and next milestone
 
 The owner approved the Souls/Elden Ring-inspired direction and shared enemy AI
-architecture in [COMBAT_AND_ENEMY_AI.md](COMBAT_AND_ENEMY_AI.md). The owner approved D1 A, D2 A, D3 B, D4 A, D5 A and D6 B, authorizing implementation. Finish and
-validate the separate pending economy/dialogue milestone first.
+architecture in [COMBAT_AND_ENEMY_AI.md](COMBAT_AND_ENEMY_AI.md). The owner approved D1 A, D2 A, D3 B, D4 A, D5 A and D6 B, authorizing implementation. The economy/dialogue milestone is complete at the
+automated-candidate level.
 
-Build a complete encounter against one supported melee actor: stamina decisions,
-light/heavy stance pressure, timed Shield Attack, a stance break and an eligible
-punish. Integrate the learned skills as parts of that loop. Keep native death,
+The first Bokoblin adapter now implements stamina decisions, dedicated heavy
+attacks and guard counters, timed Shield Attack, hidden stance and native
+knockdown/punish. All seven skills have mapped roles in this supported encounter;
+see [COMBAT_IMPLEMENTATION.md](COMBAT_IMPLEMENTATION.md) for scope and limits.
+Runtime combat feel and the requested independent reviews remain pending. Keep native death,
 armor, training and story reactions intact. Then add shared intent selection
 and a small group director; expand through per-enemy adapters.
 
@@ -40,7 +42,7 @@ death transition universally safe.
 
 | Order | Change | Deliverable and dependency |
 |---|---|---|
-| 1 | First combat encounter | Approved stamina rules, hidden stance, timed Shield Attack and supported break/punish against one actor; approved design choices |
+| 1 | Validate first combat encounter | Link techniques and Bokoblin stance are implemented; runtime feel, full controller routes and independent reviews remain pending |
 | 2 | Shared enemy AI | Encounter director, utility decisions, capability profiles and native adapters; prove fair one-on-one and group behavior |
 | 3 | Full Hidden Skill integration | All seven learned skills have distinct combat jobs; expand stance/contact/reaction support rather than add isolated bonuses |
 | 4 | Wolf combat completeness | Appropriate attack/dodge stamina and recovery; preserve scripted abilities and required Wolf combat |

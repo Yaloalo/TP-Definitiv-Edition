@@ -9,6 +9,7 @@
 #include "combat/boss_hard_mode.hpp"
 #include "combat/stamina.hpp"
 #include "combat/techniques.hpp"
+#include "combat/stance.hpp"
 #include "core/difficulty.hpp"
 #include "core/player.hpp"
 #include "core/tuning.hpp"
@@ -129,6 +130,7 @@ constexpr Installer kInstallers[] = {
     {combat::damage::install, "damage"},
     {combat::stamina::install, "stamina"},
     {combat::techniques::install, "heavy attacks and guard counters"},
+    {combat::stance::install, "hidden enemy stance"},
     {combat::dodge::install, "dodge"},
     {combat::manual_shield::install, "manual shield"},
     {combat::enemies::initialize_enemy_slow_motion, "enemy timing"},

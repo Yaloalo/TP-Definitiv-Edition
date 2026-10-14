@@ -3,6 +3,7 @@
   "enemy_death_recovery",
   "manual_shield",
   "combat_techniques",
+  "combat_stance",
   "launch_folder",
   "progression_save_model",
   "flask_callbacks",

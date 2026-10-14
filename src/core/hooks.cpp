@@ -1,5 +1,7 @@
 #include "core/hooks.hpp"
 namespace remaster::hooks {
+DEFINE_HOOK(&daE_OC_c::damage_check, BokoblinDamageMetadata);
+void* BokoblinDamage::resolved_target() { return BokoblinDamageMetadata::resolved_target(); }
 DEFINE_HOOK(&daAlink_c::execute, LinkExecuteMetadata);
 void* LinkExecute::resolved_target() { return LinkExecuteMetadata::resolved_target(); }
 DEFINE_HOOK(&dComIfGp_setItemLifeCount, LifeCountMetadata);

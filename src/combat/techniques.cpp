@@ -1,6 +1,7 @@
 #include "combat/techniques.hpp"
 #include "combat/technique_model.hpp"
 #include "combat/stamina.hpp"
+#include "combat/stance.hpp"
 #include "core/hooks.hpp"
 #include "core/player.hpp"
 #include "core/tuning.hpp"
@@ -20,10 +21,13 @@ DEFINE_HOOK(&daAlink_c::checkCutAction, CutAction);
 InputState g_input;
 Attack g_start = Attack::Ordinary, g_attack = Attack::Ordinary;
 uint64_t g_serial = 0;
+int g_parryAge = 1000;
+bool g_parried = false;
 daAlink_c* g_owner = nullptr;
 fpc_ProcID g_id = fpcM_ERROR_PROCESS_ID_e;
 std::string g_stage;
 int g_room = -1;
+int64_t g_binding = -1;
 
 bool enabled(daAlink_c* link) {
     return is_active() && tuning::get().combatTechniques && link &&
@@ -41,7 +45,12 @@ void sample_before(ModContext*, void* args, void*, void*) {
         reset(); g_owner = link; g_id = id; g_stage = stage; g_room = room;
     }
     const auto sample = input::combat_controller::sample();
-    g_input.sample(sample.heavy, enabled(link) && sample.focused, sample.device);
+    if (g_binding != tuning::get().heavyControllerButton) {
+        g_input = {}; g_binding = tuning::get().heavyControllerButton;
+    }
+    g_input.sample(sample.heavy, enabled(link) && sample.focused && sample.available, sample.device);
+    g_parryAge = std::min(1000, g_parryAge + 1);
+    stance::tick();
     if (!enabled(link)) g_attack = Attack::Ordinary;
     if (link->mProcID != daAlink_c::PROC_CUT_FINISH) g_attack = Attack::Ordinary;
 }
@@ -52,6 +61,9 @@ void cut_type_post(ModContext*, void* args, void*, void*) {
     if (mods::arg<daAlink_c*>(args, 0) != g_owner) return;
     ++g_serial;
     g_attack = g_start;
+    if (mods::arg<daAlink_c*>(args, 0)->getCutType() == daPy_py_c::CUT_TYPE_GUARD_ATTACK) {
+        g_parryAge = 0; g_parried = false;
+    }
 }
 HookAction cut_action_pre(ModContext*, void* args, void* result, void*) {
     auto* link = mods::arg<daAlink_c*>(args, 0);
@@ -82,8 +94,18 @@ void block_received(daAlink_c* link) {
         g_input.consume(); link->procGuardBreakInit();
     } else g_input.blocked(30);
 }
-HookAction guard_pre(ModContext*, void* args, void*, void*) {
+HookAction guard_pre(ModContext*, void* args, void* result, void*) {
     auto* link = mods::arg<daAlink_c*>(args, 0);
+    if (ordinary_shield(link) && link->mProcID == daAlink_c::PROC_GUARD_ATTACK &&
+        !g_parried && g_parryAge < tuning::get().parryWindowTicks) {
+        auto* collider = mods::arg<dCcD_GObjInf*>(args, 2);
+        if (collider && stance::parry(collider->GetTgHitAc(), link)) {
+            g_parried = true;
+            link->seStartOnlyReverb(Z2SE_HIT_SHIELD_ATTACK);
+            *static_cast<int*>(result) = 1;
+            return HOOK_SKIP_ORIGINAL; // Actual shield contact; preserve bash/follow-up animation.
+        }
+    }
     if (ordinary_shield(link) && link->mProcID != daAlink_c::PROC_GUARD_SLIP)
         link->field_0x2fd5 = 0; // Replace the native every-fourth-block break with stamina.
     return HOOK_CONTINUE;
@@ -137,12 +159,20 @@ int64_t finish_cost(int64_t ordinary) {
     return ordinary;
 }
 Attack current_attack(const daAlink_c* link) {
-    return link == g_owner && link->mProcID == daAlink_c::PROC_CUT_FINISH ? g_attack : Attack::Ordinary;
+    return link && link == g_owner && link->mProcID == daAlink_c::PROC_CUT_FINISH ? g_attack : Attack::Ordinary;
 }
 uint64_t attack_serial() { return g_serial; }
+void damage_received() {
+    g_input.consume();
+    g_parryAge = 1000; g_parried = false;
+    g_attack = Attack::Ordinary;
+}
 void reset() {
     g_input = {}; g_start = g_attack = Attack::Ordinary;
+    g_parryAge = 1000; g_parried = false;
+    stance::reset();
     g_owner = nullptr; g_id = fpcM_ERROR_PROCESS_ID_e; g_stage.clear(); g_room = -1;
+    g_binding = -1;
     ++g_serial; // Never recycle a previous contact identity on reset/load.
 }
 ModResult install() {

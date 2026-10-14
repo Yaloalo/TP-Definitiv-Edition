@@ -8,6 +8,7 @@
 #include "combat/dodge.hpp"
 #include "combat/ward.hpp"
 #include "combat/stamina.hpp"
+#include "combat/techniques.hpp"
 #include "healing/flask.hpp"
 #include "resources/ammo.hpp"
 #include "core/difficulty.hpp"
@@ -91,6 +92,7 @@ HookAction on_set_damage_pre(ModContext*, void* args, void*, void*) {
     const int original = amount;
     auto* link = mods::arg<daAlink_c*>(args, 0);
     healing::damage_interrupted(link);
+    techniques::damage_received();
     resources::ammo::damage_received();
     ward::damage_received();
     const float protection=ward::absorb(link);

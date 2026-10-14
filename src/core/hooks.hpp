@@ -1,6 +1,7 @@
 #pragma once
 #include "services.hpp"
 #include "d/actor/d_a_alink.h"
+#include "d/actor/d_a_e_oc.h"
 #include "d/d_meter2_draw.h"
 #include "d/d_meter_map.h"
 #include "d/d_meter_button.h"
@@ -9,6 +10,7 @@
 #include "d/d_com_inf_game.h"
 
 namespace remaster::hooks {
+struct BokoblinDamage : mods::Hook<&daE_OC_c::damage_check> { static void* resolved_target(); };
 struct LinkExecute : mods::Hook<&daAlink_c::execute> { static void* resolved_target(); };
 struct LifeCount : mods::Hook<&dComIfGp_setItemLifeCount> { static void* resolved_target(); };
 struct EnemySound : mods::NamedHook<"Z2CreatureEnemy::startCreatureSound",
