@@ -22,6 +22,9 @@ constexpr float kTickSeconds = 1.0f / 30.0f;
 // --- Gating hooks ---
 DEFINE_HOOK(&daAlink_c::decideCommonDoStatus, LinkDecideCommonDoStatus);
 using LinkSetStickData = hooks::StickData;
+DEFINE_HOOK(&daAlink_c::procCutTurnMove, LinkChargedCutDecision);
+DEFINE_HOOK(&daAlink_c::procCutJumpLand, LinkJumpLanding);
+DEFINE_HOOK(&daAlink_c::procCutLargeJumpLand, LinkJumpStrikeLanding);
 
 // --- Charging hooks (observe successful proc inits) ---
 DEFINE_HOOK(&daAlink_c::procFrontRollInit, LinkFrontRollInit);
@@ -133,6 +136,33 @@ HookAction on_guard_attack_pre(ModContext*, void* args, void* retval, void*) {
     return HOOK_SKIP_ORIGINAL;
 }
 
+bool exhausted_human(daAlink_c* link) {
+    return !can_act() && link && link == daAlink_getAlinkActorClass() &&
+        !link->checkWolf() && !link->checkEventRun() && player::input_allowed();
+}
+
+HookAction charged_cut_pre(ModContext*, void* args, void* result, void*) {
+    auto* link = mods::arg<daAlink_c*>(args, 0);
+    if (!exhausted_human(link)) return HOOK_CONTINUE;
+    // This is the charge procedure, before it chooses spin/Jump Strike on
+    // release. Exit via a real native transition, not a skipped initializer
+    // that would leave the old procedure retrying indefinitely. Preserve falls.
+    if (!link->checkGroundSpecialMode()) {
+        link->resetCombo(TRUE);
+        link->procWaitInit();
+    }
+    *static_cast<int*>(result) = 1;
+    return HOOK_SKIP_ORIGINAL;
+}
+
+HookAction jump_landing_pre(ModContext*, void* args, void*, void*) {
+    auto* link = mods::arg<daAlink_c*>(args, 0);
+    // Both native landing procedures use 2 for "no queued spin". Keep the
+    // paid jump's landing attack, recovery and next-action logic intact.
+    if (exhausted_human(link)) link->field_0x3198 = 2;
+    return HOOK_CONTINUE;
+}
+
 // --- Charging ---
 
 template <int64_t tuning::Values::*Cost>
@@ -184,6 +214,9 @@ ModResult install() {
     ModResult r = mods::hook::add_post<LinkDecideCommonDoStatus>(on_decide_do_status_post);
     if (r == MOD_OK) r = mods::hook::add_post<LinkSetStickData>(on_set_stick_data_post);
     if (r == MOD_OK) r = mods::hook::add_pre<LinkGuardAttackInit>(on_guard_attack_pre);
+    if (r == MOD_OK) r = mods::hook::add_pre<LinkChargedCutDecision>(charged_cut_pre);
+    if (r == MOD_OK) r = mods::hook::add_pre<LinkJumpLanding>(jump_landing_pre);
+    if (r == MOD_OK) r = mods::hook::add_pre<LinkJumpStrikeLanding>(jump_landing_pre);
 
     if (r == MOD_OK) r = add_charge<LinkFrontRollInit>(on_roll_post, "roll");
     if (r == MOD_OK) r = add_charge<LinkSideRollInit>(on_roll_post, "side roll");

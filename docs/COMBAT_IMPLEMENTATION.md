@@ -32,7 +32,7 @@ This page records implemented behavior separately from the wider design.
 
 These are reused native animations with distinct action/input semantics, not
 newly authored animation assets. Visual feel and controller responsiveness must
-still be tested in the release host. The complete seven-skill stance integration,
+still be tested in the release host. Broader seven-skill stance integration,
 shared AI director, other enemy adapters and boss redesign are separate stages.
 
 Automated coverage includes actual production input/technique callbacks for
@@ -50,7 +50,12 @@ Accepted sword/shield contacts contribute once per attack identity, including
 contacts spanning both hurt spheres. Light hits add 10, the dedicated heavy 35,
 guard counter 40, Back Slice 28, Helm Splitter 40, Mortal Draw 35, ordinary jump
 25, Jump Strike's main/landing phases 40, spin 18 and Great Spin 25. Ending Blow
-continues through native execution eligibility/death handling. Native lethal
+continues through native execution eligibility/death handling. These are impact
+classifications, not proof that every skill produces a nonlethal stance reaction.
+A 40-point parry immediately knocks down an ordinary 33-stance Bokoblin, so its
+opening is Ending Blow rather than Helm Splitter. On a fresh sturdy Bokoblin,
+a parry provides the native Helm Splitter opening; native Helm Splitter itself
+sets its health to zero, bypassing further stance accumulation. Native lethal
 hits still kill; no HP inflation or forced resurrection is introduced.
 
 After three seconds without pressure, stance recovers at 15 points per second.
@@ -78,14 +83,51 @@ require runtime playtesting. The shared enemy AI director is documented but is
 not part of this first combat prototype; other adapters and bosses remain pending.
 
 
-## Review status
+## Review corrections (0.14.1)
 
-The requested architecture and gameplay review agents were both launched after
-initial QA, but both failed at the service usage limit before returning findings.
-No independent grade or sign-off is available. They remain pending.
+- With combat techniques disabled and hidden stance enabled, ordinary Shield
+  Attack retains its native Helm Splitter opening. The timed-parry-only rule
+  applies when both modules are enabled.
+- Exhausted charge procedures exit to native wait, preserving native transitions
+  for falls and special ground conditions. Ordinary jump and Jump Strike landings
+  keep their paid damage and recovery, but cannot start an additional spin while
+  exhausted. Teaching/events and Wolf paths remain native.
+- Bash-first and parry-first contacts reconcile using the actor generation,
+  Shield Attack identity and native simulation frame. A later incoming guarded
+  contact can upgrade the same bash only if the enemy was attacking before that
+  accepted bash. Stale frames, another attack, an already-recoiling enemy and
+  repeated parries cannot claim this opening. An existing stance break is retained.
+- Regression fixtures now execute the pinned native Bokoblin `damage_check` and
+  `executeDamage` and `setActionMode` bodies between production callbacks, in both contact orders.
+  They also execute both native jump-landing procedures. Collision damage
+  arithmetic, rendering, physics and the full host scheduler remain doubles;
+  runtime timing and feel are still unverified.
 
-The primary-agent review added regression-covered fixes for host action-binding
-conflicts, binding changes while held, damage cancelling a counter opportunity,
-timed-parry-only Helm Splitter openings, bash/parry contact deduplication, bounded
-recovery counters, independent stance toggling, and weak-enemy stance resistance
-that does not require inflating native HP. This is not an independent review.
+## Independent review and remaining discussion
+
+Both independent reviewers completed their review of `561f8e5`, grading the
+initial prototype **7/10 for architecture** and **7/10 for gameplay**. They found
+the toggle interaction and contact-order issue above; architecture also found
+the exhausted charged-release/follow-up bypass. The corrections above address
+those concrete findings without introducing new combat features. Both reviewers
+rechecked the corrections and raised their grades to **8/10**, with no remaining
+production blocker found in the reviewed paths. Their remaining fixture-pointer
+cleanup was also applied, and the native action-transition method now runs in
+those tests rather than a simplified substitute.
+
+Before adding more adapters, separate the shared attack context/lifecycle from
+technique-specific behavior: techniques currently ticks/resets stance, while
+stance reads technique identity and stamina consults pending technique costs.
+The present small modules remain bounded, but expanding these dependencies
+would make maintenance harder. This is a future architecture task.
+
+Discuss further combat development with the owner before implementation. In
+particular, default exhaustion recovery is 30% of maximum with fixed regeneration:
+100 stamina recovers in approximately 1.35 seconds after exhaustion, versus
+2.1 seconds at 200. Assess that progression tradeoff, weak-enemy parry/finisher
+roles and broader skill integration before changing their balance. Shared AI,
+additional enemy adapters, Wolf combat and bosses remain separate future work.
+
+Runtime validation remains pending for both native Bokoblin variants, sword
+upgrades, all learned skills, parry reliability, animation commitment, controller
+responsiveness and group fairness. Passing fixtures are not a gameplay sign-off.

@@ -7,6 +7,7 @@
 #include "d/actor/d_a_e_oc.h"
 #include "d/actor/d_a_alink.h"
 #include "d/d_com_inf_game.h"
+#include "SSystem/SComponent/c_counter.h"
 #include <map>
 #include <vector>
 
@@ -15,9 +16,19 @@ namespace {
 DEFINE_HOOK(&daE_OC_c::_delete, DeleteBokoblin);
 // Private E_OC_ACTION values from the pinned native implementation.
 constexpr int kAttack = 4, kDamage = 5, kDown = 6, kLastOrdinary = 8;
-struct Entry { daE_OC_c* actor = nullptr; State state; uint64_t lastParry = 0; };
+struct Entry {
+    daE_OC_c* actor = nullptr;
+    State state;
+    uint64_t lastParry = 0, attackingBash = 0;
+    uint32_t bashFrame = 0;
+};
 std::map<fpc_ProcID, Entry> g_states;
-struct Contact { daE_OC_c* actor = nullptr; uint64_t serial = 0; float impact = 0; bool bash = false; };
+struct Contact {
+    daE_OC_c* actor = nullptr;
+    uint64_t serial = 0;
+    float impact = 0;
+    bool bash = false, attacking = false;
+};
 std::vector<Contact> g_contacts;
 
 bool active() {
@@ -90,7 +101,7 @@ HookAction before_damage(ModContext*, void* args, void*, void*) {
         !collider->ChkAtType(AT_TYPE_NORMAL_SWORD | AT_TYPE_MASTER_SWORD | AT_TYPE_SHIELD_ATTACK))
         return HOOK_CONTINUE;
     g_contacts.back() = {actor, techniques::attack_serial(), impact_for(link),
-        collider->ChkAtType(AT_TYPE_SHIELD_ATTACK) != 0};
+        collider->ChkAtType(AT_TYPE_SHIELD_ATTACK) != 0, actor->mActionMode == kAttack};
     return HOOK_CONTINUE;
 }
 void after_damage(ModContext*, void* args, void*, void*) {
@@ -100,8 +111,16 @@ void after_damage(ModContext*, void* args, void*, void*) {
     if (!active() || hit.actor != actor || hit.impact <= 0 || actor->health <= 1 ||
         actor->field_0x6cc <= 0 || (actor->mActionMode != kDamage && actor->mActionMode != kDown)) return;
     const bool broken = state_for(actor).contact(hit.serial, hit.impact, resistance_for(actor));
+    auto& entry = g_states[fopAcM_GetID(actor)];
+    entry.attackingBash = 0;
+    if (hit.bash && hit.attacking) {
+        // Native actor execution order can process this outgoing bash before
+        // Link's incoming guard contact. Keep proof only for this simulation frame.
+        entry.attackingBash = hit.serial;
+        entry.bashFrame = g_Counter.mCounter0;
+    }
     if (broken) break_stance(actor);
-    else if (hit.bash && g_states[fopAcM_GetID(actor)].lastParry != hit.serial) {
+    else if (hit.bash && tuning::get().combatTechniques && entry.lastParry != hit.serial) {
         // A plain bash still has recoil, but the Helm Splitter opening is the
         // reward for the actual incoming timed parry on this specific target.
         actor->setActionMode(kDamage, 2);
@@ -124,11 +143,21 @@ bool owns_bokoblin(fopAc_ac_c* actor) {
     return active() && actor && fopAcM_GetName(actor) == fpcNm_E_OC_e;
 }
 bool parry(fopAc_ac_c* attacker, daAlink_c* link) {
-    if (!owns_bokoblin(attacker) || !link || link->checkWolf()) return false;
+    if (!tuning::get().combatTechniques || !owns_bokoblin(attacker) || !link || link->checkWolf()) return false;
     auto* actor = static_cast<daE_OC_c*>(attacker);
-    if (!eligible(actor) || actor->mActionMode != kAttack) return false;
+    if (!player::input_allowed() || !actor->mpMorf || actor->health <= 1 || actor->checkCutDownHitFlg()) return false;
+    state_for(actor); // Validate actor generation before reading its contact history.
+    auto& entry = g_states[fopAcM_GetID(actor)];
+    const auto serial = techniques::attack_serial();
+    if (!serial || entry.lastParry == serial) return false;
+    const bool bashFirst = entry.attackingBash == serial && entry.bashFrame == g_Counter.mCounter0 &&
+        ((actor->mActionMode == kDamage && (actor->mOcState == 2 || actor->mOcState == 5)) || actor->mActionMode == kDown);
+    if (actor->mActionMode != kAttack && !bashFirst) return false;
+    entry.lastParry = serial;
+    // A same-frame bash may already have broken stance. Accept the incoming
+    // parry without cancelling the native knockdown or starting another break.
+    if (bashFirst && actor->mActionMode == kDown) return true;
     const bool broken = state_for(actor).contact(techniques::attack_serial(), 40, resistance_for(actor));
-    g_states[fopAcM_GetID(actor)].lastParry = techniques::attack_serial();
     actor->mAtInfo.mHitDirection.y = fopAcM_searchPlayerAngleY(actor);
     if (broken) break_stance(actor);
     else {

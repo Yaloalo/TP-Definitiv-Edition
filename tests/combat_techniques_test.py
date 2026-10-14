@@ -151,3 +151,82 @@ int main(){auto s=sample();assert(s.heavy&&s.device==17&&s.focused);
  focus=false;assert(!sample().focused);id=-1;assert(sample().device==0&&!sample().heavy);}
 ''')
 print('Combat techniques: dedicated actions, input isolation, costs, blocking, Great Spin and native mapping checks passed')
+
+# Exercise exhaustion at the real charge/landing decision boundaries. The two
+# pinned native landing procedures run intact; rendering/physics calls are doubles.
+stamina_source=(ROOT/'src/combat/stamina.cpp').read_text()
+cut_source=(ROOT/'dusklight/src/d/actor/d_a_alink_cut.inc').read_text()
+def native_function(name):
+    start=cut_source.index('int daAlink_c::'+name+'(')
+    end=cut_source.index('{',start)+1;depth=1
+    while depth:
+        depth+=(cut_source[end]=='{')-(cut_source[end]=='}');end+=1
+    return cut_source[start:end]
+run(r'''
+#include <cassert>
+#include <cstdint>
+using BOOL=int;constexpr bool TRUE=true;
+struct ModContext{};enum HookAction{HOOK_CONTINUE,HOOK_SKIP_ORIGINAL};
+constexpr int ERFLG0_UNK_8000000=1,RFLG0_UNK_2=2,CUT_TYPE_LARGE_JUMP_FINISH=3,ANM_CUT_RECOIL_B=4;
+struct daPy_demo_c{static constexpr int DEMO_CUT_LARGE_JUMP_e=8;int mode=0;int getDemoMode(){return mode;}};
+struct daPy_frameCtrl_c{float frame=10;float getFrame(){return frame;}};
+void dComIfGp_evmng_cutEnd(int){}void cLib_chaseF(float*,float,float){}
+struct daAlink_c{
+ enum {CHARGE,WAIT,FALL,LAND,SPIN};int proc=CHARGE,field_0x3198=1,field_0x2f99=0,mAlinkStaffId=0;
+ int spinCalls=0,nextCalls=0,landingHits=0,resetCalls=0,waitCalls=0;
+ bool wolf=false,event=false,special=false,ended=false,turnInput=true;
+ daPy_frameCtrl_c mUnderFrameCtrl[1];daPy_demo_c mDemo;
+ struct{int field_0x300c=0;}mProcVar2;float field_0x347c=0,field_0x3478=10;
+ struct{void SetR(float){}}mAtSph;
+ struct Params{int mSpinSlashCheckFrame=5,mLandAttackEndFrame=20,mLandAttackInitFrame=3,mJumpSpinDelay=5,mEndAttackFrame=20;
+ struct{int mCancelFrame=15;}mLandAnm;};
+ struct{struct{struct{Params m;}mCutLargeJump,mCutJump;}mCut;}hio;
+ decltype(hio)* mpHIO=&hio;
+ bool checkWolf(){return wolf;}bool checkEventRun(){return event;}
+ bool checkGroundSpecialMode(){if(special)proc=FALL;return special;}
+ void resetCombo(bool){++resetCalls;}int procWaitInit(){++waitCalls;proc=WAIT;return 1;}
+ bool checkCutTurnInput(){return turnInput;}int getCutTurnDirection(){return 1;}
+ bool checkAnmEnd(daPy_frameCtrl_c*){return ended;}int checkNextAction(int){++nextCalls;return 1;}
+ bool changeCutReverseProc(int){return false;}
+ void onEndResetFlg0(int){}void onResetFlg0(int){++landingHits;}void onModeFlg(int){}
+ void resetAtCollision(int){}void setCutType(int){}void initCutTurnAt(float,int){}
+ int procCutTurnInit(int,int){++spinCalls;proc=SPIN;return 1;}
+ int procCutJumpLand();int procCutLargeJumpLand();
+};
+daAlink_c* owner;daAlink_c* daAlink_getAlinkActorClass(){return owner;}
+namespace mods{template<class T>T arg(void* a,int){return *static_cast<T*>(a);}}
+bool canAct=false,allowed=true;
+namespace remaster{namespace player{bool input_allowed(){return allowed;}}
+namespace combat::stamina{bool can_act(){return canAct;}
+'''+''.join(function(stamina_source,n) for n in ['exhausted_human','charged_cut_pre','jump_landing_pre'])+r'''
+}}
+'''+native_function('procCutJumpLand')+'\n'+native_function('procCutLargeJumpLand')+r'''
+int main(){using namespace remaster::combat::stamina;
+ daAlink_c link;owner=&link;daAlink_c* args=&link;int result=0;
+ assert(charged_cut_pre(nullptr,&args,&result,nullptr)==HOOK_SKIP_ORIGINAL);
+ assert(result==1&&link.proc==daAlink_c::WAIT&&link.waitCalls==1&&link.resetCalls==1);
+ link.special=true;link.proc=daAlink_c::CHARGE;
+ assert(charged_cut_pre(nullptr,&args,&result,nullptr)==HOOK_SKIP_ORIGINAL&&link.proc==daAlink_c::FALL&&link.waitCalls==1);
+ link.special=false;
+ for(int context=0;context<5;++context){
+  canAct=context==0;link.wolf=context==1;link.event=context==2;allowed=context!=3;
+  daAlink_c other;if(context==4)owner=&other;
+  assert(charged_cut_pre(nullptr,&args,&result,nullptr)==HOOK_CONTINUE);
+ }
+ canAct=false;allowed=true;owner=&link;link.wolf=link.event=false;
+ for(int large=0;large<2;++large){
+  link.proc=daAlink_c::LAND;link.field_0x3198=1;link.spinCalls=0;link.landingHits=0;
+  assert(jump_landing_pre(nullptr,&args,nullptr,nullptr)==HOOK_CONTINUE);
+  assert(link.field_0x3198==2);
+  if(large)link.procCutLargeJumpLand();else link.procCutJumpLand();
+  assert(link.spinCalls==0&&link.landingHits>0&&link.proc==daAlink_c::LAND);
+  link.ended=true;link.nextCalls=0;
+  if(large)link.procCutLargeJumpLand();else link.procCutJumpLand();
+  assert(link.nextCalls==1);link.ended=false;
+  canAct=true;link.field_0x3198=1;jump_landing_pre(nullptr,&args,nullptr,nullptr);
+  if(large)link.procCutLargeJumpLand();else link.procCutJumpLand();
+  assert(link.spinCalls==1&&link.proc==daAlink_c::SPIN);canAct=false;
+ }
+}
+''')
+print('Exhaustion: charge exits safely; native jump landings retain paid damage/recovery without a free follow-up spin')

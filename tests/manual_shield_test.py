@@ -11,7 +11,7 @@ shared_aliases = set(re.findall(r'remaster::hooks::(\w+)', source))
 shared_fixture = 'namespace remaster::hooks { ' + ''.join(f'struct {name}{{}};' for name in shared_aliases) + ' }\n'
 stamina = (root / "src/combat/stamina.cpp").read_text()
 begin = stamina.index('HookAction on_guard_attack_pre(')
-end = stamina.index('// --- Charging ---', begin)
+end = stamina.index('bool exhausted_human(', begin)
 gate = stamina[begin:end]
 fixture = r'''
 #include <cassert>

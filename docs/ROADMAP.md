@@ -1,7 +1,7 @@
 # Remaining gameplay roadmap
 
 Updated 2026-10-14. Economy/dialogue 0.12.0 and Link techniques 0.13.0
-are committed; the first Bokoblin stance prototype is 0.14.0. This compares the owner's
+are committed; the first Bokoblin stance prototype is 0.14.0, with review fixes in 0.14.1. This compares the owner's
 [design vision](DESIGN_VISION.md) with the actual
 [implemented modules](INTEGRATION.md). Status is stated per item below.
 Existing settings/helpers are a starting point, not a
@@ -17,7 +17,9 @@ The first Bokoblin adapter now implements stamina decisions, dedicated heavy
 attacks and guard counters, timed Shield Attack, hidden stance and native
 knockdown/punish. All seven skills have mapped roles in this supported encounter;
 see [COMBAT_IMPLEMENTATION.md](COMBAT_IMPLEMENTATION.md) for scope and limits.
-Runtime combat feel and the requested independent reviews remain pending. Keep native death,
+Both independent reviews are complete; their concrete correctness findings are
+addressed in 0.14.1. Runtime combat feel remains pending. Further combat
+development and balance changes require owner discussion. Keep native death,
 armor, training and story reactions intact. Then add shared intent selection
 and a small group director; expand through per-enemy adapters.
 
@@ -42,7 +44,7 @@ death transition universally safe.
 
 | Order | Change | Deliverable and dependency |
 |---|---|---|
-| 1 | Validate first combat encounter | Link techniques and Bokoblin stance are implemented; runtime feel, full controller routes and independent reviews remain pending |
+| 1 | Validate first combat encounter | Link techniques and Bokoblin stance are implemented; independent reviews completed with correctness fixes; runtime feel and full controller routes remain pending |
 | 2 | Shared enemy AI | Encounter director, utility decisions, capability profiles and native adapters; prove fair one-on-one and group behavior |
 | 3 | Full Hidden Skill integration | All seven learned skills have distinct combat jobs; expand stance/contact/reaction support rather than add isolated bonuses |
 | 4 | Wolf combat completeness | Appropriate attack/dodge stamina and recovery; preserve scripted abilities and required Wolf combat |

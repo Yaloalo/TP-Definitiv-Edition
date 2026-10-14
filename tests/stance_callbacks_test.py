@@ -18,26 +18,57 @@ fixture=r'''
 #include <cassert>
 #include <map>
 #include <vector>
+#include <cstring>
+using s16=short;using u8=unsigned char;
+#define AVOID_UB 1
+#define KREG_S(x) 0
+#define NREG_S(x) 0
+#define S16_ADD(a,b) a+=b
+#define S16_SUB(a,b) a-=b
+struct cXyz{};
 #include "combat/stance_model.hpp"
+struct {uint32_t mCounter0=1;}g_Counter;
 using fpc_ProcID=int;struct ModContext{};enum HookAction{HOOK_CONTINUE,HOOK_SKIP_ORIGINAL};
 constexpr int fpcNm_E_OC_e=1,AT_TYPE_NORMAL_SWORD=1,AT_TYPE_MASTER_SWORD=2,AT_TYPE_SHIELD_ATTACK=4;
+constexpr int AT_TYPE_UNK=8,AT_TYPE_ARROW=16,AT_TYPE_BOMB=32,AT_TYPE_IRON_BALL=64,AT_TYPE_BOOMERANG=128,AT_TYPE_40=256,AT_TYPE_SLINGSHOT=512;
+constexpr int E_OC_ACTION_WAIT=0,E_OC_ACTION_WALK=1,E_OC_ACTION_TALK=2,E_OC_ACTION_FIND=3,E_OC_ACTION_DAMAGE=5,E_OC_ACTION_BIG_DAMAGE=6,E_OC_ACTION_DEATH=9;
+float cM_rnd(){return 0;}bool dComIfGp_checkPlayerStatus0(int,int){return false;}
 struct fopAc_ac_c{int id=1,name=1;};int fopAcM_GetID(fopAc_ac_c* a){return a->id;}int fopAcM_GetName(fopAc_ac_c* a){return a->name;}
 std::map<int,fopAc_ac_c*> actors;fopAc_ac_c* fopAcM_SearchByID(int id){return actors.contains(id)?actors[id]:nullptr;}
-struct daPy_py_c {enum {CUT_TYPE_DOWN,CUT_TYPE_GUARD_ATTACK,CUT_TYPE_HEAD_JUMP,CUT_TYPE_TWIRL,
+struct daPy_py_c {static bool checkWoodSwordEquip(){return false;}enum {CUT_TYPE_DOWN,CUT_TYPE_GUARD_ATTACK,CUT_TYPE_HEAD_JUMP,CUT_TYPE_TWIRL,
 CUT_TYPE_MORTAL_DRAW_A,CUT_TYPE_MORTAL_DRAW_B,CUT_TYPE_LARGE_JUMP_INIT,CUT_TYPE_LARGE_JUMP,
 CUT_TYPE_LARGE_JUMP_FINISH,CUT_TYPE_JUMP,CUT_TYPE_LARGE_TURN_LEFT,CUT_TYPE_LARGE_TURN_RIGHT,
 CUT_TYPE_TURN_LEFT,CUT_TYPE_TURN_RIGHT,CUT_TYPE_NORMAL};};
-struct daAlink_c:fopAc_ac_c{bool wolf=false;int cut=daPy_py_c::CUT_TYPE_NORMAL;bool checkWolf(){return wolf;}int getCutType(){return cut;}} link;
+struct daAlink_c:fopAc_ac_c{bool wolf=false;int cut=daPy_py_c::CUT_TYPE_NORMAL;bool checkCutJumpCancelTurn(){return false;}bool checkWolf(){return wolf;}int getCutType(){return cut;}} link;
 daAlink_c* daAlink_getAlinkActorClass(){return &link;}
-struct dCcD_GObjInf{int type=1;bool ChkAtType(int t){return type&t;}} collider;
+daAlink_c* daPy_getPlayerActorClass(){return &link;}
+struct dCcD_GObjInf{int GetAtSpl(){return 0;}int type=1;bool ChkAtType(int t){return type&t;}} collider;
 struct daE_OC_c:fopAc_ac_c {
- void* mpMorf=this;int health=40,field_0x560=220,mActionMode=4,mOcState=0,field_0x6cc=0,offCalls=0;bool downHit=false,head=false;
+ void damage_check();void executeDamage();int getCutType(){return 2;}
+ void offCutDownHitFlg(){downHit=false;}
+ int field_0x6d6=0,field_0x6dc=0;const char* mName="E_OC";
+ struct Status{void Move(){}}mStts;struct Attention{int flags=1;}attention_info;
+ struct Sound{void startCollisionSE(int,int){}void startCreatureVoice(int,int){}}mSound;
+ struct Morph{bool isStop(){return false;}}morf;Morph* mpMorf=&morf;
+ bool mBattleOn=false;int mPrevShapeAngle=0,field_0x6e3=0,field_0xe60=0,field_0xe64=0,tevStr=0;float speedF=0;
+ struct{int y=0;}shape_angle;struct{cXyz pos;}current;
+ void setBck(int,int,float,float){}void setSpitEffect(){}
+int health=40,field_0x560=220,mActionMode=4,mOcState=0,field_0x6cc=0,offCalls=0;bool downHit=false,head=false;
  bool checkCutDownHitFlg(){return downHit;}void onHeadLockFlg(){head=true;}void offHeadLockFlg(){head=false;}
- void setActionMode(int a,int s){mActionMode=a;mOcState=s;}void offTgSph(){++offCalls;}
+ void setActionMode(int,int);int mOldActionMode=0,field_0x6c0=0,field_0x6c2=0;void offTgSph(){++offCalls;}
  struct Sphere{bool hit=false;dCcD_GObjInf* obj=nullptr;fopAc_ac_c* owner=nullptr;
- bool ChkTgHit(){return hit;}dCcD_GObjInf* GetTgHitObj(){return obj;}fopAc_ac_c* GetTgHitAc(){return owner;}}mSphs_cc[2];
- struct Info{struct Direction{int y=0;}mHitDirection;}mAtInfo;
+ bool collisionOn=false,targetOn=false;void OnCoSetBit(){collisionOn=true;}void OnTgSetBit(){targetOn=true;}
+ cXyz pos;cXyz* GetTgHitPosP(){return &pos;}bool ChkTgHit(){return hit;}dCcD_GObjInf* GetTgHitObj(){return obj;}fopAc_ac_c* GetTgHitAc(){return owner;}}mSphs_cc[2];
+ struct Info{dCcD_GObjInf* mpCollider=nullptr;int mAttackPower=1;struct Direction{int y=0;}mHitDirection;}mAtInfo;
 };int fopAcM_searchPlayerAngleY(daE_OC_c*){return 123;}
+ constexpr int Z2SE_EN_OC_V_DAMAGE_LR=1,Z2SE_EN_OC_V_DAMAGE=2,Z2SE_EN_OC_V_GALE=3,E_OC_ACTION_MOVE_OUT=7;
+ int cLib_distanceAngleS(int,int){return 0;}void cLib_chaseF(float*,float,float){}
+ void fopAcM_effSmokeSet2(int*,int*,cXyz*,void*,float,int*){}
+ void dComIfGp_setHitMark(int,daE_OC_c*,cXyz*,void*,void*,int){}
+ // Collision damage arithmetic is outside this fixture; the native function below
+ // still owns sphere selection, shield reactions, Helm Splitter death and actions.
+ void cc_at_check(daE_OC_c*,daE_OC_c::Info*){}
+
 namespace mods{template<class T>T arg(void* a,int){return *static_cast<T*>(a);}}
 bool mode=true,allowed=true;
 namespace remaster {
@@ -48,9 +79,12 @@ namespace remaster {
  Attack current_attack(daAlink_c*){return attack;}uint64_t attack_serial(){return serial;}}
  namespace combat::stance {
  constexpr int kAttack=4,kDamage=5,kDown=6,kLastOrdinary=8;
- struct Entry{daE_OC_c* actor=nullptr;State state;uint64_t lastParry=0;};std::map<int,Entry> g_states;
- struct Contact{daE_OC_c* actor=nullptr;uint64_t serial=0;float impact=0;bool bash=false;};std::vector<Contact> g_contacts;
+ struct Entry{daE_OC_c* actor=nullptr;State state;uint64_t lastParry=0,attackingBash=0;uint32_t bashFrame=0;};std::map<int,Entry> g_states;
+ struct Contact{daE_OC_c* actor=nullptr;uint64_t serial=0;float impact=0;bool bash=false,attacking=false;};std::vector<Contact> g_contacts;
 '''
+native_damage=native[native.index('void daE_OC_c::damage_check()'):native.index('void daE_OC_c::setBck(')]
+native_damage+=native[native.index('void daE_OC_c::executeDamage()'):native.index('void daE_OC_c::executeBigDamage()')]
+native_damage+=native[native.index('void daE_OC_c::setActionMode('):native.index('int daE_OC_c::getCutType()')]
 funcs=''.join(extract(n) for n in ['active','eligible','state_for','impact_for','resistance_for','break_stance','before_damage','after_damage','deleted','owns_bokoblin','parry','tick','reset'])
 checks=r'''
 }}
@@ -81,6 +115,22 @@ int main(){using namespace remaster::combat;using namespace stance;
  link.cut=daPy_py_c::CUT_TYPE_GUARD_ATTACK;techniques::attack=techniques::Attack::Ordinary;++techniques::serial;
  before_damage(nullptr,&args,nullptr,nullptr);actor.field_0x6cc=10;actor.mActionMode=5;actor.mOcState=3;
  after_damage(nullptr,&args,nullptr,nullptr);assert(actor.mOcState==2&&!actor.head&&state_for(&actor).pressure==10);
+
+ // Bash-first and parry-first must reconcile only a proven same-frame incoming attack.
+ assert(parry(&actor,&link)&&actor.mOcState==3&&actor.head&&state_for(&actor).pressure==40);
+ assert(!parry(&actor,&link));
+ for(int scenario=0;scenario<3;++scenario){
+  reset();actor.mActionMode=scenario==2?5:4;actor.field_0x6cc=0;++techniques::serial;
+  before_damage(nullptr,&args,nullptr,nullptr);actor.field_0x6cc=10;actor.mActionMode=5;actor.mOcState=3;
+  after_damage(nullptr,&args,nullptr,nullptr);
+  if(scenario==0)++g_Counter.mCounter0;if(scenario==1)++techniques::serial;
+  assert(!parry(&actor,&link)); // expired frame, different attack, or enemy was already recoiling
+ }
+ // Disabling techniques preserves native learned follow-up access with stance still enabled.
+ reset();remaster::tuning::v.combatTechniques=false;actor.mActionMode=4;actor.field_0x6cc=0;++techniques::serial;
+ before_damage(nullptr,&args,nullptr,nullptr);actor.field_0x6cc=10;actor.mActionMode=5;actor.mOcState=3;actor.head=true;
+ after_damage(nullptr,&args,nullptr,nullptr);assert(actor.mOcState==3&&actor.head);
+ assert(!parry(&actor,&link));remaster::tuning::v.combatTechniques=true;
  // Same-target bash after a successful parry retains the opening without double pressure.
  reset();actor.mActionMode=4;actor.field_0x6cc=0;++techniques::serial;assert(parry(&actor,&link));
  before_damage(nullptr,&args,nullptr,nullptr);actor.field_0x6cc=10;actor.mActionMode=5;actor.mOcState=3;
@@ -112,6 +162,33 @@ int main(){using namespace remaster::combat;using namespace stance;
  assert(!parry(&actor,&link)); // no reacting twice to the already interrupted attack
  actor.mActionMode=4;++techniques::serial;assert(parry(&actor,&link)&&actor.mActionMode==6);
  actor.name=77;assert(!parry(&actor,&link));actor.name=1;
+
+ // Execute the pinned native damage_check body between production hooks, both orders.
+ for(int order=0;order<2;++order){
+  reset();actor=daE_OC_c{};actor.mpMorf=&actor.morf;actor.health=220;actor.field_0x560=220;actor.mActionMode=4;
+  collider.type=AT_TYPE_SHIELD_ATTACK;link.cut=daPy_py_c::CUT_TYPE_GUARD_ATTACK;
+  actor.mSphs_cc[0]={true,&collider,&link};++techniques::serial;
+  if(order==0)assert(parry(&actor,&link));
+  before_damage(nullptr,&args,nullptr,nullptr);actor.damage_check();after_damage(nullptr,&args,nullptr,nullptr);
+  actor.executeDamage(); // native action() executes the reaction before the next actor
+  if(order==1)assert(parry(&actor,&link));
+  assert(actor.mActionMode==5&&actor.head&&state_for(&actor).pressure==40);
+ }
+ // Weak parries break immediately; native Helm Splitter kills sturdy enemies,
+ // so neither result is misrepresented as a nonlethal pressure-only follow-up.
+ reset();actor=daE_OC_c{};actor.mpMorf=&actor.morf;actor.field_0x560=40;++techniques::serial;
+ assert(parry(&actor,&link)&&actor.mActionMode==6);
+ reset();actor=daE_OC_c{};actor.mpMorf=&actor.morf;actor.health=220;actor.field_0x560=220;
+ collider.type=AT_TYPE_NORMAL_SWORD;link.cut=daPy_py_c::CUT_TYPE_HEAD_JUMP;
+ actor.mSphs_cc[0]={true,&collider,&link};++techniques::serial;
+ before_damage(nullptr,&args,nullptr,nullptr);actor.damage_check();after_damage(nullptr,&args,nullptr,nullptr);
+ assert(actor.health==0&&actor.mActionMode==6&&g_states.empty());
+ // A bash that itself breaks an attacking enemy can still reconcile its incoming parry.
+ reset();actor=daE_OC_c{};actor.mpMorf=&actor.morf;actor.field_0x560=40;state_for(&actor).pressure=25;
+ collider.type=AT_TYPE_SHIELD_ATTACK;link.cut=daPy_py_c::CUT_TYPE_GUARD_ATTACK;
+ actor.mSphs_cc[0]={true,&collider,&link};++techniques::serial;
+ before_damage(nullptr,&args,nullptr,nullptr);actor.damage_check();after_damage(nullptr,&args,nullptr,nullptr);
+ assert(actor.mActionMode==6&&parry(&actor,&link)&&actor.mActionMode==6);
  // Actor generation/lifecycle, menu freeze and mode isolation.
  state_for(&actor).pressure=20;state_for(&actor).quietTicks=100;allowed=false;tick();assert(state_for(&actor).pressure==20);
  allowed=true;tick();assert(state_for(&actor).pressure==19.5f);
@@ -128,5 +205,5 @@ int main(){using namespace remaster::combat;using namespace stance;
  link.cut=daPy_py_c::CUT_TYPE_LARGE_TURN_LEFT;assert(impact_for(&link)==25);
 }
 '''
-run(fixture+funcs+checks)
+run(fixture+funcs+'\n}}\n'+native_damage+'\nnamespace remaster { namespace combat::stance {\n'+checks)
 print('Stance: production adapter, native action IDs, deduplication, recovery, skills, parries and lifecycle checks passed')
