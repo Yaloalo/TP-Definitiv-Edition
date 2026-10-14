@@ -1,0 +1,7 @@
+{
+  "id": "dev.yaloalo.tp_remaster",
+  "name": "TP Definitive Overhaul",
+  "version": "@PROJECT_VERSION@",
+  "author": "yaloalo",
+  "description": "Souls-inspired combat, modern movement and pacing for Twilight Princess. Adds the 'Definitive Overhaul' game mode with its own save file."
+}

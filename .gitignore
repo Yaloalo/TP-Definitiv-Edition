@@ -1,0 +1,11 @@
+/build*/
+/cmake-build-*/
+/dusklight/
+__pycache__/
+*.pyc
+.idea/
+.DS_Store
+.vs/
+.vscode/
+.idea/
+out/
