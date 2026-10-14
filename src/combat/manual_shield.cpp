@@ -2,6 +2,7 @@
 // Ported from Dawnlight src/manual_shield_hooks.cpp and lazytweaks-modapi
 // src/hooks.cpp. Adapted for R shielding without targeting and shared stamina.
 #include "combat/manual_shield.hpp"
+#include "combat/techniques.hpp"
 
 #include "core/player.hpp"
 #include "core/tuning.hpp"
@@ -62,6 +63,11 @@ void after_shield_guard(ModContext*, void* args, void*, void*) {
 
 HookAction before_item_action(ModContext*, void* args, void* result, void*) {
     auto* link = mods::arg<daAlink_c*>(args, 0);
+    int techniqueResult = 0;
+    if (techniques::try_action(link, techniqueResult)) {
+        *static_cast<BOOL*>(result) = techniqueResult;
+        return HOOK_SKIP_ORIGINAL;
+    }
     if (!held(link) || !can_bash(link)) return HOOK_CONTINUE;
     link->setBStatus(BUTTON_STATUS_SHIELD_ATTACK);
     *static_cast<BOOL*>(result) = FALSE;

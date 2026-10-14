@@ -8,6 +8,7 @@
 #include "combat/enemy_slow_motion.hpp"
 #include "combat/boss_hard_mode.hpp"
 #include "combat/stamina.hpp"
+#include "combat/techniques.hpp"
 #include "core/difficulty.hpp"
 #include "core/player.hpp"
 #include "core/tuning.hpp"
@@ -77,6 +78,7 @@ ModResult on_activated(void*, ModError*) {
     resources::ammo::reset();
     economy::merchants::reset();
     combat::ward::reset();
+    combat::techniques::reset();
     mods::log::info("Definitive Overhaul activated");
     return MOD_OK;
 }
@@ -92,6 +94,7 @@ ModResult on_deactivated(void*, ModError*) {
     resources::ammo::reset();
     economy::merchants::reset();
     combat::ward::reset();
+    combat::techniques::reset();
     input::mouse_controls::reset();
     combat::enemies::reset_enemy_slow_motion();
     combat::enemies::reset_boss_hard_mode();
@@ -125,6 +128,7 @@ constexpr Installer kInstallers[] = {
     {player::install, "player tick"},
     {combat::damage::install, "damage"},
     {combat::stamina::install, "stamina"},
+    {combat::techniques::install, "heavy attacks and guard counters"},
     {combat::dodge::install, "dodge"},
     {combat::manual_shield::install, "manual shield"},
     {combat::enemies::initialize_enemy_slow_motion, "enemy timing"},

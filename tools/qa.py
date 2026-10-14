@@ -155,6 +155,7 @@ def run_gate(options):
                 imports = command('imports', ['bash', ROOT / 'tools/check_symbols.sh', library, path])
                 hooks = command('hooks', [sys.executable, ROOT / 'tools/check_hook_symbols.py', library, path,
                     '--dynamic-source', ROOT / 'src/input/mouse_controls.cpp',
+                    '--dynamic-source', ROOT / 'src/input/combat_controller.cpp',
                     '--dynamic-source', ROOT / 'src/core/tuning.cpp'])
                 return imports + '\n' + hooks
             check('exact-host imports and hooks', host)

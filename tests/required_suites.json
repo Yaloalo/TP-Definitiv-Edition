@@ -2,6 +2,7 @@
   "enemy_timing",
   "enemy_death_recovery",
   "manual_shield",
+  "combat_techniques",
   "launch_folder",
   "progression_save_model",
   "flask_callbacks",

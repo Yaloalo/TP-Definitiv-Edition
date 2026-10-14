@@ -1,6 +1,7 @@
 #include "combat/stamina.hpp"
 #include "core/hooks.hpp"
 #include "combat/manual_shield.hpp"
+#include "combat/techniques.hpp"
 
 #include <algorithm>
 
@@ -31,6 +32,7 @@ DEFINE_HOOK(&daAlink_c::procCutNormalInit, LinkCutNormalInit);
 DEFINE_HOOK(&daAlink_c::procCutFinishInit, LinkCutFinishInit);
 DEFINE_HOOK(&daAlink_c::procCutTurnInit, LinkCutTurnInit);
 DEFINE_HOOK(&daAlink_c::procCutJumpInit, LinkCutJumpInit);
+DEFINE_HOOK(&daAlink_c::procCutLargeJumpInit, LinkJumpStrikeInit);
 DEFINE_HOOK(&daAlink_c::procCutHeadInit, LinkCutHeadInit);
 DEFINE_HOOK(&daAlink_c::procCutFinishJumpUpInit, LinkCutFinishJumpUpInit);
 DEFINE_HOOK(&daAlink_c::procCutDownInit, LinkCutDownInit);
@@ -160,6 +162,21 @@ void on_targeted_dodge_post(ModContext* ctx, void* args, void* result, void* wha
     charge_post<&tuning::Values::costSidestep>(ctx, args, result, what);
 }
 
+void finish_charge_post(ModContext*, void* args, void* result, void*) {
+    if (!succeeded(result)) return;
+    auto* link = mods::arg<daAlink_c*>(args, 0);
+    const bool mortal = link && (link->getCutType() == daPy_py_c::CUT_TYPE_MORTAL_DRAW_A ||
+                                 link->getCutType() == daPy_py_c::CUT_TYPE_MORTAL_DRAW_B);
+    spend(techniques::finish_cost(mortal ? tuning::get().costTechnique : tuning::get().costSwing), "sword technique");
+}
+void spin_charge_post(ModContext*, void* args, void* result, void*) {
+    if (!succeeded(result)) return;
+    auto* link = mods::arg<daAlink_c*>(args, 0);
+    const bool great = link && (link->getCutType() == daPy_py_c::CUT_TYPE_LARGE_TURN_LEFT ||
+                                link->getCutType() == daPy_py_c::CUT_TYPE_LARGE_TURN_RIGHT);
+    spend(great && tuning::get().combatTechniques ? tuning::get().costGreatSpin : tuning::get().costSpin, "spin attack");
+}
+
 }  // namespace
 
 ModResult install() {
@@ -173,8 +190,9 @@ ModResult install() {
     if (r == MOD_OK) r = add_charge<LinkSideStepInit>(on_targeted_dodge_post, "sidestep");
     if (r == MOD_OK) r = add_charge<LinkBackJumpInit>(on_targeted_dodge_post, "back jump");
     if (r == MOD_OK) r = add_charge<LinkCutNormalInit>(charge_post<&V::costSwing>, "swing");
-    if (r == MOD_OK) r = add_charge<LinkCutFinishInit>(charge_post<&V::costSwing>, "combo finisher");
-    if (r == MOD_OK) r = add_charge<LinkCutTurnInit>(charge_post<&V::costSpin>, "spin attack");
+    if (r == MOD_OK) r = add_charge<LinkCutFinishInit>(finish_charge_post, "combo finisher");
+    if (r == MOD_OK) r = add_charge<LinkCutTurnInit>(spin_charge_post, "spin attack");
+    if (r == MOD_OK) r = add_charge<LinkJumpStrikeInit>(charge_post<&V::costTechnique>, "Jump Strike");
     if (r == MOD_OK) r = add_charge<LinkCutJumpInit>(charge_post<&V::costTechnique>, "jump attack");
     if (r == MOD_OK) r = add_charge<LinkCutHeadInit>(charge_post<&V::costTechnique>, "helm splitter");
     if (r == MOD_OK) r = add_charge<LinkCutFinishJumpUpInit>(charge_post<&V::costTechnique>, "back slice");

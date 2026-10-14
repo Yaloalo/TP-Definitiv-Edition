@@ -94,6 +94,12 @@ VarSpec g_specs[] = {
     INT_VAR("Dodge", dodgeInvincibilityTicks, "Dodge invincibility", 0, 30, 1, " ticks (1/30 s)"),
 
     BOOL_VAR("Combat depth", manualShield, "Manual shield (hold R; R + B to bash)"),
+    BOOL_VAR(nullptr, combatTechniques, "Heavy attacks, guard counters and learned Great Spin"),
+    INT_VAR(nullptr, heavyControllerButton, "Heavy button: 7=L3, 8=R3, 9=LB, 10=RB (must be unassigned)", 7, 10, 1, nullptr),
+    INT_VAR(nullptr, costHeavy, "Cost: heavy sword attack", 1, 100, 1, nullptr),
+    INT_VAR(nullptr, costGuardCounter, "Cost: guard counter", 1, 100, 1, nullptr),
+    INT_VAR(nullptr, costBlock, "Cost: blocked impact", 1, 100, 1, nullptr),
+    INT_VAR(nullptr, costGreatSpin, "Cost: Great Spin", 1, 100, 1, nullptr),
     BOOL_VAR(nullptr, enemyHardMode, "Dawnlight Enemy Hard Mode"),
     BOOL_VAR(nullptr, bossHardMode, "Dawnlight Boss Hard Mode"),
 

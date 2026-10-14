@@ -24,7 +24,9 @@ enum HookAction{HOOK_CONTINUE,HOOK_SKIP_ORIGINAL};
 enum ModResult{MOD_OK};
 #define DEFINE_HOOK(target,name) struct name{}
 bool active=true, running=true, shieldOwned=true, learned=true, rHeld=false, staminaReady=true;
+struct daAlink_c;
 namespace remaster {
+namespace combat::techniques { bool try_action(daAlink_c*, int&) { return false; } }
 bool is_active(){return active;}
 namespace player {bool gameplay_running(){return running;}}
 namespace tuning {struct Values{bool manualShield=true;} values; const Values& get(){return values;}}

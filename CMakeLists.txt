@@ -7,7 +7,7 @@ if (NOT DEFINED CMAKE_BUILD_TYPE AND NOT DEFINED ENV{CMAKE_BUILD_TYPE})
     set(CMAKE_BUILD_TYPE "RelWithDebInfo" CACHE STRING "Build type")
 endif ()
 
-project(tp_remaster VERSION 0.12.0 LANGUAGES CXX)
+project(tp_remaster VERSION 0.13.0 LANGUAGES CXX)
 
 # Must match the Dusklight release the mod runs on: game structs and symbols are version-specific.
 if (NOT DUSKLIGHT_VERSION)
@@ -48,6 +48,8 @@ add_mod(tp_remaster
             src/combat/damage.cpp
             src/combat/ward.cpp
             src/combat/stamina.cpp
+            src/combat/techniques.cpp
+            src/input/combat_controller.cpp
             src/combat/dodge.cpp
             src/combat/manual_shield.cpp
             src/combat/enemy_hard_mode.cpp
@@ -85,6 +87,8 @@ if (BUILD_TESTING AND NOT CMAKE_CROSSCOMPILING AND NOT MSVC)
         COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/enemy_hard_mode_death_test.py")
     add_test(NAME manual_shield
         COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/manual_shield_test.py")
+    add_test(NAME combat_techniques
+        COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/combat_techniques_test.py")
     add_test(NAME launch_folder
         COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/prepare_mods_test.py")
     add_executable(progression_test tests/progression_model.cpp)
