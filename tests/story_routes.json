@@ -1,7 +1,7 @@
 [
   {
     "route": "Ordon introduction",
-    "checks": "Herd goats, rescue cradle, return cat, acquire Slingshot, complete sword tutorial, cross into Faron",
+    "checks": "Enter Ordon Spring to retrieve Epona, verify fade completes and camera remains visible; inspect [Transition] logs if black screen persists; Herd goats, rescue cradle, return cat, acquire Slingshot, complete sword tutorial, cross into Faron",
     "status": "in-game-pending"
   },
   {
@@ -67,6 +67,11 @@
   {
     "route": "Isolation and compatibility",
     "checks": "New and old overhaul saves, death/retry, all slots, mode switching to vanilla, F1 toggles, graphics/Zora mods, keyboard/controller and 30/60/high FPS, ward recovery/save/tunic isolation and native armor preset independence, LB/L3/R3/RB mappings and host action conflicts, heavy input after focus/menu/binding changes, attack/counter interruption, stance toggle independence, save/load and actor reuse",
+    "status": "in-game-pending"
+  },
+  {
+    "route": "HUD and equipment presentation",
+    "checks": "Check compact flask bottle/segments below hearts, native rare-rupee digits, bottom-left minimap and smaller prompts at 16:9, ultrawide and tall aspect ratios; open equipment menu, verify visible Growth & Equipment summary and Z pages; confirm submenus and cutscenes keep their native presentation",
     "status": "in-game-pending"
   }
 ]

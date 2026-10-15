@@ -211,7 +211,7 @@ std::string input_value(const void* p){return static_cast<const Input*>(p)->valu
 void input_set(void* p,const std::string& value){static_cast<Input*>(p)->value=value;}
 int64_t timing=5000;int writes=0;bool fail=false;std::string label;
 struct Config{int set_int(ModContext*,int,int64_t value){++writes;if(fail)return MOD_ERROR;timing=value;return MOD_OK;}} config;
-struct Ui{void elem_set_text(ModContext*,int,const char* value){label=value;}} ui;
+struct Ui{int elem_set_text(ModContext*,int,const char* value){label=value;return MOD_OK;}} ui;
 auto* svc_config=&config;auto* svc_ui=&ui;
 namespace fmt{template<class...T>std::string format(const char*,T...){return "timing label";}}
 namespace remaster::tuning {
@@ -248,7 +248,7 @@ enum {MOD_OK,MOD_ERROR};constexpr int ITEM_GIVE_RESOLVE=2,ITEM_GIVE_SILENT=1;con
 ModContext* mod_ctx=nullptr;int gives=0,persists=0;bool giveFails=false;std::string queued;
 struct Items{int give_item(ModContext*,const char* name,uint8_t,int){++gives;queued=name;return giveFails?MOD_ERROR:MOD_OK;}} itemService;
 auto* svc_item=&itemService;
-struct Ui{void elem_set_text(ModContext*,int,const char*){}} ui;auto* svc_ui=&ui;
+struct Ui{int elem_set_text(ModContext*,int,const char*){return MOD_OK;}} ui;auto* svc_ui=&ui;
 namespace fmt{template<class...T>std::string format(const char*,T...){return "status";}}
 namespace remaster::tuning{struct Values{bool removeCurrency=true,merchantRewards=true;} cfg;auto& get(){return cfg;}}
 namespace remaster::progression{Model state;bool ready(){return true;}Model& model(){return state;}void persist(){++persists;}}

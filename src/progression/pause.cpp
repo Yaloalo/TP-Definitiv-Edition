@@ -1,4 +1,5 @@
 #include "progression/pause.hpp"
+#include "hud/draw_context.hpp"
 #include "progression/rewards.hpp"
 #include "progression/growth.hpp"
 #include "progression/collections.hpp"
@@ -20,6 +21,7 @@
 namespace remaster::progression::pause {
 namespace {
 DEFINE_HOOK(&dMenu_Collect2D_c::wait_proc, CollectWait);
+DEFINE_HOOK(&dMenu_Collect2DTop_c::draw, CollectTopDraw);
 DEFINE_HOOK(&dMenu_Collect2D_c::_delete, CollectDelete);
 bool g_open=false;
 int g_page=0;
@@ -45,12 +47,13 @@ HookAction wait_pre(ModContext*,void* args,void*,void*) {
 }
 HookAction close_pre(ModContext*,void*,void*,void*) { g_open=false; g_page=0; g_owner=nullptr; return HOOK_CONTINUE; }
 void draw_post(ModContext*,void* args,void*,void*) {
-    auto* menu=mods::arg<dMenu_Collect2D_c*>(args,0);
+    auto* top=mods::arg<dMenu_Collect2DTop_c*>(args,0);
+    auto* menu=top ? top->mpCollect2D : nullptr;
     if (!available(menu) || !growth::ensure()) return;
     auto* port=dComIfGp_getCurrentGrafPort(); auto* font=mDoExt_getSubFont();
     if (!font) font=mDoExt_getMesgFont(); if (!port || !font) return;
     const auto& m=model(); const auto& cfg=tuning::get();
-    port->setup2D();
+    hud::DrawContext context(true);
     if (g_open && g_owner==menu) {
         J2DFillBox(24,24,560,376,JUtility::TColor(20,22,26,245));
         font->setGX(); font->setCharColor(JUtility::TColor(236,220,173,255));
@@ -113,14 +116,14 @@ void draw_post(ModContext*,void* args,void*,void*) {
             3+m.healthPoints,cfg.staminaMax+m.stamina_bonus(),m.charges,m.capacity(cfg.flaskStartingCharges,cfg.flaskMaximumCharges));
         font->drawString_scale(36,45,11,14,text.c_str(),true);
     }
-    port->setup2D();
+
 }
 }
 ModResult install() {
     auto r=mods::hook::add_pre<CollectWait>(wait_pre);
     if (r==MOD_OK) r=mods::hook::add_pre<CollectDelete>(close_pre);
     HookOptions late=HOOK_OPTIONS_INIT; late.priority=-20000;
-    if (r==MOD_OK) r=mods::hook::add_post<hooks::CollectDraw>(draw_post,&late);
+    if (r==MOD_OK) r=mods::hook::add_post<CollectTopDraw>(draw_post,&late);
     if (r==MOD_OK) r=svc_save->observe_saves(mod_ctx,reset,reset,nullptr,nullptr,nullptr);
     return r;
 }

@@ -28,5 +28,6 @@
   "ward_callbacks",
   "guild_callbacks",
   "dialogue_models",
-  "dialogue_callbacks"
+  "dialogue_callbacks",
+  "hud_layout"
 ]

@@ -1,4 +1,5 @@
 #include "economy/currency.hpp"
+#include "progression/rewards.hpp"
 #include "combat/ward.hpp"
 #include "core/tuning.hpp"
 #include "core/hooks.hpp"
@@ -22,7 +23,7 @@ DEFINE_HOOK_SYMBOL("daNpc_Henna_Execute", int(npc_henna_class*), HenaExecute);
 DEFINE_HOOK(&daAlink_c::checkMagicArmorHeavy, ArmorHeavy);
 DEFINE_HOOK(&daAlink_c::checkMagicArmorNoDamage, ArmorInvulnerability);
 unsigned g_feeScope = 0;
-struct HiddenRupees { dMeter2Draw_c* meter = nullptr; bool visible[3]{}; } g_hidden;
+
 bool enabled() { return is_active() && tuning::get().removeCurrency; }
 HookAction read(ModContext*, void*, void* result, void*) {
     if(enabled()&&g_feeScope){*static_cast<u16*>(result)=65535;return HOOK_SKIP_ORIGINAL;}
@@ -63,19 +64,12 @@ HookAction armor(ModContext*, void*, void* result, void*) {
 HookAction meter_pre(ModContext*, void* args, void*, void*) {
     if (!enabled()) return HOOK_CONTINUE;
     auto* meter = mods::arg<dMeter2Draw_c*>(args, 0); if (!meter) return HOOK_CONTINUE;
-    g_hidden.meter = meter;
-    for (int i = 0; i < 3; ++i) if (meter->mpRupeeParent[i] && meter->mpRupeeParent[i]->getPanePtr()) {
-        g_hidden.visible[i] = meter->mpRupeeParent[i]->getPanePtr()->isVisible();
-        meter->mpRupeeParent[i]->getPanePtr()->hide();
-    }
+    // Render the rare balance with TP's original icon/digits. Do not expose it
+    // to native wallet/price/armor logic, or force visibility during cutscenes.
+    if (progression::ready()) meter->drawRupee(std::min<uint32_t>(9999, progression::model().rareRupees));
     return HOOK_CONTINUE;
 }
-void meter_post(ModContext*, void*, void*, void*) {
-    if (!g_hidden.meter) return;
-    for (int i = 0; i < 3; ++i) if (g_hidden.visible[i] && g_hidden.meter->mpRupeeParent[i])
-        g_hidden.meter->mpRupeeParent[i]->getPanePtr()->show();
-    g_hidden = {};
-}
+
 }
 ModResult install() {
     auto r = mods::hook::add_pre<RupeeRead>(read);
@@ -88,7 +82,6 @@ ModResult install() {
     if (r == MOD_OK) r = mods::hook::add_pre<ArmorHeavy>(armor);
     if (r == MOD_OK) r = mods::hook::add_pre<ArmorInvulnerability>(armor);
     if (r == MOD_OK) r = mods::hook::add_pre<hooks::Shared1>(meter_pre);
-    if (r == MOD_OK) r = mods::hook::add_post<hooks::Shared1>(meter_post);
     return r;
 }
 }

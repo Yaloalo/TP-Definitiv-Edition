@@ -11,6 +11,7 @@ import json
 import os
 from pathlib import Path, PurePosixPath
 import re
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -73,6 +74,75 @@ def verify_report(report, package, root=ROOT):
     if not host.get('path') or digest(host['path']) != host.get('sha256'):
         raise ValueError('The tested host changed or is unavailable; rerun QA against the installed release')
     return data
+
+def verify_candidate(report, package):
+    """Archived build evidence is tied to bytes, not the currently edited source."""
+    data = json.loads(Path(report).read_text())
+    required = {'regression suites', 'bundle and compiled library',
+                'exact-host imports and hooks', 'source unchanged during QA'}
+    checks = data.get('checks', [])
+    if (data.get('status') != 'verified-candidate' or not checks or
+        any(c.get('status') != 'passed' for c in checks) or
+        not required.issubset({c.get('name') for c in checks})):
+        raise ValueError('Candidate has incomplete or failed QA evidence')
+    if data.get('package_sha256') != digest(package):
+        raise ValueError('Candidate package changed after QA')
+    host = data.get('host', {})
+    if not host.get('path') or digest(host['path']) != host.get('sha256'):
+        raise ValueError('Candidate tested host changed or is unavailable')
+    return data
+
+def archive_candidate(build):
+    report = build / 'qa/report.json'
+    package = build / 'mods/tp_remaster.dusk'
+    data = verify_candidate(report, package)
+    directory = build / 'candidates'
+    directory.mkdir(parents=True, exist_ok=True)
+    name = f'tp_remaster-{data["version"]}-{data["package_sha256"][:12]}'
+    frozen = directory / (name + '.dusk')
+    evidence = directory / (name + '.json')
+    if frozen.exists() and evidence.exists():
+        try:
+            verify_candidate(evidence, frozen)
+            return frozen
+        except (ValueError, OSError, KeyError):
+            pass
+    if not frozen.exists():
+        with tempfile.NamedTemporaryFile(dir=directory, suffix='.tmp', delete=False) as stream:
+            temporary = Path(stream.name)
+        try:
+            shutil.copyfile(package, temporary)
+            if digest(temporary) != data['package_sha256']:
+                raise ValueError('Build package changed while archiving')
+            temporary.replace(frozen)
+        finally:
+            temporary.unlink(missing_ok=True)
+    # Publish evidence last. A concurrent launcher sees either the previous
+    # candidate or a complete new pair, never a half-written build.
+    with tempfile.NamedTemporaryFile(mode='w', dir=directory, suffix='.tmp', delete=False) as stream:
+        temporary = Path(stream.name)
+        stream.write(json.dumps(data, indent=2) + '\n')
+    try:
+        temporary.replace(evidence)
+    finally:
+        temporary.unlink(missing_ok=True)
+    verify_candidate(evidence, frozen)
+    return frozen
+
+def launch_candidate(build):
+    # Only the completed build gate publishes candidates. Launching never
+    # touches a package/report currently being produced by the compiler.
+    candidates = []
+    for report in (build / 'candidates').glob('*.json'):
+        package = report.with_suffix('.dusk')
+        try:
+            data = verify_candidate(report, package)
+            candidates.append((data.get('finished_utc', ''), package))
+        except (ValueError, OSError, KeyError):
+            continue
+    if not candidates:
+        raise ValueError('No verified playable package is available; run the full build gate')
+    return max(candidates)[1]
 
 def run_gate(options):
     build = options.build.resolve()
@@ -178,6 +248,8 @@ def run_gate(options):
     report['status'] = 'failed' if failed else ('verified-candidate' if options.host else 'tests-and-package-passed')
     report['finished_utc'] = datetime.now(timezone.utc).isoformat()
     save()
+    if report['status'] == 'verified-candidate':
+        archive_candidate(build)
     print(f'QA: {report["status"]}; report: {report_path}', flush=True)
     return 1 if failed else 0
 
@@ -190,7 +262,17 @@ def main():
     parser.add_argument('--require-host', action='store_true')
     parser.add_argument('--config', default='')
     parser.add_argument('--verify', action='store_true', help='Reject stale/unverified packages before launching')
+    parser.add_argument('--launch-package', action='store_true', help='Print an immutable verified package for playing during development')
     options = parser.parse_args()
+    if options.launch_package:
+        try:
+            package = launch_candidate(options.build.resolve())
+            print(f'Launching verified package: {package.name}', file=sys.stderr)
+            print(package)
+            return 0
+        except (ValueError, OSError, KeyError) as error:
+            print(f'QA launch gate: {error}', file=sys.stderr)
+            return 1
     if options.verify:
         try:
             verify_report(options.build / 'qa/report.json', options.build / 'mods/tp_remaster.dusk')

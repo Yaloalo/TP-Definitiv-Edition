@@ -1,3 +1,5 @@
+#include "hud/draw_context.hpp"
+#include "d/d_pane_class.h"
 #include "healing/flask.hpp"
 #include "combat/ward.hpp"
 #include "healing/wolf.hpp"
@@ -194,13 +196,31 @@ HookAction ring_max(ModContext*, void* args, void* result, void*) {
     if (!enabled() || mods::arg<u8>(args, 1) != progress().bottleSlot) return HOOK_CONTINUE;
     *static_cast<u8*>(result) = capacity(); return HOOK_SKIP_ORIGINAL;
 }
-void hud_post(ModContext*, void*, void*, void*) {
-    if (!enabled() || !player::gameplay_running()) return;
-    JUTFont* font = mDoExt_getSubFont(); if (!font) font = mDoExt_getMesgFont(); if (!font) return;
-    const auto text = fmt::format("Flask {}/{}", progress().charges, capacity());
-    font->setGX(); font->setCharColor(JUtility::TColor(235, 210, 155, u8(hud::idle_fade::opacity()*255)));
-    font->drawString_scale(26, 126, 14, 16, text.c_str(), true);
-    if (auto* port = dComIfGp_getCurrentGrafPort()) port->setup2D();
+void hud_post(ModContext*, void* args, void*, void*) {
+    if (!enabled() || !player::input_allowed() || dComIfGp_isEnableNextStage()) return;
+    auto* meter=mods::arg<dMeter2Draw_c*>(args,0);
+    if (!meter || !meter->mpLifeParent || meter->mpLifeParent->getAlphaRate()<=0) return;
+    float left=10000, bottom=-10000;
+    for (auto* heart:meter->mpLifeParts) {
+        if (!heart || !heart->getPanePtr() || !heart->getPanePtr()->isVisible()) continue;
+        Mtx matrix;
+        const auto a=heart->getGlobalVtx(&matrix,0,false,0), b=heart->getGlobalVtx(&matrix,3,false,0);
+        left=std::min(left,std::min(a.x,b.x)); bottom=std::max(bottom,std::max(a.y,b.y));
+    }
+    if (bottom<0) return;
+    hud::DrawContext context;
+    const float x=left+4, y=bottom+29*std::max(1.0f,std::abs(meter->mpLifeParent->getScaleY())); // leave two native meter rows for stamina/oxygen
+    const u8 alpha=u8(hud::idle_fade::opacity()*meter->mpLifeParent->getAlphaRate()*255);
+    const JUtility::TColor gold(225,204,150,alpha), dim(59,61,54,alpha);
+    // Small bottle silhouette and one lit segment per usable charge.
+    J2DFillBox(x+3,y-3,4,3,gold);
+    J2DFillBox(x,y,10,12,gold);
+    J2DFillBox(x+1,y+1,8,10,dim);
+    if (progress().charges) J2DFillBox(x+2,y+5,6,5,gold);
+    for (int i=0;i<capacity();++i) {
+        J2DFillBox(x+16+i*8,y+2,6,8,gold);
+        J2DFillBox(x+17+i*8,y+3,4,6,i<progress().charges?gold:dim);
+    }
 }
 // Mods UI itself pauses gameplay, so evaluate rest's underlying safety without requiring a closed pane.
 bool rest_disabled(ModContext*, void*) {
@@ -282,7 +302,7 @@ void tick(daAlink_c* link) {
         const auto text = fmt::format("Sacred Flask: {}/{} charges, {} hearts each. Flask shards {}/4; growth fragments {}/5.\nStand beside a Sacred Rest Stone and hold L + R. Rest takes 3 seconds by default. Death and boss victories refill.{}",
             progress().charges, capacity(), progress().potency(tuning::get().flaskHealingHearts), progress().flaskShards % 4,
             progress().growthFragments % 5, progress().bottleSlot == 255 ? " Empty a bottle to make room for the flask." : " Human: assign flask to X/Y. Wolf: R + X to recover.");
-        svc_ui->elem_set_text(mod_ctx, g_info, text.c_str());
+        if (svc_ui->elem_set_text(mod_ctx, g_info, text.c_str()) != MOD_OK) g_info = 0;
     }
 }
 ModResult build_controls(UiElementHandle pane) {

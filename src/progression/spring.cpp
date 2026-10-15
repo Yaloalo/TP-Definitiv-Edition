@@ -1,3 +1,4 @@
+#include "hud/prompt.hpp"
 #include "progression/spring.hpp"
 #include "progression/growth.hpp"
 #include "progression/rewards.hpp"
@@ -73,9 +74,8 @@ HookAction interact_pre(ModContext*,void* args,void* result,void*) {
 void hud_post(ModContext*,void*,void*,void*) {
     if (!player::input_allowed() || !here()) return;
     auto* font=mDoExt_getSubFont(); if (!font) font=mDoExt_getMesgFont(); if (!font) return;
-    font->setGX(); font->setCharColor(JUtility::TColor(236,220,173,255));
-    font->drawString_scale(26,175,12,15,"Ordonna's Blessing: hold L + press Y to exchange health/stamina",true);
-    if (auto* port=dComIfGp_getCurrentGrafPort()) port->setup2D();
+    hud::draw_prompt("Ordonna's Blessing: hold L + press Y to exchange health/stamina");
+
 }
 }
 void tick() {

@@ -154,7 +154,7 @@ void tick() {
     if (g_status) {
         std::string text = "Help Sera for the Slingshot; Fyrus unlocks a bomb bag; Zora Armor unlocks water bombs; Lakebed unlocks Bomblings. Hawkeye arrives with the Bow.\nSpeak to Malo, Barnes, Agitha or Jovani for permanent purchases and relic gifts.\n";
         for (const auto& relic : kRelics) text += fmt::format("{}: {}\n", relic.name, redeemed(progression::model(), relic) ? "upgrade complete" : owns_relic(progression::model(), relic) ? "ready to trade" : "find through exploration");
-        svc_ui->elem_set_text(mod_ctx, g_status, text.c_str());
+        if (svc_ui->elem_set_text(mod_ctx, g_status, text.c_str()) != MOD_OK) g_status = 0;
     }
 }
 ModResult build_controls(UiElementHandle pane) {

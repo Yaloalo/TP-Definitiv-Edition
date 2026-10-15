@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Launches the locally built Definitive Overhaul. Gameplay features belong to the mod;
+# Launches the latest verified Definitive Overhaul package. Gameplay features belong to the mod;
 # no built-in gameplay settings preset is required.
 #
 # Usage: tools/play.sh [extra Dusklight args...]
@@ -14,7 +14,7 @@ root="$(cd "$(dirname "$0")/.." && pwd)"
 dusklight="${DUSKLIGHT_APPIMAGE:-$HOME/Games/Dusklight/Dusklight.AppImage}"
 curated_mods="${DEFINITIVE_MODS:-$HOME/Games/Dusklight/definitive/mods}"
 mods="$root/build/runtime-mods"
-python3 "$root/tools/qa.py" --build "$root/build" --verify
-python3 "$root/tools/prepare_mods.py" "$curated_mods" "$mods" "$root/build/mods/tp_remaster.dusk" >/dev/null
+package="$(python3 "$root/tools/qa.py" --build "$root/build" --launch-package)"
+python3 "$root/tools/prepare_mods.py" "$curated_mods" "$mods" "$package" >/dev/null
 
 exec "$dusklight" --mods "$mods" -L debug "$@"

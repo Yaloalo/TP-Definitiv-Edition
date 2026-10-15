@@ -7,7 +7,7 @@ if (NOT DEFINED CMAKE_BUILD_TYPE AND NOT DEFINED ENV{CMAKE_BUILD_TYPE})
     set(CMAKE_BUILD_TYPE "RelWithDebInfo" CACHE STRING "Build type")
 endif ()
 
-project(tp_remaster VERSION 0.14.1 LANGUAGES CXX)
+project(tp_remaster VERSION 0.14.2 LANGUAGES CXX)
 
 # Must match the Dusklight release the mod runs on: game structs and symbols are version-specific.
 if (NOT DUSKLIGHT_VERSION)
@@ -57,6 +57,8 @@ add_mod(tp_remaster
             src/combat/boss_hard_mode.cpp
             src/combat/enemy_slow_motion.cpp
             ${ENEMY_PROFILE_SOURCES}
+            src/hud/prompt.cpp
+            src/hud/layout.cpp
             src/hud/stamina_bar.cpp
             src/hud/idle_fade.cpp
             src/hud/damage_feedback.cpp
@@ -66,6 +68,7 @@ add_mod(tp_remaster
             src/movement/responsiveness.cpp
             src/movement/crawl.cpp
             src/movement/horse.cpp
+            src/pacing/transition_diagnostics.cpp
             src/pacing/quality.cpp
             src/pacing/tears.cpp
             src/input/mouse_controls.cpp
@@ -82,6 +85,7 @@ target_include_directories(tp_remaster PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src"
 include(CTest)
 if (BUILD_TESTING AND NOT CMAKE_CROSSCOMPILING AND NOT MSVC)
     find_package(Python3 COMPONENTS Interpreter REQUIRED)
+    add_test(NAME hud_layout COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/hud_layout_test.py")
     add_executable(enemy_timing_test tests/enemy_slow_motion_timing.cpp)
     add_test(NAME enemy_timing COMMAND enemy_timing_test)
     add_test(NAME enemy_death_recovery

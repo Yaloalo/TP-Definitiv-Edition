@@ -88,5 +88,43 @@ class GateTests(unittest.TestCase):
         (self.root / 'build/report.log').write_text('new output')
         self.assertEqual(before, qa.source_digest(self.root))
 
+    def candidate(self):
+        build = self.root / 'build'
+        self.package.rename(build / 'mods/tp_remaster.dusk')
+        self.package = build / 'mods/tp_remaster.dusk'
+        (build / 'qa').mkdir()
+        self.report = build / 'qa/report.json'
+        self.record()
+        data = json.loads(self.report.read_text())
+        data.update(version='0.6.0', finished_utc='2026-10-15T12:00:00Z', checks=[
+            {'name': name, 'status': 'passed'} for name in
+            ('regression suites', 'bundle and compiled library',
+             'exact-host imports and hooks', 'source unchanged during QA')])
+        self.report.write_text(json.dumps(data))
+        return build, qa.archive_candidate(build)
+
+    def test_launch_survives_edits_and_failed_build_without_using_failed_bytes(self):
+        build, frozen = self.candidate()
+        original = frozen.read_bytes()
+        (self.root / 'src/feature.cpp').write_text('work in progress')
+        self.assertEqual(qa.launch_candidate(build), frozen)
+        self.package.write_bytes(b'unverified build')
+        self.record('failed')
+        self.assertEqual(qa.launch_candidate(build), frozen)
+        self.assertEqual(frozen.read_bytes(), original)
+        # An incomplete report claiming success cannot be promoted either.
+        self.record('verified-candidate')
+        self.assertEqual(qa.launch_candidate(build), frozen)
+
+    def test_corrupt_archive_and_changed_host_cannot_launch(self):
+        build, frozen = self.candidate()
+        self.record('running')
+        original = frozen.read_bytes()
+        frozen.write_bytes(b'corrupt')
+        with self.assertRaises(ValueError): qa.launch_candidate(build)
+        frozen.write_bytes(original)
+        self.host.write_bytes(b'other host')
+        with self.assertRaises(ValueError): qa.launch_candidate(build)
+
 if __name__ == '__main__':
     unittest.main()

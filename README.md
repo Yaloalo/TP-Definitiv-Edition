@@ -88,7 +88,7 @@ cmake --build build
 The default native build also runs the automated QA suite. For the complete
 Linux gate, set `-DDUSKLIGHT_BINARY=/absolute/path/to/extracted/dusklight`
 and `-DTP_QA_REQUIRE_HOST=ON` when configuring. Reports and logs are under
-`build/qa/`. The launcher rejects packages without current complete QA evidence.
+`build/qa/`. The launcher uses an immutable package with complete QA evidence. While source is edited or a new build fails, it keeps the previous verified package playable.
 See [the QA coverage and story checks](docs/QA.md); runtime story checks remain
 pending until actually played. Run the full gate after every major change.
 
@@ -202,7 +202,7 @@ src/economy/*         currency suppression, quest equipment and unique relic upg
 src/hud/stamina_bar.*  stamina meter drawing
 src/presentation/texture_packs.*  in-game texture pack switcher (Mods window → Graphics)
 tools/check_symbols.sh ABI check against a Dusklight binary
-tools/play.sh          launch with build output + owned gameplay controls
+tools/play.sh          launch the latest verified package + owned gameplay controls
 tools/keyboard_layout.py  write the laptop keyboard layout
 tools/texture_pack.sh  switch the active texture pack from the shell
 docs/MODPACK.md        curated graphics mods and texture packs

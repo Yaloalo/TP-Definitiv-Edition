@@ -14,6 +14,8 @@
 #include "core/player.hpp"
 #include "core/tuning.hpp"
 #include "hud/stamina_bar.hpp"
+#include "hud/layout.hpp"
+#include "hud/prompt.hpp"
 #include "hud/idle_fade.hpp"
 #include "hud/damage_feedback.hpp"
 #include "movement/responsiveness.hpp"
@@ -22,6 +24,7 @@
 #include "movement/sprint.hpp"
 #include "movement/quality.hpp"
 #include "pacing/quality.hpp"
+#include "pacing/transition_diagnostics.hpp"
 #include "pacing/tears.hpp"
 #include "input/mouse_controls.hpp"
 #include "presentation/texture_packs.hpp"
@@ -140,9 +143,12 @@ constexpr Installer kInstallers[] = {
     {movement::crawl::install, "crawl speed"},
     {movement::horse::install, "Epona handling"},
     {movement::quality::install, "movement quality"},
+    {pacing::diagnostics::install, "Transition diagnostics"},
     {pacing::quality::install, "owned pacing"},
     {pacing::tears::install, "Tears of Light"},
     {input::mouse_controls::install, "mouse controls"},
+    {hud::install_prompts, "Shared interaction hints"},
+    {hud::layout::install, "HUD corner layout"},
     {hud::stamina_bar::install, "stamina bar"},
     {hud::idle_fade::install, "HUD idle fade"},
     {hud::damage_feedback::install, "damage feedback"},

@@ -31,7 +31,8 @@ packaged resource against source. Native SDK dotfile exclusions are respected.
 Only complete regression/package/host success produces `verified-candidate`.
 Without a host, CI can produce `tests-and-package-passed`; ABI is explicitly
 not run, and this is not a verified candidate. The launcher requires a verified
-report and rejects changed source, changed packages and changed tested hosts.
+archived report and rejects changed packages and changed tested hosts. The strict
+`--verify` development check also rejects changed source.
 A report is invalidated at the start of a new QA run, so a failure cannot retain
 an earlier success. Source changes during testing fail the gate.
 
@@ -121,3 +122,23 @@ run the regression fixtures automatically; host ABI validation is pending.
 Windows and cross-compiles produce compile/package artifacts and do not run
 these native Unix fixtures. CI uploads Linux QA evidence even on failure and
 does not imply runtime story validation.
+
+### Playing while development continues
+
+The Wofi/desktop launcher selects an immutable package from `build/candidates`.
+The full gate archives a new package and matching evidence only after all checks
+pass. Launch verification checks the archived package and tested host hashes, not
+the current working source. Failed builds and source edits therefore do not block
+the previous playable build. `tools/qa.py --verify` still checks the current source
+and build together for development/commit validation.
+
+Version 0.14.2 adds `hud_layout` regression coverage for repeated draw restoration,
+corner anchoring in tall viewports, inactive-mode isolation, and native rupee digits.
+The equipment panel renders after `dMenu_Collect2DTop_c::draw` with an explicit
+orthographic context. Visual inspection remains pending.
+
+The reported early Ordon/Epona black screen is not yet reproduced or resolved.
+Read-only `[Transition]` log records now distinguish OVERLAP0 fade-to-black, waiting
+for scene, reveal-scene, and resumed gameplay; they include stage, room, pending
+transition, window count, event and fader state. These records never force a fade
+or advance a story flag. The existing log did not establish a failed load.

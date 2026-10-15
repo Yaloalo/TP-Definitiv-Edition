@@ -50,6 +50,7 @@ struct Values {
     int64_t crawlSpeedPercent = 175;
     bool horseHandling = true;
     int64_t horseTurnSpeedPercent = 150, horseAccelerationPercent = 140, horseBrakingPercent = 150;
+    int64_t hudPromptScalePercent = 75;
     bool idleHudFade = true;
     int64_t hudIdleDelayMs = 5000, hudFadeDurationMs = 800, hudIdleOpacityPercent = 0;
     bool damageFeedback = true;

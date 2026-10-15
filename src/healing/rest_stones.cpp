@@ -1,3 +1,4 @@
+#include "hud/prompt.hpp"
 // Sacred Rest Stones reuse WStoneF's native model (d_a_obj_smw_stone.cpp), without
 // its collision/howling/event actor. Actor heap/resource lifecycle follows the native
 // actor pattern and Dawnlight's boss_portal_mirrors.cpp; no donor gameplay is loaded.
@@ -199,9 +200,8 @@ bool safe(daAlink_c* link) {
 void hud_post(ModContext*,void*,void*,void*) {
     if (!enabled() || !player::input_allowed() || g_prompt.empty()) return;
     auto* font = mDoExt_getSubFont(); if (!font) font=mDoExt_getMesgFont(); if (!font) return;
-    font->setGX(); font->setCharColor(JUtility::TColor(235,210,155,u8(hud::idle_fade::opacity()*255)));
-    font->drawString_scale(26,151,12,14,g_prompt.c_str(),true);
-    if (auto* port=dComIfGp_getCurrentGrafPort()) port->setup2D();
+    hud::draw_prompt(g_prompt);
+
 }
 }
 void damage_received() { if (enabled()) { g_timers.damage(); g_menuChannel=false; g_requested=-1; } }

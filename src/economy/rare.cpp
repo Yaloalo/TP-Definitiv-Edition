@@ -37,14 +37,6 @@ void give(ModContext*,const ItemGiveInfo* info,void*) {
         g_pending.erase(info->check_name);
     }
 }
-void hud_post(ModContext*,void*,void*,void*) {
-    if (!enabled() || !progression::ready() || !player::input_allowed()) return;
-    auto* font=mDoExt_getSubFont(); if (!font) font=mDoExt_getMesgFont(); if (!font) return;
-    font->setGX(); font->setCharColor(JUtility::TColor(225,209,116,uint8_t(hud::idle_fade::opacity()*255)));
-    const auto text=fmt::format("Rupees {}",progression::model().rareRupees);
-    font->drawString_scale(26,106,12,15,text.c_str(),true);
-    if (auto* port=dComIfGp_getCurrentGrafPort()) port->setup2D();
-}
 ModResult text(const char* value,MessageId* id) {
     std::array<MessageVariantData,6> variants{}; constexpr uint8_t languages[]={0,1,2,3,4,6};
     for (size_t i=0;i<variants.size();++i) {
@@ -109,7 +101,6 @@ void tick() { if (player::input_allowed()) ensure(); }
 ModResult install() {
     auto r=svc_item->observe_gives(mod_ctx,give,nullptr,nullptr);
     if (r==MOD_OK) r=svc_save->observe_saves(mod_ctx,reset,reset,nullptr,nullptr,nullptr);
-    if (r==MOD_OK) r=mods::hook::add_post<hooks::Shared1>(hud_post);
     if (r==MOD_OK) r=text("You found 15 Hylian rupees!\nRare treasure for permanent equipment. There are no repeatable payouts.",&g_cacheMessage);
     if (r==MOD_OK) r=text("A blessing of Hyrule!\nCheck Growth & Equipment in your pause menu.",&g_blessingMessage);
     if (r==MOD_OK) r=text("Your Sacred Flask grows stronger!\nFour shards add one charge.",&g_flaskMessage);

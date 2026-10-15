@@ -1,3 +1,4 @@
+#include "hud/prompt.hpp"
 #include "economy/conversations.hpp"
 #include "economy/rare.hpp"
 #include "economy/merchants.hpp"
@@ -163,8 +164,8 @@ void hud_post(ModContext*,void*,void*,void*) {
     auto* actor=nearby();if(!actor)return;
     auto* font=mDoExt_getSubFont();if(!font)font=mDoExt_getMesgFont();if(!font)return;
     const auto text=fmt::format("{}: {}",title(kind(actor)),g_native==fopAcM_GetID(actor)?"press A to continue the conversation":"A: speak / L + Y: gifts and equipment");
-    font->setGX();font->setCharColor(JUtility::TColor(236,220,173,255));font->drawString_scale(26,175,12,15,text.c_str(),true);
-    if(auto* port=dComIfGp_getCurrentGrafPort())port->setup2D();
+    hud::draw_prompt(text);
+
 }
 }
 void tick() {

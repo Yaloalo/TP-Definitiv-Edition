@@ -17,6 +17,7 @@ ModContext* mod_ctx=nullptr;bool active=true,visible=false;bool is_active(){retu
 namespace mods{template<class T>T arg(void* p,int i){return *static_cast<T*>(static_cast<void**>(p)[i]);}}
 struct Ui{int is_any_document_visible(ModContext*,bool* result){*result=visible;return MOD_OK;}}ui;auto* svc_ui=&ui;
 struct dMenu_Collect2D_c{int sub=0;int getSubWindowOpenCheck(){return sub;}};
+struct dMenu_Collect2DTop_c{dMenu_Collect2D_c* mpCollect2D;};
 struct mDoCPd_c{static inline int trig=0;static int getTrigZ(int){return trig&1;}static int getTrigB(int){return trig&2;}
 static int getTrigA(int){return trig&4;}static int getTrigX(int){return trig&8;}static int getTrigRight(int){return trig&16;}static int getTrigLeft(int){return trig&32;}};
 namespace remaster::progression{Model state;bool valid=true;bool ready(){return valid;}Model& model(){return state;}}
@@ -29,6 +30,7 @@ namespace JUtility{struct TColor{int r,g,b,a;};}
 struct Font{std::vector<std::string>text;float bottom=0;void setGX(){}void setCharColor(JUtility::TColor){}
 void drawString_scale(float,float y,float,float h,const char* s,bool){text.emplace_back(s);bottom=std::max(bottom,y+h);}}font;
 struct Port{int restored=0;void setup2D(){++restored;}}port;
+namespace remaster::hud {struct DrawContext {explicit DrawContext(bool menu){assert(menu);++port.restored;} ~DrawContext(){++port.restored;}};}
 Port* dComIfGp_getCurrentGrafPort(){return &port;}Font* mDoExt_getSubFont(){return &font;}Font* mDoExt_getMesgFont(){return &font;}
 void J2DFillBox(float,float,float,float,JUtility::TColor){}
 bool dComIfGs_isCollectShield(int){return true;}bool dComIfGs_isCollectClothes(int){return true;}
@@ -38,31 +40,31 @@ namespace remaster::progression::pause{bool g_open=false;int g_page=0;dMenu_Coll
 code+=''.join(function(source,n) for n in ['reset','available','wait_pre','close_pre','draw_post'])+'}\n'
 code+=r'''
 int main(){using namespace remaster::progression;using namespace pause;state.migrate_growth(15);state.add_growth(10);
- dMenu_Collect2D_c menu;auto* p=&menu;void* a[]={&p};
+ dMenu_Collect2D_c menu;auto* p=&menu;void* a[]={&p}; dMenu_Collect2DTop_c top{p};auto* pt=&top;void* drawArgs[]={&pt};
  assert(wait_pre(nullptr,a,nullptr,nullptr)==HOOK_CONTINUE&&!g_open);
  mDoCPd_c::trig=1;assert(wait_pre(nullptr,a,nullptr,nullptr)==HOOK_SKIP_ORIGINAL&&g_open);
  mDoCPd_c::trig=4;wait_pre(nullptr,a,nullptr,nullptr);assert(state.healthPoints==1&&state.unassigned()==1);
  mDoCPd_c::trig=8;wait_pre(nullptr,a,nullptr,nullptr);assert(state.staminaPoints==1&&state.unassigned()==0);
  wait_pre(nullptr,a,nullptr,nullptr);assert(state.staminaPoints==1); // cannot overspend
  for(const auto& r:remaster::economy::merchants::kRelics)state.claim(r.check,r.id);
- state.equipmentUpgrades=7;draw_post(nullptr,a,nullptr,nullptr);assert(font.bottom<400&&font.text.size()>=13&&port.restored==2);
+ state.equipmentUpgrades=7;draw_post(nullptr,drawArgs,nullptr,nullptr);assert(font.bottom<400&&font.text.size()>=13&&port.restored==2);
  bool health=false,stamina=false,flask=false,gear=false;
  for(auto& line:font.text){health|=line.find("Health: 4")!=std::string::npos;stamina|=line.find("Stamina: 120")!=std::string::npos;
  flask|=line.find("Sacred Flask")!=std::string::npos;gear|=line.find("Bomb capacities")!=std::string::npos;}
  assert(health&&stamina&&flask&&gear);
  // Relics/recipes occupy a bounded second page; honors remain independent.
- font.text.clear();mDoCPd_c::trig=16;wait_pre(nullptr,a,nullptr,nullptr);draw_post(nullptr,a,nullptr,nullptr);assert(g_page==1&&font.bottom<400);
+ font.text.clear();mDoCPd_c::trig=16;wait_pre(nullptr,a,nullptr,nullptr);draw_post(nullptr,drawArgs,nullptr,nullptr);assert(g_page==1&&font.bottom<400);
  bool obsolete=false;for(auto&row:font.text)obsolete|=row.find("Surveyor's Lens: equipment owned")!=std::string::npos;assert(obsolete);
  auto hearts=state.healthPoints;mDoCPd_c::trig=4;wait_pre(nullptr,a,nullptr,nullptr);assert(state.healthPoints==hearts);
- font.text.clear();mDoCPd_c::trig=16;wait_pre(nullptr,a,nullptr,nullptr);state.honors=511;draw_post(nullptr,a,nullptr,nullptr);assert(g_page==2&&font.bottom<400);font.text.clear();wait_pre(nullptr,a,nullptr,nullptr);draw_post(nullptr,a,nullptr,nullptr);assert(g_page==3&&font.bottom<400);
+ font.text.clear();mDoCPd_c::trig=16;wait_pre(nullptr,a,nullptr,nullptr);state.honors=511;draw_post(nullptr,drawArgs,nullptr,nullptr);assert(g_page==2&&font.bottom<400);font.text.clear();wait_pre(nullptr,a,nullptr,nullptr);draw_post(nullptr,drawArgs,nullptr,nullptr);assert(g_page==3&&font.bottom<400);
  bool cave=false;for(auto&row:font.text)cave|=row.find("Cave of Ordeals Crest")!=std::string::npos;assert(cave);
  mDoCPd_c::trig=16;wait_pre(nullptr,a,nullptr,nullptr);assert(g_page==0);
  for(int gate=0;gate<4;++gate){font.text.clear();active=gate!=0;visible=gate==1;valid=gate!=2;menu.sub=gate==3?1:0;
- assert(wait_pre(nullptr,a,nullptr,nullptr)==HOOK_CONTINUE);draw_post(nullptr,a,nullptr,nullptr);assert(font.text.empty()&&!g_open);}
+ assert(wait_pre(nullptr,a,nullptr,nullptr)==HOOK_CONTINUE);draw_post(nullptr,drawArgs,nullptr,nullptr);assert(font.text.empty()&&!g_open);}
  active=valid=true;visible=false;menu.sub=0;mDoCPd_c::trig=1;wait_pre(nullptr,a,nullptr,nullptr);
  mDoCPd_c::trig=2;assert(wait_pre(nullptr,a,nullptr,nullptr)==HOOK_SKIP_ORIGINAL&&!g_open); // B closes sheet, not the native menu
  mDoCPd_c::trig=1;wait_pre(nullptr,a,nullptr,nullptr);close_pre(nullptr,a,nullptr,nullptr);assert(!g_open&&!g_owner);
- mDoCPd_c::trig=0;draw_post(nullptr,a,nullptr,nullptr);assert(font.text.size()==1&&font.text[0].find("Z: Growth")!=std::string::npos);
+ mDoCPd_c::trig=0;draw_post(nullptr,drawArgs,nullptr,nullptr);assert(font.text.size()==1&&font.text[0].find("Z: Growth")!=std::string::npos);
  reset(nullptr,1,nullptr);assert(!g_owner&&!g_open);
 }
 '''

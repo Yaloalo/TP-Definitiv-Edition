@@ -4235,7 +4235,7 @@ void after_meter_draw(ModContext*, void* args, void*, void*) {
 
     // v0.9.6 targeted HUD picture inspector.
     // Dump the complete picture tree once while the HUD is visible.
-    if(!g_swordDiagLogged && meter->mpScreen!=nullptr && svc_log!=nullptr) {
+    if(kDeveloperOptions && !g_swordDiagLogged && meter->mpScreen!=nullptr && svc_log!=nullptr) {
         svc_log->info(mod_ctx,"[HudPic] BEGIN full zelda_game_image picture tree");
         int picCount=0;
         log_picture_tree(meter->mpScreen,0,picCount);
